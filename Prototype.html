@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimal Fund Allocation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #334155;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            max-width: 900px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        input[type="number"] {
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+        .toggle-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+        }
+        .toggle-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        .toggle-option:hover {
+            background-color: #f0f4f8;
+        }
+        .toggle-option input[type="radio"] {
+            margin-right: 0.5rem;
+            accent-color: #3b82f6;
+        }
+        .result-box {
+            background-color: #ecfdf5;
+            border: 1px solid #d1fae5;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #a7f3d0;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-item span:first-child {
+            font-weight: 600;
+        }
+        .total-interest {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #059669;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .interest-breakdown-item {
+            font-size: 0.9rem;
+            color: #4b5563;
+            padding-left: 1rem;
+        }
+        .interest-breakdown-item::before {
+            content: "•";
+            color: #34d399;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="container">
+        <div class="input-section">
+            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Fund Allocation Optimizer</h1>
+
+            <div class="mb-6">
+                <label for="totalFunds" class="block text-gray-700 text-lg font-semibold mb-2">Total Funds (SGD):</label>
+                <input type="number" id="totalFunds" value="250000" min="0" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">UOB Account Conditions (Updated):</h2>
+                <div class="toggle-group">
+                    <label class="toggle-option">
+                        <input type="radio" name="uobCondition" value="spend_only" checked>
+                        <span>Spend min. S$500 on eligible UOB Card</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="uobCondition" value="spend_giro_debit">
+                        <span>Spend min. S$500 AND 3 GIRO debit transactions</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="uobCondition" value="spend_salary_giro">
+                        <span>Spend min. S$500 AND credit salary</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">SC Account Conditions:</h2>
+                <div class="toggle-group">
+                    <label class="toggle-option">
+                        <input type="radio" name="scCondition" value="neither" checked>
+                        <span>Neither (Base interest only)</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="scCondition" value="salary_credit">
+                        <span>Salary Credit (min. S$3,000 monthly)</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="scCondition" value="card_spend">
+                        <span>Card Spend (min. S$1,000 monthly)</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="scCondition" value="both">
+                        <span>Both Salary Credit AND Card Spend</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">DBS Account Conditions (Combined Salary + Card Spend):</h2>
+                <div class="toggle-group">
+                    <label class="toggle-option">
+                        <input type="radio" name="dbsCondition" value="fail_requirement" checked>
+                        <span>Fail requirement (0% p.a. on all balances)</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="dbsCondition" value="500_to_15000">
+                        <span>≥ S$500 to < S$15,000 (1.80% p.a.)</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="dbsCondition" value="15000_to_30000">
+                        <span>≥ S$15,000 to < S$30,000 (1.90% p.a.)</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="dbsCondition" value="30000_plus">
+                        <span>≥ S$30,000 (2.20% p.a.)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2 class="text-2xl font-bold text-center mb-6 text-green-700">Optimal Allocation & Interest</h2>
+            <div class="result-box">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700">Allocated Funds:</h3>
+                <div id="allocationResults">
+                    </div>
+                
+                <h3 class="text-xl font-semibold mt-6 mb-4 text-gray-700">Monthly Interest Breakdown:</h3>
+                <div id="interestBreakdown">
+                    </div>
+
+                <div class="total-interest">
+                    Maximum Estimated Monthly Interest: <span id="monthlyInterest">S$0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Helper function to format currency
+        const formatCurrency = (amount) => {
+            return new Intl.NumberFormat('en-SG', { style: 'currency', currency: 'SGD' }).format(amount);
+        };
+
+        // --- Interest Calculation Functions ---
+
+        function calculateUOBInterest(balance, uobCondition) {
+            let totalMonthlyInterest = 0;
+            let breakdown = {};
+            let rates = {};
+
+            switch (uobCondition) {
+                case 'spend_only':
+                    rates = { t1: 0.0005, t2: 0.0005, t3: 0.0005, t4: 0.0005 };
+                    break;
+                case 'spend_giro_debit':
+                    rates = { t1: 0.0100, t2: 0.0200, t3: 0.0005, t4: 0.0005 };
+                    break;
+                case 'spend_salary_giro':
+                    rates = { t1: 0.0150, t2: 0.0300, t3: 0.0450, t4: 0.0005 };
+                    break;
+            }
+
+            if (balance > 150000) {
+                let amountInTier = balance - 150000;
+                let interest = amountInTier * (rates.t4 / 12);
+                breakdown["Tier 4 (>S$150k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+            if (balance > 125000) {
+                let amountInTier = Math.min(balance - 125000, 25000);
+                let interest = amountInTier * (rates.t3 / 12);
+                breakdown["Tier 3 (S$125k-S$150k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+            if (balance > 75000) {
+                let amountInTier = Math.min(balance - 75000, 50000);
+                let interest = amountInTier * (rates.t2 / 12);
+                breakdown["Tier 2 (S$75k-S$125k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+            if (balance > 0) {
+                let amountInTier = Math.min(balance, 75000);
+                let interest = amountInTier * (rates.t1 / 12);
+                breakdown["Tier 1 (S$0-S$75k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+
+            return { total: totalMonthlyInterest, breakdown };
+        }
+
+        function calculateSCInterest(balance, scCondition) {
+            let totalMonthlyInterest = 0;
+            let breakdown = {};
+            const baseRate = 0.0005 / 12;
+            let bonusRate = 0;
+
+            switch (scCondition) {
+                case 'salary_credit':
+                case 'card_spend':
+                    bonusRate = 0.0150 / 12;
+                    break;
+                case 'both':
+                    bonusRate = (0.0150 + 0.0150) / 12;
+                    break;
+                default:
+                    bonusRate = 0;
+                    break;
+            }
+            
+            if (balance > 100000) {
+                let amountInTier = balance - 100000;
+                let interest = amountInTier * baseRate;
+                breakdown["Tier 2 (>S$100k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+
+            if (balance > 0) {
+                let amountInTier = Math.min(balance, 100000);
+                let interest = amountInTier * (baseRate + bonusRate);
+                breakdown["Tier 1 (S$0-S$100k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+            
+            return { total: totalMonthlyInterest, breakdown };
+        }
+
+        function calculateDBSInterest(balance, dbsCondition) {
+            let totalMonthlyInterest = 0;
+            let breakdown = {};
+            let dbsRate = 0;
+            
+            switch (dbsCondition) {
+                case 'fail_requirement': dbsRate = 0.0000; break;
+                case '500_to_15000': dbsRate = 0.0180; break;
+                case '15000_to_30000': dbsRate = 0.0190; break;
+                case '30000_plus': dbsRate = 0.0220; break;
+                default: dbsRate = 0.0000; break;
+            }
+
+            if (balance > 0) {
+                let amountInTier = Math.min(balance, 50000);
+                let interest = amountInTier * (dbsRate / 12);
+                breakdown["Tier 1 (S$0-S$50k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+            
+            if (balance > 50000) {
+                let amountInTier = balance - 50000;
+                let interest = amountInTier * (0.0000 / 12); // 0% for balances > 50k
+                breakdown["Tier 2 (>S$50k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+
+            return { total: totalMonthlyInterest, breakdown };
+        }
+
+        function calculateCIMBInterest(balance) {
+            let totalMonthlyInterest = 0;
+            let breakdown = {};
+            const rates = {
+                t1: 0.0088 / 12, // First S$25,000
+                t2: 0.0178 / 12, // Next S$25,000
+                t3: 0.0250 / 12, // Next S$25,000
+                t4: 0.0080 / 12  // Above S$75,000
+            };
+
+            if (balance > 75000) {
+                let amountInTier = balance - 75000;
+                let interest = amountInTier * rates.t4;
+                breakdown["Tier 4 (>S$75k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+            if (balance > 50000) {
+                let amountInTier = Math.min(balance - 50000, 25000);
+                let interest = amountInTier * rates.t3;
+                breakdown["Tier 3 (S$50k-S$75k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+            if (balance > 25000) {
+                let amountInTier = Math.min(balance - 25000, 25000);
+                let interest = amountInTier * rates.t2;
+                breakdown["Tier 2 (S$25k-S$50k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+            if (balance > 0) {
+                let amountInTier = Math.min(balance, 25000);
+                let interest = amountInTier * rates.t1;
+                breakdown["Tier 1 (S$0-S$25k)"] = interest;
+                totalMonthlyInterest += interest;
+            }
+
+            return { total: totalMonthlyInterest, breakdown };
+        }
+
+        // --- Optimal Allocation Logic ---
+
+        function findOptimalAllocation(totalFunds, uobCondition, scCondition, dbsCondition) {
+            let allocation = {"UOB": 0, "SC": 0, "DBS": 0, "CIMB": 0};
+            let currentFunds = totalFunds;
+
+            const getMarginalRate = (bankName, currentBalance) => {
+                if (bankName === "UOB") {
+                    let rates = {};
+                    switch (uobCondition) {
+                        case 'spend_only': rates = { t1: 0.0005, t2: 0.0005, t3: 0.0005, t4: 0.0005 }; break;
+                        case 'spend_giro_debit': rates = { t1: 0.0100, t2: 0.0200, t3: 0.0005, t4: 0.0005 }; break;
+                        case 'spend_salary_giro': rates = { t1: 0.0150, t2: 0.0300, t3: 0.0450, t4: 0.0005 }; break;
+                    }
+                    if (currentBalance < 75000) return rates.t1 / 12;
+                    if (currentBalance < 125000) return rates.t2 / 12;
+                    if (currentBalance < 150000) return rates.t3 / 12;
+                    return rates.t4 / 12;
+                } else if (bankName === "SC") {
+                    const baseRate = 0.0005;
+                    let bonusRate = 0;
+                    switch (scCondition) {
+                        case 'salary_credit': case 'card_spend': bonusRate = 0.0150; break;
+                        case 'both': bonusRate = 0.0300; break;
+                        default: bonusRate = 0; break;
+                    }
+                    if (currentBalance < 100000) return (baseRate + bonusRate) / 12;
+                    return baseRate / 12;
+                } else if (bankName === "DBS") {
+                    let dbsRate = 0;
+                    switch (dbsCondition) {
+                        case 'fail_requirement': dbsRate = 0.0000; break;
+                        case '500_to_15000': dbsRate = 0.0180; break;
+                        case '15000_to_30000': dbsRate = 0.0190; break;
+                        case '30000_plus': dbsRate = 0.0220; break;
+                        default: dbsRate = 0.0000; break;
+                    }
+                    if (currentBalance < 50000) return dbsRate / 12;
+                    return 0.0000 / 12;
+                } else if (bankName === "CIMB") {
+                    if (currentBalance < 25000) return 0.0088 / 12;
+                    if (currentBalance < 50000) return 0.0178 / 12;
+                    if (currentBalance < 75000) return 0.0250 / 12;
+                    return 0.0080 / 12;
+                }
+                return 0;
+            };
+
+            while (currentFunds > 0) {
+                let bestBank = null;
+                let maxMarginalRate = -1;
+
+                for (const bankName of Object.keys(allocation)) {
+                    const rate = getMarginalRate(bankName, allocation[bankName]);
+                    if (rate > maxMarginalRate) {
+                        maxMarginalRate = rate;
+                        bestBank = bankName;
+                    } else if (rate === maxMarginalRate) {
+                        // Tie-breaking: CIMB > UOB > SC > DBS for positive rates
+                        if (bestBank === "UOB" && bankName === "CIMB") bestBank = bankName;
+                        else if (bestBank === "SC" && (bankName === "CIMB" || bankName === "UOB")) bestBank = bankName;
+                        else if (bestBank === "DBS" && (bankName === "CIMB" || bankName === "UOB" || bankName === "SC")) bestBank = bankName;
+                    }
+                }
+
+                if (maxMarginalRate <= 0 && currentFunds > 0) {
+                    // Distribute remaining funds to the lowest non-zero interest tiers
+                    if (getMarginalRate("CIMB", allocation["CIMB"]) === 0.0080 / 12) allocation["CIMB"] += currentFunds;
+                    else if (getMarginalRate("UOB", allocation["UOB"]) === 0.0005 / 12) allocation["UOB"] += currentFunds;
+                    else if (getMarginalRate("SC", allocation["SC"]) === 0.0005 / 12) allocation["SC"] += currentFunds;
+                    else allocation["DBS"] += currentFunds;
+                    currentFunds = 0;
+                    break;
+                }
+
+                if (bestBank) {
+                    let amountToAdd = currentFunds;
+
+                    if (bestBank === "UOB") {
+                        if (allocation["UOB"] < 75000) amountToAdd = Math.min(currentFunds, 75000 - allocation["UOB"]);
+                        else if (allocation["UOB"] < 125000) amountToAdd = Math.min(currentFunds, 125000 - allocation["UOB"]);
+                        else if (allocation["UOB"] < 150000) amountToAdd = Math.min(currentFunds, 150000 - allocation["UOB"]);
+                    } else if (bestBank === "SC") {
+                        const baseRate = 0.0005; let bonusRate = 0;
+                        switch (scCondition) { case 'salary_credit': case 'card_spend': bonusRate = 0.0150; break; case 'both': bonusRate = 0.0300; break; default: bonusRate = 0; break; }
+                        if (getMarginalRate("SC", allocation["SC"]) === (baseRate + bonusRate) / 12) {
+                            amountToAdd = Math.min(currentFunds, 100000 - allocation["SC"]);
+                        }
+                    } else if (bestBank === "DBS") {
+                        let dbsRate = 0;
+                        switch (dbsCondition) { case '500_to_15000': dbsRate = 0.0180; break; case '15000_to_30000': dbsRate = 0.0190; break; case '30000_plus': dbsRate = 0.0220; break; default: dbsRate = 0.0000; }
+                        if (dbsRate > 0 && allocation["DBS"] < 50000) {
+                            amountToAdd = Math.min(currentFunds, 50000 - allocation["DBS"]);
+                        }
+                    } else if (bestBank === "CIMB") {
+                        if (allocation["CIMB"] < 25000) amountToAdd = Math.min(currentFunds, 25000 - allocation["CIMB"]);
+                        else if (allocation["CIMB"] < 50000) amountToAdd = Math.min(currentFunds, 50000 - allocation["CIMB"]);
+                        else if (allocation["CIMB"] < 75000) amountToAdd = Math.min(currentFunds, 75000 - allocation["CIMB"]);
+                    }
+                    
+                    amountToAdd = Math.min(amountToAdd, currentFunds);
+                    if (amountToAdd === 0 && currentFunds > 0) break;
+                    
+                    allocation[bestBank] += amountToAdd;
+                    currentFunds -= amountToAdd;
+                }
+            }
+
+            const uobResult = calculateUOBInterest(allocation["UOB"], uobCondition);
+            const scResult = calculateSCInterest(allocation["SC"], scCondition);
+            const dbsResult = calculateDBSInterest(allocation["DBS"], dbsCondition);
+            const cimbResult = calculateCIMBInterest(allocation["CIMB"]);
+            const totalMonthlyInterest = uobResult.total + scResult.total + dbsResult.total + cimbResult.total;
+
+            return { allocation, totalMonthlyInterest, breakdown: { UOB: uobResult.breakdown, SC: scResult.breakdown, DBS: dbsResult.breakdown, CIMB: cimbResult.breakdown } };
+        }
+
+        // --- Event Listeners and Display Logic ---
+
+        const totalFundsInput = document.getElementById('totalFunds');
+        const uobConditionRadios = document.querySelectorAll('input[name="uobCondition"]');
+        const scConditionRadios = document.querySelectorAll('input[name="scCondition"]');
+        const dbsConditionRadios = document.querySelectorAll('input[name="dbsCondition"]');
+        const allocationResultsDiv = document.getElementById('allocationResults');
+        const interestBreakdownDiv = document.getElementById('interestBreakdown');
+        const monthlyInterestSpan = document.getElementById('monthlyInterest');
+
+        function updateAllocation() {
+            const totalFunds = parseFloat(totalFundsInput.value);
+            if (isNaN(totalFunds) || totalFunds < 0) {
+                allocationResultsDiv.innerHTML = '<p class="text-red-500">Please enter a valid fund amount.</p>';
+                interestBreakdownDiv.innerHTML = '';
+                monthlyInterestSpan.textContent = formatCurrency(0);
+                return;
+            }
+
+            const selectedUOBCondition = document.querySelector('input[name="uobCondition"]:checked').value;
+            const selectedSCCondition = document.querySelector('input[name="scCondition"]:checked').value;
+            const selectedDBSCondition = document.querySelector('input[name="dbsCondition"]:checked').value;
+
+            const { allocation, totalMonthlyInterest, breakdown } = findOptimalAllocation(totalFunds, selectedUOBCondition, selectedSCCondition, selectedDBSCondition);
+
+            // Display allocation results
+            allocationResultsDiv.innerHTML = '';
+            for (const bank in allocation) {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'result-item';
+                itemDiv.innerHTML = `
+                    <span>${bank}:</span>
+                    <span>${formatCurrency(allocation[bank])}</span>
+                `;
+                allocationResultsDiv.appendChild(itemDiv);
+            }
+
+            // Display interest breakdown
+            interestBreakdownDiv.innerHTML = '';
+            for (const bank in breakdown) {
+                const bankTitle = document.createElement('h4');
+                bankTitle.className = 'font-semibold text-sm mt-3';
+                bankTitle.textContent = `${bank} Account:`;
+                interestBreakdownDiv.appendChild(bankTitle);
+                
+                for (const tier in breakdown[bank]) {
+                    if (breakdown[bank][tier] > 0) {
+                        const tierItem = document.createElement('div');
+                        tierItem.className = 'interest-breakdown-item flex justify-between';
+                        tierItem.innerHTML = `
+                            <span>${tier}</span>
+                            <span>${formatCurrency(breakdown[bank][tier])}</span>
+                        `;
+                        interestBreakdownDiv.appendChild(tierItem);
+                    }
+                }
+            }
+
+            // Display total monthly interest
+            monthlyInterestSpan.textContent = formatCurrency(totalMonthlyInterest);
+        }
+
+        // Add event listeners
+        totalFundsInput.addEventListener('input', updateAllocation);
+        uobConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
+        scConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
+        dbsConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
+
+        // Initial calculation on page load
+        window.onload = updateAllocation;
+
+    </script>
+</body>
+</html>
