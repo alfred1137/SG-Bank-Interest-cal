@@ -168,122 +168,100 @@ function calculateCIMBInterest(balance) {
 // --- Optimal Allocation Logic ---
 
 function findOptimalAllocation(totalFunds, uobCondition, scConditions, dbsCondition) {
-    let allocation = {"UOB": 0, "SC": 0, "DBS": 0, "CIMB": 0};
-    let currentFunds = totalFunds;
+    let allocation = { "UOB": 0, "SC": 0, "DBS": 0, "CIMB": 0 };
+    let remainingFunds = totalFunds;
 
-    const getMarginalRate = (bankName, currentBalance) => {
-        if (bankName === "UOB") {
-            let rates = {};
-            switch (uobCondition) {
-                case 'spend_only': rates = { t1: 0.0065, t2: 0.0005, t3: 0.0005, t4: 0.0005 }; break;
-                case 'spend_giro_debit': rates = { t1: 0.0100, t2: 0.0200, t3: 0.0005, t4: 0.0005 }; break;
-                case 'spend_salary_giro': rates = { t1: 0.0150, t2: 0.0300, t3: 0.0450, t4: 0.0005 }; break;
-            }
-            if (currentBalance < 75000) return rates.t1 / 12;
-            if (currentBalance < 125000) return rates.t2 / 12;
-            if (currentBalance < 150000) return rates.t3 / 12;
-            return rates.t4 / 12;
-        } else if (bankName === "SC") {
-            const baseRate = 0.0005;
-            let bonusRate = 0;
-            if (scConditions.includes('salary_credit')) bonusRate += 0.0150;
-            if (scConditions.includes('card_spend')) bonusRate += 0.0155;
-            if (scConditions.includes('insure')) bonusRate += 0.0250;
-            if (scConditions.includes('invest')) bonusRate += 0.0250;
-            if (currentBalance < 100000) return (baseRate + bonusRate) / 12;
-            return baseRate / 12;
-        } else if (bankName === "DBS") {
-            let rate = 0;
-            let cap = 0;
-            switch (dbsCondition) {
-                case 'income_1_cat_500_to_15000':    rate = 0.0180; cap = 50000; break;
-                case 'income_1_cat_15000_to_30000':  rate = 0.0190; cap = 50000; break;
-                case 'income_1_cat_30000_plus':      rate = 0.0220; cap = 50000; break;
-                case 'income_2_cat_500_to_15000':    rate = 0.0210; cap = 100000; break;
-                case 'income_2_cat_15000_to_30000':  rate = 0.0220; cap = 100000; break;
-                case 'income_2_cat_30000_plus':      rate = 0.0300; cap = 100000; break;
-                case 'income_3_cat_500_to_15000':    rate = 0.0240; cap = 100000; break;
-                case 'income_3_cat_15000_to_30000':  rate = 0.0250; cap = 100000; break;
-                case 'income_3_cat_30000_plus':      rate = 0.0410; cap = 100000; break;
-                default:                            rate = 0.0000; cap = 0; break;
-            }
-            if (currentBalance < cap) return rate / 12;
-            return 0.0005 / 12; // Base rate for balance > cap
-        } else if (bankName === "CIMB") {
-            if (currentBalance < 25000) return 0.0088 / 12;
-            if (currentBalance < 50000) return 0.0178 / 12;
-            if (currentBalance < 75000) return 0.0250 / 12;
-            return 0.0080 / 12;
-        }
-        return 0;
-    };
+    // 1. Define "projects" for each bank's bonus structure
+    const projects = [];
 
-    while (currentFunds > 0) {
-        let bestBank = null;
-        let maxMarginalRate = -1;
-
-        for (const bankName of Object.keys(allocation)) {
-            const rate = getMarginalRate(bankName, allocation[bankName]);
-            if (rate > maxMarginalRate) {
-                maxMarginalRate = rate;
-                bestBank = bankName;
-            } else if (rate === maxMarginalRate) {
-                // Tie-breaking: CIMB > UOB > SC > DBS for positive rates
-                if (bestBank === "UOB" && bankName === "CIMB") bestBank = bankName;
-                else if (bestBank === "SC" && (bankName === "CIMB" || bankName === "UOB")) bestBank = bankName;
-                else if (bestBank === "DBS" && (bankName === "CIMB" || bankName === "UOB" || bankName === "SC")) bestBank = bankName;
-            }
-        }
-
-        // If no bank offers a positive marginal rate, we can't optimize further.
-        if (maxMarginalRate <= 0) {
-            break;
-        }
-
-        // This should not happen if maxMarginalRate > 0, but it's a safe guard.
-        if (!bestBank) {
-            break;
-        }
-        
-        let amountToAdd = currentFunds;
-
-        if (bestBank === "UOB") {
-            if (allocation["UOB"] < 75000) amountToAdd = Math.min(currentFunds, 75000 - allocation["UOB"]);
-            else if (allocation["UOB"] < 125000) amountToAdd = Math.min(currentFunds, 125000 - allocation["UOB"]);
-            else if (allocation["UOB"] < 150000) amountToAdd = Math.min(currentFunds, 150000 - allocation["UOB"]);
-        } else if (bestBank === "SC") {
-            if (allocation["SC"] < 100000) {
-                amountToAdd = Math.min(currentFunds, 100000 - allocation["SC"]);
-            }
-        } else if (bestBank === "DBS") {
-            let cap = 0;
-            switch (true) {
-                case dbsCondition.startsWith('income_1_cat'): cap = 50000; break;
-                case dbsCondition.startsWith('income_2_cat'): cap = 100000; break;
-                case dbsCondition.startsWith('income_3_cat'): cap = 100000; break;
-            }
-            if (cap > 0 && allocation["DBS"] < cap) {
-                amountToAdd = Math.min(currentFunds, cap - allocation["DBS"]);
-            }
-        } else if (bestBank === "CIMB") {
-            if (allocation["CIMB"] < 25000) amountToAdd = Math.min(currentFunds, 25000 - allocation["CIMB"]);
-            else if (allocation["CIMB"] < 50000) amountToAdd = Math.min(currentFunds, 50000 - allocation["CIMB"]);
-            else if (allocation["CIMB"] < 75000) amountToAdd = Math.min(currentFunds, 75000 - allocation["CIMB"]);
-        }
-        
-        // If the calculated amount is zero or less, we can't proceed.
-        if (amountToAdd <= 0) {
-            break;
-        }
-        
-        allocation[bestBank] += amountToAdd;
-        currentFunds -= amountToAdd;
+    // UOB Project
+    const uobBonusCap = 150000;
+    const uobInterestForCap = calculateUOBInterest(uobBonusCap, uobCondition).total;
+    if (uobInterestForCap > 0) {
+        projects.push({
+            bank: 'UOB',
+            cost: uobBonusCap,
+            reward: uobInterestForCap,
+            effectiveRate: uobInterestForCap / uobBonusCap
+        });
     }
 
-    // If any funds remain after the optimization loop (e.g., all rates were <= 0),
-    // allocate them to a default fallback account. CIMB is a reasonable choice.
-    if (currentFunds > 0) {
-        allocation["CIMB"] += currentFunds;
+    // SC Project
+    const scBonusCap = 100000;
+    const scInterestForCap = calculateSCInterest(scBonusCap, scConditions).total;
+    if (scInterestForCap > 0) {
+        projects.push({
+            bank: 'SC',
+            cost: scBonusCap,
+            reward: scInterestForCap,
+            effectiveRate: scInterestForCap / scBonusCap
+        });
+    }
+
+    // DBS Project
+    let dbsBonusCap = 0;
+    switch (true) {
+        case dbsCondition.startsWith('income_1_cat'): dbsBonusCap = 50000; break;
+        case dbsCondition.startsWith('income_2_cat'): dbsBonusCap = 100000; break;
+        case dbsCondition.startsWith('income_3_cat'): dbsBonusCap = 100000; break;
+    }
+    if (dbsBonusCap > 0) {
+        const dbsInterestForCap = calculateDBSInterest(dbsBonusCap, dbsCondition).total;
+        if (dbsInterestForCap > 0) {
+            projects.push({
+                bank: 'DBS',
+                cost: dbsBonusCap,
+                reward: dbsInterestForCap,
+                effectiveRate: dbsInterestForCap / dbsBonusCap
+            });
+        }
+    }
+
+    // CIMB Project
+    const cimbBonusCap = 75000;
+    const cimbInterestForCap = calculateCIMBInterest(cimbBonusCap).total;
+    if (cimbInterestForCap > 0) {
+        projects.push({
+            bank: 'CIMB',
+            cost: cimbBonusCap,
+            reward: cimbInterestForCap,
+            effectiveRate: cimbInterestForCap / cimbBonusCap
+        });
+    }
+
+    // 2. Sort projects by their effective rate, descending
+    projects.sort((a, b) => b.effectiveRate - a.effectiveRate);
+
+    // 3. Allocate funds based on the sorted projects
+    for (const project of projects) {
+        if (remainingFunds <= 0) break;
+        const amountToAllocate = Math.min(remainingFunds, project.cost);
+        allocation[project.bank] += amountToAllocate;
+        remainingFunds -= amountToAllocate;
+    }
+
+    // 4. If any funds remain, allocate them to the bank with the best "fallback" rate
+    // (i.e., the rate for funds above the bonus cap).
+    if (remainingFunds > 0) {
+        let bestFallbackBank = 'CIMB'; // Default fallback
+        let maxFallbackRate = 0.0080; // CIMB's >75k rate
+
+        // UOB fallback
+        let uobRates = {};
+        switch (uobCondition) {
+            case 'spend_only': uobRates = { t4: 0.0005 }; break;
+            case 'spend_giro_debit': uobRates = { t4: 0.0005 }; break;
+            case 'spend_salary_giro': uobRates = { t4: 0.0005 }; break;
+        }
+        if (uobRates.t4 > maxFallbackRate) {
+            maxFallbackRate = uobRates.t4;
+            bestFallbackBank = 'UOB';
+        }
+
+        // SC & DBS fallback rate is 0.0005, which is lower than CIMB's.
+        // So we only need to compare with UOB.
+        
+        allocation[bestFallbackBank] += remainingFunds;
     }
 
     const uobResult = calculateUOBInterest(allocation["UOB"], uobCondition);
