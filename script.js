@@ -12,7 +12,7 @@ function calculateUOBInterest(balance, uobCondition) {
 
     switch (uobCondition) {
         case 'spend_only':
-            rates = { t1: 0.0005, t2: 0.0005, t3: 0.0005, t4: 0.0005 };
+            rates = { t1: 0.0065, t2: 0.0005, t3: 0.0005, t4: 0.0005 };
             break;
         case 'spend_giro_debit':
             rates = { t1: 0.0100, t2: 0.0200, t3: 0.0005, t4: 0.0005 };
@@ -58,11 +58,13 @@ function calculateSCInterest(balance, scCondition) {
 
     switch (scCondition) {
         case 'salary_credit':
-        case 'card_spend':
             bonusRate = 0.0150 / 12;
             break;
+        case 'card_spend':
+            bonusRate = 0.0155 / 12;
+            break;
         case 'both':
-            bonusRate = (0.0150 + 0.0150) / 12;
+            bonusRate = (0.0150 + 0.0155) / 12;
             break;
         default:
             bonusRate = 0;
@@ -108,7 +110,7 @@ function calculateDBSInterest(balance, dbsCondition) {
     
     if (balance > 50000) {
         let amountInTier = balance - 50000;
-        let interest = amountInTier * (0.0000 / 12); // 0% for balances > 50k
+        let interest = amountInTier * (0.0005 / 12); // 0.05% for balances > 50k
         breakdown["Tier 2 (>S$50k)"] = interest;
         totalMonthlyInterest += interest;
     }
@@ -164,7 +166,7 @@ function findOptimalAllocation(totalFunds, uobCondition, scCondition, dbsConditi
         if (bankName === "UOB") {
             let rates = {};
             switch (uobCondition) {
-                case 'spend_only': rates = { t1: 0.0005, t2: 0.0005, t3: 0.0005, t4: 0.0005 }; break;
+                case 'spend_only': rates = { t1: 0.0065, t2: 0.0005, t3: 0.0005, t4: 0.0005 }; break;
                 case 'spend_giro_debit': rates = { t1: 0.0100, t2: 0.0200, t3: 0.0005, t4: 0.0005 }; break;
                 case 'spend_salary_giro': rates = { t1: 0.0150, t2: 0.0300, t3: 0.0450, t4: 0.0005 }; break;
             }
@@ -176,8 +178,9 @@ function findOptimalAllocation(totalFunds, uobCondition, scCondition, dbsConditi
             const baseRate = 0.0005;
             let bonusRate = 0;
             switch (scCondition) {
-                case 'salary_credit': case 'card_spend': bonusRate = 0.0150; break;
-                case 'both': bonusRate = 0.0300; break;
+                case 'salary_credit': bonusRate = 0.0150; break;
+                case 'card_spend': bonusRate = 0.0155; break;
+                case 'both': bonusRate = 0.0150 + 0.0155; break;
                 default: bonusRate = 0; break;
             }
             if (currentBalance < 100000) return (baseRate + bonusRate) / 12;
@@ -192,7 +195,7 @@ function findOptimalAllocation(totalFunds, uobCondition, scCondition, dbsConditi
                 default: dbsRate = 0.0000; break;
             }
             if (currentBalance < 50000) return dbsRate / 12;
-            return 0.0000 / 12;
+            return 0.0005 / 12;
         } else if (bankName === "CIMB") {
             if (currentBalance < 25000) return 0.0088 / 12;
             if (currentBalance < 50000) return 0.0178 / 12;
@@ -219,47 +222,53 @@ function findOptimalAllocation(totalFunds, uobCondition, scCondition, dbsConditi
             }
         }
 
-        if (maxMarginalRate <= 0 && currentFunds > 0) {
-            // Distribute remaining funds to the lowest non-zero interest tiers
-            if (getMarginalRate("CIMB", allocation["CIMB"]) === 0.0080 / 12) allocation["CIMB"] += currentFunds;
-            else if (getMarginalRate("UOB", allocation["UOB"]) === 0.0005 / 12) allocation["UOB"] += currentFunds;
-            else if (getMarginalRate("SC", allocation["SC"]) === 0.0005 / 12) allocation["SC"] += currentFunds;
-            else allocation["DBS"] += currentFunds;
-            currentFunds = 0;
+        // If no bank offers a positive marginal rate, we can't optimize further.
+        if (maxMarginalRate <= 0) {
             break;
         }
 
-        if (bestBank) {
-            let amountToAdd = currentFunds;
-
-            if (bestBank === "UOB") {
-                if (allocation["UOB"] < 75000) amountToAdd = Math.min(currentFunds, 75000 - allocation["UOB"]);
-                else if (allocation["UOB"] < 125000) amountToAdd = Math.min(currentFunds, 125000 - allocation["UOB"]);
-                else if (allocation["UOB"] < 150000) amountToAdd = Math.min(currentFunds, 150000 - allocation["UOB"]);
-            } else if (bestBank === "SC") {
-                const baseRate = 0.0005; let bonusRate = 0;
-                switch (scCondition) { case 'salary_credit': case 'card_spend': bonusRate = 0.0150; break; case 'both': bonusRate = 0.0300; break; default: bonusRate = 0; break; }
-                if (getMarginalRate("SC", allocation["SC"]) === (baseRate + bonusRate) / 12) {
-                    amountToAdd = Math.min(currentFunds, 100000 - allocation["SC"]);
-                }
-            } else if (bestBank === "DBS") {
-                let dbsRate = 0;
-                switch (dbsCondition) { case '500_to_15000': dbsRate = 0.0180; break; case '15000_to_30000': dbsRate = 0.0190; break; case '30000_plus': dbsRate = 0.0220; break; default: dbsRate = 0.0000; }
-                if (dbsRate > 0 && allocation["DBS"] < 50000) {
-                    amountToAdd = Math.min(currentFunds, 50000 - allocation["DBS"]);
-                }
-            } else if (bestBank === "CIMB") {
-                if (allocation["CIMB"] < 25000) amountToAdd = Math.min(currentFunds, 25000 - allocation["CIMB"]);
-                else if (allocation["CIMB"] < 50000) amountToAdd = Math.min(currentFunds, 50000 - allocation["CIMB"]);
-                else if (allocation["CIMB"] < 75000) amountToAdd = Math.min(currentFunds, 75000 - allocation["CIMB"]);
-            }
-            
-            amountToAdd = Math.min(amountToAdd, currentFunds);
-            if (amountToAdd === 0 && currentFunds > 0) break;
-            
-            allocation[bestBank] += amountToAdd;
-            currentFunds -= amountToAdd;
+        // This should not happen if maxMarginalRate > 0, but it's a safe guard.
+        if (!bestBank) {
+            break;
         }
+        
+        let amountToAdd = currentFunds;
+
+        if (bestBank === "UOB") {
+            if (allocation["UOB"] < 75000) amountToAdd = Math.min(currentFunds, 75000 - allocation["UOB"]);
+            else if (allocation["UOB"] < 125000) amountToAdd = Math.min(currentFunds, 125000 - allocation["UOB"]);
+            else if (allocation["UOB"] < 150000) amountToAdd = Math.min(currentFunds, 150000 - allocation["UOB"]);
+        } else if (bestBank === "SC") {
+            const baseRate = 0.0005; let bonusRate = 0;
+            switch (scCondition) { case 'salary_credit': bonusRate = 0.0150; break; case 'card_spend': bonusRate = 0.0155; break; case 'both': bonusRate = 0.0150 + 0.0155; break; default: bonusRate = 0; break; }
+            if (getMarginalRate("SC", allocation["SC"]) === (baseRate + bonusRate) / 12) {
+                amountToAdd = Math.min(currentFunds, 100000 - allocation["SC"]);
+            }
+        } else if (bestBank === "DBS") {
+            let dbsRate = 0;
+            switch (dbsCondition) { case '500_to_15000': dbsRate = 0.0180; break; case '15000_to_30000': dbsRate = 0.0190; break; case '30000_plus': dbsRate = 0.0220; break; default: dbsRate = 0.0000; }
+            if (dbsRate > 0 && allocation["DBS"] < 50000) {
+                amountToAdd = Math.min(currentFunds, 50000 - allocation["DBS"]);
+            }
+        } else if (bestBank === "CIMB") {
+            if (allocation["CIMB"] < 25000) amountToAdd = Math.min(currentFunds, 25000 - allocation["CIMB"]);
+            else if (allocation["CIMB"] < 50000) amountToAdd = Math.min(currentFunds, 50000 - allocation["CIMB"]);
+            else if (allocation["CIMB"] < 75000) amountToAdd = Math.min(currentFunds, 75000 - allocation["CIMB"]);
+        }
+        
+        // If the calculated amount is zero or less, we can't proceed.
+        if (amountToAdd <= 0) {
+            break;
+        }
+        
+        allocation[bestBank] += amountToAdd;
+        currentFunds -= amountToAdd;
+    }
+
+    // If any funds remain after the optimization loop (e.g., all rates were <= 0),
+    // allocate them to a default fallback account. CIMB is a reasonable choice.
+    if (currentFunds > 0) {
+        allocation["CIMB"] += currentFunds;
     }
 
     const uobResult = calculateUOBInterest(allocation["UOB"], uobCondition);
