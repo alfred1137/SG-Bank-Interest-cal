@@ -1,6 +1,6 @@
 # Singapore Bank Interest Rates Documentation
 
-This file contains processed and documented information regarding Singapore bank interest rates, derived from the `script.js` reference material.
+This file contains processed and documented information regarding Singapore bank interest rates, derived from the `script.js` reference material and provided image sources.
 
 ## Overview
 
@@ -59,6 +59,11 @@ The `script.js` file implements distinct interest rate structures for each bank,
 ## Data Sources
 
 *   `script.js`: This JavaScript file serves as the primary data source, containing all the functions and logic for calculating interest rates for UOB, Standard Chartered, DBS, and CIMB.
+*   `memory-bank/interest-rates/11-CIMB-fastsaver-20250804.png`: Image reference for CIMB FastSaver rates as of 4 August 2025.
+*   `memory-bank/interest-rates/12-CIMB-fastsaver-20250805.png`: Image reference for CIMB FastSaver rates as of 5 August 2025.
+*   `memory-bank/interest-rates/21-DBS-Multiplier-20250804.png`: Image reference for DBS Multiplier rates as of 4 August 2025.
+*   `memory-bank/interest-rates/31-SC-bonussaver-20250804.png`: Image reference for Standard Chartered BonusSaver rates as of 4 August 2025.
+*   `memory-bank/interest-rates/41-UOB-One-20250901.png`: Image reference for UOB One rates as of 1 September 2025.
 
 ## Analysis and Insights
 

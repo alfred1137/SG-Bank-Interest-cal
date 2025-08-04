@@ -22,6 +22,6 @@
 
 ## Tool Usage Patterns
 - **File Editing:** `write_to_file` and `replace_in_file` for modifying HTML, CSS, and JavaScript.
-- **Directory Management:** `mkdir` for creating project structure.
+- **Directory Management:** `mkdir` for creating project structure (e.g., `memory-bank/`).
 - **Version Control:** `git` commands for repository initialization and management.
 - **Browser Interaction:** `browser_action` for testing the UI and functionality.

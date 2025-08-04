@@ -18,7 +18,7 @@ graph TD
 ```
 
 ## Key Technical Decisions
-- **Frontend Framework/Library:** None. Pure HTML, CSS, and JavaScript for simplicity and minimal overhead, suitable for a "minisite."
+- **Frontend Framework/Library:** None. Pure HTML, CSS, and JavaScript for simplicity and minimal overhead, suitable for a "minisite." All source code files (`index.html`, `style.css`, `script.js`) are located in the repository root for direct GitHub Pages deployment.
 - **Styling:** Tailwind CSS CDN for utility-first styling, supplemented by inline CSS for specific custom styles.
 - **Data Storage:** No persistent data storage (database, local storage) is used. All inputs are ephemeral and processed in real-time.
 - **Backend:** No backend required. All calculations are performed client-side.

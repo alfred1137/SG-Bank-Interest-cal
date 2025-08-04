@@ -2,16 +2,16 @@
 
 ## Current Status
 The basic project scaffolding is complete, and the codebase has been reviewed for GitHub Pages deployment. This includes:
-- Creation of `src/` and `memory-bank/` directories.
+- Creation of `memory-bank/` directory.
 - Initialization of core memory bank files (`projectBrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`).
 - Creation of `memory-bank/interest-rates/` directory and `memory-bank/interest-rates/00-interest-rates-master.md` placeholder file.
-- Migration of the prototype HTML content into `src/index.html`.
-- Separation of CSS into `src/style.css` and JavaScript into `src/script.js`.
+- Migration of the prototype HTML content into `index.html` in the repository root.
+- Separation of CSS into `style.css` and JavaScript into `script.js` in the repository root.
 - Initialization of a Git repository and an initial commit.
 - Review of the codebase for GitHub Pages compatibility.
 
 ## What Works
-- The project directory structure is set up.
+- The `memory-bank/` directory structure is set up.
 - The memory bank is populated with initial context and updated with deployment plan.
 - The `index.html` file is in place and correctly links to external CSS and JavaScript files.
 - The core calculation logic and UI functionality are preserved.
@@ -19,8 +19,8 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 - The project is compatible with GitHub Pages deployment as a static site.
 
 ## What's Left to Build
-- **Data Provision:** User to provide interest rate reference materials in `memory-bank/interest-rates/` for processing and documentation.
-- **Deployment:** Move `index.html`, `style.css`, and `script.js` from `src/` to the repository root for GitHub Pages deployment.
+- **Data Provision:** Update `memory-bank/interest-rates/00-interest-rates-master.md` to reflect the provided interest rate images as data sources.
+- **Deployment:** `index.html`, `style.css`, and `script.js` have been moved from `src/` to the repository root for GitHub Pages deployment.
 - **Refinement of Prototype (Future):** The existing code needs further review for production readiness, including:
     - Potential optimization of the optimal allocation algorithm.
     - Improved error handling and input validation.

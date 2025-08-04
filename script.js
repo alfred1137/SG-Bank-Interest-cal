@@ -50,27 +50,27 @@ function calculateUOBInterest(balance, uobCondition) {
     return { total: totalMonthlyInterest, breakdown };
 }
 
-function calculateSCInterest(balance, scCondition) {
+function calculateSCInterest(balance, scConditions) {
     let totalMonthlyInterest = 0;
     let breakdown = {};
     const baseRate = 0.0005 / 12;
     let bonusRate = 0;
 
-    switch (scCondition) {
-        case 'salary_credit':
-            bonusRate = 0.0150 / 12;
-            break;
-        case 'card_spend':
-            bonusRate = 0.0155 / 12;
-            break;
-        case 'both':
-            bonusRate = (0.0150 + 0.0155) / 12;
-            break;
-        default:
-            bonusRate = 0;
-            break;
+    if (scConditions.includes('salary_credit')) {
+        bonusRate += 0.0150;
+    }
+    if (scConditions.includes('card_spend')) {
+        bonusRate += 0.0155;
+    }
+    if (scConditions.includes('insure')) {
+        bonusRate += 0.0250;
+    }
+    if (scConditions.includes('invest')) {
+        bonusRate += 0.0250;
     }
     
+    bonusRate /= 12;
+
     if (balance > 100000) {
         let amountInTier = balance - 100000;
         let interest = amountInTier * baseRate;
@@ -91,27 +91,36 @@ function calculateSCInterest(balance, scCondition) {
 function calculateDBSInterest(balance, dbsCondition) {
     let totalMonthlyInterest = 0;
     let breakdown = {};
-    let dbsRate = 0;
-    
+    let rate = 0;
+    let cap = 0;
+
+    // Determine rate and cap based on the condition
     switch (dbsCondition) {
-        case 'fail_requirement': dbsRate = 0.0000; break;
-        case '500_to_15000': dbsRate = 0.0180; break;
-        case '15000_to_30000': dbsRate = 0.0190; break;
-        case '30000_plus': dbsRate = 0.0220; break;
-        default: dbsRate = 0.0000; break;
+        case 'income_1_cat_500_to_15000':    rate = 0.0180; cap = 50000; break;
+        case 'income_1_cat_15000_to_30000':  rate = 0.0190; cap = 50000; break;
+        case 'income_1_cat_30000_plus':      rate = 0.0220; cap = 50000; break;
+        case 'income_2_cat_500_to_15000':    rate = 0.0210; cap = 100000; break;
+        case 'income_2_cat_15000_to_30000':  rate = 0.0220; cap = 100000; break;
+        case 'income_2_cat_30000_plus':      rate = 0.0300; cap = 100000; break;
+        case 'income_3_cat_500_to_15000':    rate = 0.0240; cap = 100000; break;
+        case 'income_3_cat_15000_to_30000':  rate = 0.0250; cap = 100000; break;
+        case 'income_3_cat_30000_plus':      rate = 0.0410; cap = 100000; break;
+        default:                            rate = 0.0000; cap = 0; break; // Fail requirement
     }
 
+    // Calculate interest for the amount within the cap
     if (balance > 0) {
-        let amountInTier = Math.min(balance, 50000);
-        let interest = amountInTier * (dbsRate / 12);
-        breakdown["Tier 1 (S$0-S$50k)"] = interest;
+        const amountInTier = Math.min(balance, cap);
+        const interest = amountInTier * (rate / 12);
+        breakdown[`Tier 1 (S$0-S$${cap/1000}k)`] = interest;
         totalMonthlyInterest += interest;
     }
     
-    if (balance > 50000) {
-        let amountInTier = balance - 50000;
-        let interest = amountInTier * (0.0005 / 12); // 0.05% for balances > 50k
-        breakdown["Tier 2 (>S$50k)"] = interest;
+    // Calculate interest for the amount above the cap
+    if (balance > cap) {
+        const amountInTier = balance - cap;
+        const interest = amountInTier * (0.0005 / 12); // Base rate for balance > cap
+        breakdown[`Tier 2 (>S$${cap/1000}k)`] = interest;
         totalMonthlyInterest += interest;
     }
 
@@ -158,7 +167,7 @@ function calculateCIMBInterest(balance) {
 
 // --- Optimal Allocation Logic ---
 
-function findOptimalAllocation(totalFunds, uobCondition, scCondition, dbsCondition) {
+function findOptimalAllocation(totalFunds, uobCondition, scConditions, dbsCondition) {
     let allocation = {"UOB": 0, "SC": 0, "DBS": 0, "CIMB": 0};
     let currentFunds = totalFunds;
 
@@ -177,25 +186,29 @@ function findOptimalAllocation(totalFunds, uobCondition, scCondition, dbsConditi
         } else if (bankName === "SC") {
             const baseRate = 0.0005;
             let bonusRate = 0;
-            switch (scCondition) {
-                case 'salary_credit': bonusRate = 0.0150; break;
-                case 'card_spend': bonusRate = 0.0155; break;
-                case 'both': bonusRate = 0.0150 + 0.0155; break;
-                default: bonusRate = 0; break;
-            }
+            if (scConditions.includes('salary_credit')) bonusRate += 0.0150;
+            if (scConditions.includes('card_spend')) bonusRate += 0.0155;
+            if (scConditions.includes('insure')) bonusRate += 0.0250;
+            if (scConditions.includes('invest')) bonusRate += 0.0250;
             if (currentBalance < 100000) return (baseRate + bonusRate) / 12;
             return baseRate / 12;
         } else if (bankName === "DBS") {
-            let dbsRate = 0;
+            let rate = 0;
+            let cap = 0;
             switch (dbsCondition) {
-                case 'fail_requirement': dbsRate = 0.0000; break;
-                case '500_to_15000': dbsRate = 0.0180; break;
-                case '15000_to_30000': dbsRate = 0.0190; break;
-                case '30000_plus': dbsRate = 0.0220; break;
-                default: dbsRate = 0.0000; break;
+                case 'income_1_cat_500_to_15000':    rate = 0.0180; cap = 50000; break;
+                case 'income_1_cat_15000_to_30000':  rate = 0.0190; cap = 50000; break;
+                case 'income_1_cat_30000_plus':      rate = 0.0220; cap = 50000; break;
+                case 'income_2_cat_500_to_15000':    rate = 0.0210; cap = 100000; break;
+                case 'income_2_cat_15000_to_30000':  rate = 0.0220; cap = 100000; break;
+                case 'income_2_cat_30000_plus':      rate = 0.0300; cap = 100000; break;
+                case 'income_3_cat_500_to_15000':    rate = 0.0240; cap = 100000; break;
+                case 'income_3_cat_15000_to_30000':  rate = 0.0250; cap = 100000; break;
+                case 'income_3_cat_30000_plus':      rate = 0.0410; cap = 100000; break;
+                default:                            rate = 0.0000; cap = 0; break;
             }
-            if (currentBalance < 50000) return dbsRate / 12;
-            return 0.0005 / 12;
+            if (currentBalance < cap) return rate / 12;
+            return 0.0005 / 12; // Base rate for balance > cap
         } else if (bankName === "CIMB") {
             if (currentBalance < 25000) return 0.0088 / 12;
             if (currentBalance < 50000) return 0.0178 / 12;
@@ -239,16 +252,18 @@ function findOptimalAllocation(totalFunds, uobCondition, scCondition, dbsConditi
             else if (allocation["UOB"] < 125000) amountToAdd = Math.min(currentFunds, 125000 - allocation["UOB"]);
             else if (allocation["UOB"] < 150000) amountToAdd = Math.min(currentFunds, 150000 - allocation["UOB"]);
         } else if (bestBank === "SC") {
-            const baseRate = 0.0005; let bonusRate = 0;
-            switch (scCondition) { case 'salary_credit': bonusRate = 0.0150; break; case 'card_spend': bonusRate = 0.0155; break; case 'both': bonusRate = 0.0150 + 0.0155; break; default: bonusRate = 0; break; }
-            if (getMarginalRate("SC", allocation["SC"]) === (baseRate + bonusRate) / 12) {
+            if (allocation["SC"] < 100000) {
                 amountToAdd = Math.min(currentFunds, 100000 - allocation["SC"]);
             }
         } else if (bestBank === "DBS") {
-            let dbsRate = 0;
-            switch (dbsCondition) { case '500_to_15000': dbsRate = 0.0180; break; case '15000_to_30000': dbsRate = 0.0190; break; case '30000_plus': dbsRate = 0.0220; break; default: dbsRate = 0.0000; }
-            if (dbsRate > 0 && allocation["DBS"] < 50000) {
-                amountToAdd = Math.min(currentFunds, 50000 - allocation["DBS"]);
+            let cap = 0;
+            switch (true) {
+                case dbsCondition.startsWith('income_1_cat'): cap = 50000; break;
+                case dbsCondition.startsWith('income_2_cat'): cap = 100000; break;
+                case dbsCondition.startsWith('income_3_cat'): cap = 100000; break;
+            }
+            if (cap > 0 && allocation["DBS"] < cap) {
+                amountToAdd = Math.min(currentFunds, cap - allocation["DBS"]);
             }
         } else if (bestBank === "CIMB") {
             if (allocation["CIMB"] < 25000) amountToAdd = Math.min(currentFunds, 25000 - allocation["CIMB"]);
@@ -272,7 +287,7 @@ function findOptimalAllocation(totalFunds, uobCondition, scCondition, dbsConditi
     }
 
     const uobResult = calculateUOBInterest(allocation["UOB"], uobCondition);
-    const scResult = calculateSCInterest(allocation["SC"], scCondition);
+    const scResult = calculateSCInterest(allocation["SC"], scConditions);
     const dbsResult = calculateDBSInterest(allocation["DBS"], dbsCondition);
     const cimbResult = calculateCIMBInterest(allocation["CIMB"]);
     const totalMonthlyInterest = uobResult.total + scResult.total + dbsResult.total + cimbResult.total;
@@ -284,7 +299,7 @@ function findOptimalAllocation(totalFunds, uobCondition, scCondition, dbsConditi
 
 const totalFundsInput = document.getElementById('totalFunds');
 const uobConditionRadios = document.querySelectorAll('input[name="uobCondition"]');
-const scConditionRadios = document.querySelectorAll('input[name="scCondition"]');
+const scConditionCheckboxes = document.querySelectorAll('input[name="scCondition"]');
 const dbsConditionRadios = document.querySelectorAll('input[name="dbsCondition"]');
 const allocationResultsDiv = document.getElementById('allocationResults');
 const interestBreakdownDiv = document.getElementById('interestBreakdown');
@@ -300,10 +315,10 @@ function updateAllocation() {
     }
 
     const selectedUOBCondition = document.querySelector('input[name="uobCondition"]:checked').value;
-    const selectedSCCondition = document.querySelector('input[name="scCondition"]:checked').value;
+    const selectedSCConditions = Array.from(document.querySelectorAll('input[name="scCondition"]:checked')).map(cb => cb.value);
     const selectedDBSCondition = document.querySelector('input[name="dbsCondition"]:checked').value;
 
-    const { allocation, totalMonthlyInterest, breakdown } = findOptimalAllocation(totalFunds, selectedUOBCondition, selectedSCCondition, selectedDBSCondition);
+    const { allocation, totalMonthlyInterest, breakdown } = findOptimalAllocation(totalFunds, selectedUOBCondition, selectedSCConditions, selectedDBSCondition);
 
     // Display allocation results
     allocationResultsDiv.innerHTML = '';
@@ -345,7 +360,7 @@ function updateAllocation() {
 // Add event listeners
 totalFundsInput.addEventListener('input', updateAllocation);
 uobConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
-scConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
+scConditionCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateAllocation));
 dbsConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
 
 // Initial calculation on page load

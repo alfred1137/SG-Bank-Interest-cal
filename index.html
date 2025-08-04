@@ -38,44 +38,71 @@
 
             <div class="mb-6">
                 <h2 class="text-xl font-semibold mb-3 text-gray-700">SC Account Conditions:</h2>
-                <div class="toggle-group">
-                    <label class="toggle-option">
-                        <input type="radio" name="scCondition" value="neither" checked>
-                        <span>Neither (Base interest only)</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="scCondition" value="salary_credit">
+                        <span>Salary Credit (min. S$3k)</span>
                     </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="scCondition" value="salary_credit">
-                        <span>Salary Credit (min. S$3,000 monthly)</span>
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="scCondition" value="card_spend">
+                        <span>Card Spend (min. S$1k)</span>
                     </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="scCondition" value="card_spend">
-                        <span>Card Spend (min. S$1,000 monthly)</span>
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="scCondition" value="insure">
+                        <span>Insure (min. S$2k premium)</span>
                     </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="scCondition" value="both">
-                        <span>Both Salary Credit AND Card Spend</span>
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="scCondition" value="invest">
+                        <span>Invest (min. S$20k)</span>
                     </label>
                 </div>
             </div>
 
             <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-3 text-gray-700">DBS Account Conditions (Combined Salary + Card Spend):</h2>
-                <div class="toggle-group">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">DBS Account Conditions:</h2>
+                <div class="toggle-group-dbs">
                     <label class="toggle-option">
                         <input type="radio" name="dbsCondition" value="fail_requirement" checked>
-                        <span>Fail requirement (0% p.a. on all balances)</span>
+                        <span>Fail requirement (0% p.a.)</span>
+                    </label>
+                    <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 1 Category (Cap: S$50k)</h4>
+                    <label class="toggle-option">
+                        <input type="radio" name="dbsCondition" value="income_1_cat_500_to_15000">
+                        <span>≥ S$500 to < S$15k (1.80% p.a.)</span>
                     </label>
                     <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="500_to_15000">
-                        <span>≥ S$500 to < S$15,000 (1.80% p.a.)</span>
+                        <input type="radio" name="dbsCondition" value="income_1_cat_15000_to_30000">
+                        <span>≥ S$15k to < S$30k (1.90% p.a.)</span>
                     </label>
                     <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="15000_to_30000">
-                        <span>≥ S$15,000 to < S$30,000 (1.90% p.a.)</span>
+                        <input type="radio" name="dbsCondition" value="income_1_cat_30000_plus">
+                        <span>≥ S$30k (2.20% p.a.)</span>
+                    </label>
+                    <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 2 Categories (Cap: S$100k)</h4>
+                    <label class="toggle-option">
+                        <input type="radio" name="dbsCondition" value="income_2_cat_500_to_15000">
+                        <span>≥ S$500 to < S$15k (2.10% p.a.)</span>
                     </label>
                     <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="30000_plus">
-                        <span>≥ S$30,000 (2.20% p.a.)</span>
+                        <input type="radio" name="dbsCondition" value="income_2_cat_15000_to_30000">
+                        <span>≥ S$15k to < S$30k (2.20% p.a.)</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="dbsCondition" value="income_2_cat_30000_plus">
+                        <span>≥ S$30k (3.00% p.a.)</span>
+                    </label>
+                    <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 3+ Categories (Cap: S$100k)</h4>
+                    <label class="toggle-option">
+                        <input type="radio" name="dbsCondition" value="income_3_cat_500_to_15000">
+                        <span>≥ S$500 to < S$15k (2.40% p.a.)</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="dbsCondition" value="income_3_cat_15000_to_30000">
+                        <span>≥ S$15k to < S$30k (2.50% p.a.)</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="dbsCondition" value="income_3_cat_30000_plus">
+                        <span>≥ S$30k (4.10% p.a.)</span>
                     </label>
                 </div>
             </div>
