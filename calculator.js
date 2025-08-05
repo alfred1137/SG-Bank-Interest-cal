@@ -159,98 +159,85 @@ export function calculateCIMBInterest(balance) {
 }
 
 export function findOptimalAllocation(totalFunds, uobCondition, scConditions, dbsCondition) {
-    let allocation = { "UOB": 0, "SC": 0, "DBS": 0, "CIMB": 0 };
+    const segments = [];
+
+    // 1. Extract Interest Segments from Each Bank
+    // UOB Segments
+    let uobRates = {};
+    switch (uobCondition) {
+        case 'spend_only': uobRates = { t1: 0.0065, t2: 0.0005, t3: 0.0005, t4: 0.0005 }; break;
+        case 'spend_giro_debit': uobRates = { t1: 0.0100, t2: 0.0200, t3: 0.0005, t4: 0.0005 }; break;
+        case 'spend_salary_giro': uobRates = { t1: 0.0150, t2: 0.0300, t3: 0.0450, t4: 0.0005 }; break;
+    }
+    segments.push({ bank: 'UOB', tierName: 'Tier 1 (S$0-S$75k)', minBalance: 0, maxBalance: 75000, amount: 75000, rate: uobRates.t1, currentAllocation: 0 });
+    segments.push({ bank: 'UOB', tierName: 'Tier 2 (S$75k-S$125k)', minBalance: 75000, maxBalance: 125000, amount: 50000, rate: uobRates.t2, currentAllocation: 0 });
+    segments.push({ bank: 'UOB', tierName: 'Tier 3 (S$125k-S$150k)', minBalance: 125000, maxBalance: 150000, amount: 25000, rate: uobRates.t3, currentAllocation: 0 });
+    segments.push({ bank: 'UOB', tierName: 'Tier 4 (>S$150k)', minBalance: 150000, maxBalance: Infinity, amount: Infinity, rate: uobRates.t4, currentAllocation: 0 });
+
+    // SC Segments
+    const scBaseRate = 0.0005;
+    let scBonusRate = 0;
+    if (scConditions.includes('salary_credit')) { scBonusRate += 0.0150; }
+    if (scConditions.includes('card_spend')) { scBonusRate += 0.0155; }
+    if (scConditions.includes('insure')) { scBonusRate += 0.0250; }
+    if (scConditions.includes('invest')) { scBonusRate += 0.0250; }
+    segments.push({ bank: 'SC', tierName: 'Tier 1 (S$0-S$100k)', minBalance: 0, maxBalance: 100000, amount: 100000, rate: scBaseRate + scBonusRate, currentAllocation: 0 });
+    segments.push({ bank: 'SC', tierName: 'Tier 2 (>S$100k)', minBalance: 100000, maxBalance: Infinity, amount: Infinity, rate: scBaseRate, currentAllocation: 0 });
+
+    // DBS Segments
+    let dbsRate = 0, dbsCap = 0;
+    switch (dbsCondition) {
+        case 'income_1_cat_500_to_15000':    dbsRate = 0.0180; dbsCap = 50000; break;
+        case 'income_1_cat_15000_to_30000':  dbsRate = 0.0190; dbsCap = 50000; break;
+        case 'income_1_cat_30000_plus':      dbsRate = 0.0220; dbsCap = 50000; break;
+        case 'income_2_cat_500_to_15000':    dbsRate = 0.0210; dbsCap = 100000; break;
+        case 'income_2_cat_15000_to_30000':  dbsRate = 0.0220; dbsCap = 100000; break;
+        case 'income_2_cat_30000_plus':      dbsRate = 0.0300; dbsCap = 100000; break;
+        case 'income_3_cat_500_to_15000':    dbsRate = 0.0240; dbsCap = 100000; break;
+        case 'income_3_cat_15000_to_30000':  dbsRate = 0.0250; dbsCap = 100000; break;
+        case 'income_3_cat_30000_plus':      dbsRate = 0.0410; dbsCap = 100000; break;
+    }
+    if (dbsCap > 0) {
+        segments.push({ bank: 'DBS', tierName: `Tier 1 (S$0-S$${dbsCap/1000}k)`, minBalance: 0, maxBalance: dbsCap, amount: dbsCap, rate: dbsRate, currentAllocation: 0 });
+        segments.push({ bank: 'DBS', tierName: `Tier 2 (>S$${dbsCap/1000}k)`, minBalance: dbsCap, maxBalance: Infinity, amount: Infinity, rate: 0.0005, currentAllocation: 0 });
+    } else {
+        segments.push({ bank: 'DBS', tierName: 'Tier 1 (S$0-S$0k)', minBalance: 0, maxBalance: Infinity, amount: Infinity, rate: 0, currentAllocation: 0 });
+    }
+
+
+    // CIMB Segments
+    const cimbRates = { t1: 0.0088, t2: 0.0178, t3: 0.0250, t4: 0.0080 };
+    segments.push({ bank: 'CIMB', tierName: 'Tier 1 (S$0-S$25k)', minBalance: 0, maxBalance: 25000, amount: 25000, rate: cimbRates.t1, currentAllocation: 0 });
+    segments.push({ bank: 'CIMB', tierName: 'Tier 2 (S$25k-S$50k)', minBalance: 25000, maxBalance: 50000, amount: 25000, rate: cimbRates.t2, currentAllocation: 0 });
+    segments.push({ bank: 'CIMB', tierName: 'Tier 3 (S$50k-S$75k)', minBalance: 50000, maxBalance: 75000, amount: 25000, rate: cimbRates.t3, currentAllocation: 0 });
+    segments.push({ bank: 'CIMB', tierName: 'Tier 4 (>S$75k)', minBalance: 75000, maxBalance: Infinity, amount: Infinity, rate: cimbRates.t4, currentAllocation: 0 });
+
+    // 2. Sort Segments and Allocate Funds
+    segments.sort((a, b) => b.rate - a.rate);
+
     let remainingFunds = totalFunds;
-
-    // 1. Define "projects" for each bank's bonus structure
-    const projects = [];
-
-    // UOB Project
-    const uobBonusCap = 150000;
-    const uobInterestForCap = calculateUOBInterest(uobBonusCap, uobCondition).total;
-    if (uobInterestForCap > 0) {
-        projects.push({
-            bank: 'UOB',
-            cost: uobBonusCap,
-            reward: uobInterestForCap,
-            effectiveRate: uobInterestForCap / uobBonusCap
-        });
-    }
-
-    // SC Project
-    const scBonusCap = 100000;
-    const scInterestForCap = calculateSCInterest(scBonusCap, scConditions).total;
-    if (scInterestForCap > 0) {
-        projects.push({
-            bank: 'SC',
-            cost: scBonusCap,
-            reward: scInterestForCap,
-            effectiveRate: scInterestForCap / scBonusCap
-        });
-    }
-
-    // DBS Project
-    let dbsBonusCap = 0;
-    switch (true) {
-        case dbsCondition.startsWith('income_1_cat'): dbsBonusCap = 50000; break;
-        case dbsCondition.startsWith('income_2_cat'): dbsBonusCap = 100000; break;
-        case dbsCondition.startsWith('income_3_cat'): dbsBonusCap = 100000; break;
-    }
-    if (dbsBonusCap > 0) {
-        const dbsInterestForCap = calculateDBSInterest(dbsBonusCap, dbsCondition).total;
-        if (dbsInterestForCap > 0) {
-            projects.push({
-                bank: 'DBS',
-                cost: dbsBonusCap,
-                reward: dbsInterestForCap,
-                effectiveRate: dbsInterestForCap / dbsBonusCap
-            });
-        }
-    }
-
-    // CIMB Project
-    const cimbBonusCap = 75000;
-    const cimbInterestForCap = calculateCIMBInterest(cimbBonusCap).total;
-    if (cimbInterestForCap > 0) {
-        projects.push({
-            bank: 'CIMB',
-            cost: cimbBonusCap,
-            reward: cimbInterestForCap,
-            effectiveRate: cimbInterestForCap / cimbBonusCap
-        });
-    }
-
-    // 2. Sort projects by their effective rate, descending
-    projects.sort((a, b) => b.effectiveRate - a.effectiveRate);
-
-    // 3. Allocate funds based on the sorted projects
-    for (const project of projects) {
+    for (const segment of segments) {
         if (remainingFunds <= 0) break;
-        const amountToAllocate = Math.min(remainingFunds, project.cost);
-        allocation[project.bank] += amountToAllocate;
+        const amountToAllocate = Math.min(remainingFunds, segment.amount);
+        segment.currentAllocation = amountToAllocate;
         remainingFunds -= amountToAllocate;
     }
 
-    // 4. If any funds remain, allocate them to the bank with the best "fallback" rate
-    // (i.e., the rate for funds above the bonus cap).
-    if (remainingFunds > 0) {
-        const fallbacks = [
-            { bank: 'CIMB', rate: 0.0080 },
-            { bank: 'UOB', rate: (calculateUOBInterest(150001, uobCondition).total - calculateUOBInterest(150000, uobCondition).total) * 12 },
-            { bank: 'SC', rate: 0.0005 },
-            { bank: 'DBS', rate: 0.0005 }
-        ];
+    // 3. Calculate Total Interest and Breakdown
+    let allocation = { "UOB": 0, "SC": 0, "DBS": 0, "CIMB": 0 };
+    let breakdown = { "UOB": {}, "SC": {}, "DBS": {}, "CIMB": {} };
+    let totalMonthlyInterest = 0;
 
-        fallbacks.sort((a, b) => b.rate - a.rate);
-        
-        allocation[fallbacks[0].bank] += remainingFunds;
+    for (const segment of segments) {
+        if (segment.currentAllocation > 0) {
+            allocation[segment.bank] += segment.currentAllocation;
+            const interest = segment.currentAllocation * (segment.rate / 12);
+            totalMonthlyInterest += interest;
+            if(interest > 0) {
+                breakdown[segment.bank][segment.tierName] = interest;
+            }
+        }
     }
 
-    const uobResult = calculateUOBInterest(allocation["UOB"], uobCondition);
-    const scResult = calculateSCInterest(allocation["SC"], scConditions);
-    const dbsResult = calculateDBSInterest(allocation["DBS"], dbsCondition);
-    const cimbResult = calculateCIMBInterest(allocation["CIMB"]);
-    const totalMonthlyInterest = uobResult.total + scResult.total + dbsResult.total + cimbResult.total;
-
-    return { allocation, totalMonthlyInterest, breakdown: { UOB: uobResult.breakdown, SC: scResult.breakdown, DBS: dbsResult.breakdown, CIMB: cimbResult.breakdown } };
+    return { allocation, totalMonthlyInterest, breakdown };
 }

@@ -40,8 +40,10 @@ graph TD
 ## Technologies Used
 
 *   **HTML5:** For structuring the web content.
-*   **CSS3:** For styling, primarily leveraging Tailwind CSS utility classes via CDN.
+*   **Tailwind CSS:** For styling, managed via a local Node.js build process.
 *   **JavaScript (ES6+):** For all interactive logic, calculations, and DOM manipulation. No external JavaScript libraries or frameworks are used.
+*   **Jest:** For unit testing the calculation logic.
+*   **Node.js:** Required for the development environment (running tests and building CSS).
 
 ## Deployment
 
