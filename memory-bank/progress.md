@@ -28,10 +28,7 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 
 ### Phase 2: Enhancing Display and User Options
 
-- [ ] Calculate and display the equivalent interest rate of total interest earned.
-- [ ] Display additional details on the minisite:
-    - [ ] Full name of bank accounts.
-    - [ ] Interest rates of different tiers.
+- [ ] Implement Display Revisions (Planned).
 - [ ] Add `No account` and `Failed requirements` options to all bank account selections.
 
 ### Phase 3: Integrating New Bank Accounts

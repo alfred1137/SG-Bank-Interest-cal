@@ -27,23 +27,15 @@ With the testing framework now in place and the core logic validated, the curren
 
 The following is the execution plan to address the "What's Left to Build" items:
 
+### Phase 2: Enhancing Display and User Options (Current Focus)
 
-__Phase 2: Enhancing Display and User Options__
+1.  **Implement Display Revisions (Planned):**
+    *   **Objective:** Enhance the display of interest calculations by showing full account names, annualized interest rates per tier, right-aligning monetary values, and displaying the overall equivalent annualized interest rate.
+    *   **Action:** This involves modifications to `calculator.js` (to return annualized rates), `script.js` (for display logic and new calculations, including account name mappings and equivalent rate calculation), `index.html` (for new display elements), and `style.css` (for alignment).
 
-1. __Calculate and Display Equivalent Interest Rate:__
-
-   - __Action:__ Modify `script.js` to calculate the equivalent annual interest rate based on the `totalMonthlyInterest` and `totalFunds`.
-   - __Display:__ Add a new element in `index.html` to display this calculated equivalent rate.
-
-2. __Display Full Bank Account Names and Tier Interest Rates:__
-
-   - __Action:__ Update the `interestBreakdownDiv` rendering logic in `script.js` to include the full bank account names and the specific annual interest rates for each tier. This will likely involve creating a data structure in `script.js` to map conditions/tiers to their descriptive names and rates.
-   - __Display:__ Modify the `interest-breakdown-item` in `index.html` and `style.css` if necessary to accommodate this additional information.
-
-3. __Add "No account" and "Failed requirements" Options:__
-
-   - __Action:__ For UOB, SC, and DBS, add new radio/checkbox options in `index.html` for "No account" and "Failed requirements".
-   - __Logic:__ Update the respective `calculateUOBInterest`, `calculateSCInterest`, and `calculateDBSInterest` functions in `script.js` to handle these new conditions, returning 0 interest and 0 breakdown for these selections.
+2.  **Add "No account" and "Failed requirements" Options:**
+    *   **Action:** For UOB, SC, and DBS, add new radio/checkbox options in `index.html` for "No account" and "Failed requirements".
+    *   **Logic:** Update the respective `calculateUOBInterest`, `calculateSCInterest`, and `calculateDBSInterest` functions in `script.js` to handle these new conditions, returning 0 interest and 0 breakdown for these selections.
 
 __Phase 3: Integrating New Bank Accounts__
 

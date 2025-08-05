@@ -1,5 +1,13 @@
 import { findOptimalAllocation } from './calculator.js';
 
+// Bank account names mapping
+const bankAccountNames = {
+    "UOB": "UOB One Account",
+    "SC": "SC Bonus$aver Account",
+    "DBS": "DBS Multiplier Account",
+    "CIMB": "CIMB FastSaver Account"
+};
+
 // Helper function to format currency
 const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-SG', { style: 'currency', currency: 'SGD' }).format(amount);
@@ -12,6 +20,7 @@ const dbsConditionRadios = document.querySelectorAll('input[name="dbsCondition"]
 const allocationResultsDiv = document.getElementById('allocationResults');
 const interestBreakdownDiv = document.getElementById('interestBreakdown');
 const monthlyInterestSpan = document.getElementById('monthlyInterest');
+const equivalentRateDiv = document.getElementById('equivalentRate');
 
 function updateAllocation() {
     const totalFunds = parseFloat(totalFundsInput.value);
@@ -19,6 +28,7 @@ function updateAllocation() {
         allocationResultsDiv.innerHTML = '<p class="text-red-500">Please enter a valid fund amount.</p>';
         interestBreakdownDiv.innerHTML = '';
         monthlyInterestSpan.textContent = formatCurrency(0);
+        equivalentRateDiv.textContent = '';
         return;
     }
 
@@ -31,38 +41,50 @@ function updateAllocation() {
     // Display allocation results
     allocationResultsDiv.innerHTML = '';
     for (const bank in allocation) {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'result-item';
-        itemDiv.innerHTML = `
-            <span>${bank}:</span>
-            <span>${formatCurrency(allocation[bank])}</span>
-        `;
-        allocationResultsDiv.appendChild(itemDiv);
+        if (allocation[bank] > 0) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'result-item';
+            itemDiv.innerHTML = `
+                <span>${bankAccountNames[bank] || bank}:</span>
+                <span class="text-right">${formatCurrency(allocation[bank])}</span>
+            `;
+            allocationResultsDiv.appendChild(itemDiv);
+        }
     }
 
     // Display interest breakdown
     interestBreakdownDiv.innerHTML = '';
     for (const bank in breakdown) {
+        const hasInterest = Object.values(breakdown[bank]).some(tierData => tierData.interest > 0);
+        if (!hasInterest) continue;
+
         const bankTitle = document.createElement('h4');
         bankTitle.className = 'font-semibold text-sm mt-3';
-        bankTitle.textContent = `${bank} Account:`;
+        bankTitle.textContent = `${bankAccountNames[bank] || bank}:`;
         interestBreakdownDiv.appendChild(bankTitle);
         
         for (const tier in breakdown[bank]) {
-            if (breakdown[bank][tier] > 0) {
+            const tierData = breakdown[bank][tier];
+            if (tierData.interest > 0) {
                 const tierItem = document.createElement('div');
-                tierItem.className = 'interest-breakdown-item flex justify-between';
+                tierItem.className = 'interest-breakdown-item';
                 tierItem.innerHTML = `
-                    <span>${tier}</span>
-                    <span>${formatCurrency(breakdown[bank][tier])}</span>
+                    <span>${tier} (${(tierData.rate * 100).toFixed(2)}% p.a.)</span>
+                    <span>${formatCurrency(tierData.interest)}</span>
                 `;
                 interestBreakdownDiv.appendChild(tierItem);
             }
         }
     }
 
-    // Display total monthly interest
+    // Display total monthly interest and equivalent rate
     monthlyInterestSpan.textContent = formatCurrency(totalMonthlyInterest);
+    if (totalFunds > 0) {
+        const equivalentAnnualRate = (totalMonthlyInterest * 12 / totalFunds) * 100;
+        equivalentRateDiv.textContent = `Equivalent ${equivalentAnnualRate.toFixed(2)}% p.a.`;
+    } else {
+        equivalentRateDiv.textContent = '';
+    }
 }
 
 // Add event listeners

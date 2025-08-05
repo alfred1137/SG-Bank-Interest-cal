@@ -18,25 +18,25 @@ export function calculateUOBInterest(balance, uobCondition) {
     if (balance > 150000) {
         let amountInTier = balance - 150000;
         let interest = amountInTier * (rates.t4 / 12);
-        breakdown["Tier 4 (>S$150k)"] = interest;
+        breakdown["Tier 4 (>S$150k)"] = { interest, rate: rates.t4 };
         totalMonthlyInterest += interest;
     }
     if (balance > 125000) {
         let amountInTier = Math.min(balance - 125000, 25000);
         let interest = amountInTier * (rates.t3 / 12);
-        breakdown["Tier 3 (S$125k-S$150k)"] = interest;
+        breakdown["Tier 3 (S$125k-S$150k)"] = { interest, rate: rates.t3 };
         totalMonthlyInterest += interest;
     }
     if (balance > 75000) {
         let amountInTier = Math.min(balance - 75000, 50000);
         let interest = amountInTier * (rates.t2 / 12);
-        breakdown["Tier 2 (S$75k-S$125k)"] = interest;
+        breakdown["Tier 2 (S$75k-S$125k)"] = { interest, rate: rates.t2 };
         totalMonthlyInterest += interest;
     }
     if (balance > 0) {
         let amountInTier = Math.min(balance, 75000);
         let interest = amountInTier * (rates.t1 / 12);
-        breakdown["Tier 1 (S$0-S$75k)"] = interest;
+        breakdown["Tier 1 (S$0-S$75k)"] = { interest, rate: rates.t1 };
         totalMonthlyInterest += interest;
     }
 
@@ -64,17 +64,20 @@ export function calculateSCInterest(balance, scConditions) {
     
     bonusRate /= 12;
 
+    const annualBaseRate = 0.0005;
+    const annualBonusRate = (bonusRate * 12);
+
     if (balance > 100000) {
         let amountInTier = balance - 100000;
         let interest = amountInTier * baseRate;
-        breakdown["Tier 2 (>S$100k)"] = interest;
+        breakdown["Tier 2 (>S$100k)"] = { interest, rate: annualBaseRate };
         totalMonthlyInterest += interest;
     }
 
     if (balance > 0) {
         let amountInTier = Math.min(balance, 100000);
         let interest = amountInTier * (baseRate + bonusRate);
-        breakdown["Tier 1 (S$0-S$100k)"] = interest;
+        breakdown["Tier 1 (S$0-S$100k)"] = { interest, rate: annualBaseRate + annualBonusRate };
         totalMonthlyInterest += interest;
     }
     
@@ -105,15 +108,16 @@ export function calculateDBSInterest(balance, dbsCondition) {
     if (balance > 0) {
         const amountInTier = Math.min(balance, cap);
         const interest = amountInTier * (rate / 12);
-        breakdown[`Tier 1 (S$0-S$${cap/1000}k)`] = interest;
+        breakdown[`Tier 1 (S$0-S$${cap/1000}k)`] = { interest, rate };
         totalMonthlyInterest += interest;
     }
     
     // Calculate interest for the amount above the cap
     if (balance > cap) {
         const amountInTier = balance - cap;
-        const interest = amountInTier * (0.0005 / 12); // Base rate for balance > cap
-        breakdown[`Tier 2 (>S$${cap/1000}k)`] = interest;
+        const baseRate = 0.0005;
+        const interest = amountInTier * (baseRate / 12); // Base rate for balance > cap
+        breakdown[`Tier 2 (>S$${cap/1000}k)`] = { interest, rate: baseRate };
         totalMonthlyInterest += interest;
     }
 
@@ -130,28 +134,35 @@ export function calculateCIMBInterest(balance) {
         t4: 0.0080 / 12  // Above S$75,000
     };
 
+    const annualRates = {
+        t1: 0.0088, // First S$25,000
+        t2: 0.0178, // Next S$25,000
+        t3: 0.0250, // Next S$25,000
+        t4: 0.0080  // Above S$75,000
+    };
+
     if (balance > 75000) {
         let amountInTier = balance - 75000;
         let interest = amountInTier * rates.t4;
-        breakdown["Tier 4 (>S$75k)"] = interest;
+        breakdown["Tier 4 (>S$75k)"] = { interest, rate: annualRates.t4 };
         totalMonthlyInterest += interest;
     }
     if (balance > 50000) {
         let amountInTier = Math.min(balance - 50000, 25000);
         let interest = amountInTier * rates.t3;
-        breakdown["Tier 3 (S$50k-S$75k)"] = interest;
+        breakdown["Tier 3 (S$50k-S$75k)"] = { interest, rate: annualRates.t3 };
         totalMonthlyInterest += interest;
     }
     if (balance > 25000) {
         let amountInTier = Math.min(balance - 25000, 25000);
         let interest = amountInTier * rates.t2;
-        breakdown["Tier 2 (S$25k-S$50k)"] = interest;
+        breakdown["Tier 2 (S$25k-S$50k)"] = { interest, rate: annualRates.t2 };
         totalMonthlyInterest += interest;
     }
     if (balance > 0) {
         let amountInTier = Math.min(balance, 25000);
         let interest = amountInTier * rates.t1;
-        breakdown["Tier 1 (S$0-S$25k)"] = interest;
+        breakdown["Tier 1 (S$0-S$25k)"] = { interest, rate: annualRates.t1 };
         totalMonthlyInterest += interest;
     }
 
@@ -234,7 +245,7 @@ export function findOptimalAllocation(totalFunds, uobCondition, scConditions, db
             const interest = segment.currentAllocation * (segment.rate / 12);
             totalMonthlyInterest += interest;
             if(interest > 0) {
-                breakdown[segment.bank][segment.tierName] = interest;
+                breakdown[segment.bank][segment.tierName] = { interest, rate: segment.rate };
             }
         }
     }
