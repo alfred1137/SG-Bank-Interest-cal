@@ -4,7 +4,6 @@
 The basic project scaffolding is complete, and the codebase has been reviewed for GitHub Pages deployment. This includes:
 - Creation of `memory-bank/` directory.
 - Initialization of core memory bank files (`projectBrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`).
-- Creation of `memory-bank/interest-rates/` directory and `memory-bank/interest-rates/00-interest-rates-master.md` placeholder file.
 - Migration of the prototype HTML content into `index.html` in the repository root.
 - Separation of CSS into `style.css` and JavaScript into `script.js` in the repository root.
 - Initialization of a Git repository and an initial commit.
@@ -19,14 +18,21 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 - The project is compatible with GitHub Pages deployment as a static site.
 
 ## What's Left to Build
-- **Data Provision:** Update `memory-bank/interest-rates/00-interest-rates-master.md` to reflect the provided interest rate images as data sources.
-- **Deployment:** `index.html`, `style.css`, and `script.js` have been moved from `src/` to the repository root for GitHub Pages deployment.
-- **Refinement of Prototype (Future):** The existing code needs further review for production readiness, including:
-    - Potential optimization of the optimal allocation algorithm.
-    - Improved error handling and input validation.
-    - Accessibility enhancements.
-    - Responsive design improvements.
-- **Testing (Future):** Implement automated tests for the calculation logic.
+
+### Core Features
+- [ ] Calculate and display the equivalent interest rate of total interest earned.
+- [ ] Display additional details on the minisite:
+    - [ ] Full name of bank accounts.
+    - [ ] Interest rates of different tiers.
+- [ ] Add `No account` and `Failed requirements` options to all bank account selections.
+
+### New Account Integration
+- [ ] Add UOB Stash account.
+- [ ] Add OCBC 365 account.
+
+### Future Enhancements
+- [ ] Implement automated tests for the calculation logic.
+- [ ] Address potential performance/reliability concerns related to Tailwind CSS CDN.
 
 ## Known Issues
 - The current setup relies on CDN for Tailwind CSS, which is fine for a prototype but not ideal for production due to potential performance and reliability concerns.

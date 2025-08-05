@@ -45,7 +45,7 @@ graph TD
 
 ## Deployment
 
-This project is designed to be deployed as a static site on GitHub Pages [HERE]](https://alfred1137.github.io/SG-Bank-Interest-cal/). 
+This project is designed to be deployed as a static site on GitHub Pages [HERE](https://alfred1137.github.io/SG-Bank-Interest-cal/). 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
