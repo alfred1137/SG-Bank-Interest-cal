@@ -1,29 +1,23 @@
 {
   "name": "sg-bank-interest-cal",
   "version": "1.0.0",
-  "description": "This is a personal hobby project, primarily developed with ***vibes***!",
+  "description": "A web-based minisite that calculates the optimal fund allocation across multiple Singaporean banks to maximize monthly interest earnings.",
   "main": "script.js",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "jest",
+    "build": "npx tailwindcss -i ./src/input.css -o ./style.css"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alfred1137/SG-Bank-Interest-cal.git"
-  },
-  "keywords": [],
+  "keywords": [
+    "singapore",
+    "bank",
+    "interest",
+    "calculator"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/alfred1137/SG-Bank-Interest-cal/issues"
-  },
-  "homepage": "https://github.com/alfred1137/SG-Bank-Interest-cal#readme",
   "devDependencies": {
-    "jest": "^30.0.5",
-    "jest-environment-jsdom": "^30.0.5"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "transform": {}
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11"
   }
 }
