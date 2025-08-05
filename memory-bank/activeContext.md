@@ -2,36 +2,25 @@
 
 ## Current Work Focus
 
-Phase 1 of the implementation plan is complete. The current focus is on executing __Phase 2: Enhancing Display and User Options__.
+With the testing framework now in place and the core logic validated, the current focus is on executing **Phase 2: Enhancing Display and User Options**.
 
 ## Recent Changes
 
+- **Automated Tests Implemented:**
+  - Successfully set up a testing environment using Jest and Babel to handle ES Modules.
+  - Separated core calculation logic from `script.js` into a dedicated `calculator.js` file to facilitate testing.
+  - Created `__tests__/script.test.js` with a comprehensive suite of 23 tests.
+  - All tests for `calculateXInterest` and `findOptimalAllocation` are passing, ensuring the logic is robust and accurate.
 - **Phase 1 Complete: Migrated to Local Tailwind CSS Build Process**
   - Installed `tailwindcss`, `postcss`, and `autoprefixer`.
   - Configured `tailwind.config.js` and `postcss.config.js`.
   - Added a `build` script to `package.json` to process `src/input.css` into the final `style.css`.
   - Updated `index.html` to remove the Tailwind CDN and link to the local `style.css`.
-- Created `memory-bank/` directory.
-- Created `memory-bank/projectBrief.md`, `memory-bank/productContext.md`, `memory-bank/systemPatterns.md`, and `memory-bank/techContext.md`.
-- Moved `Prototype.html` content to `index.html` in the repository root.
+- Created `memory-bank/` directory and core files.
+- Moved `Prototype.html` content to `index.html`.
 - Initialized Git repository and made an initial commit.
-- Separated JavaScript into `script.js` and CSS into `style.css` in the repository root.
-- Reviewed the codebase (`index.html`, `style.css`, `script.js`) for GitHub Pages compatibility.
-- Created `memory-bank/interest-rates/` directory and `memory-bank/interest-rates/00-interest-rates-master.md` placeholder file.
+- Separated JavaScript into `script.js` and `calculator.js`, and CSS into `style.css`.
 - User has provided interest rate reference images in `memory-bank/interest-rates/`.
-- Implemented Automated Tests for Calculation Logic
-   - __Action:__ Set up a testing framework (e.g., Jest or a simple in-browser testing setup).
-   - __Tests:__ Write unit tests for each `calculateXInterest` function and the `findOptimalAllocation` function to ensure accuracy and cover various edge cases.
-   - __Proposed Framework:__ Jest (Node.js)
-     - __Setup:__
-       1. Initialize Node.js project (`npm init -y`).
-       2. Install Jest as a dev dependency (`npm install --save-dev jest`).
-       3. Add a test script to `package.json`: `"test": "jest"`.
-     - __Testing Strategy:__
-       1. Create a `__tests__` directory.
-       2. Create `script.test.js` to import and test functions from `script.js`.
-       3. Write unit tests for `calculateXInterest` functions covering base, edge, and typical cases.
-       4. Write integration-style unit tests for `findOptimalAllocation` to verify optimal allocation and handle various conditions.
 - The phased implementation plan has been approved.
 
 ## Next Steps
@@ -93,8 +82,9 @@ __Phase 4: Documentation Update__
 
 ## Learnings and Project Insights
 
-- The prototype provides a solid foundation for the core calculation logic, which is the most complex part of the application.
-- The UI is basic but functional, leveraging Tailwind CSS for quick styling.
-- The project now uses a local Node.js build process for Tailwind CSS, which is compatible with GitHub Pages deployment after running the build step.
-- The interest rate data from `script.js` has been documented, and new image references are available for further documentation updates.
+- **Jest/Babel Setup:** A standard pattern for testing modern JavaScript (ES Modules) involves installing `jest`, `@babel/core`, `@babel/preset-env`, and `babel-jest`, and creating a `babel.config.js` to transpile the code. This is a reusable setup for future projects.
+- **Debugging Complex Logic:** When a test for a complex calculation fails, the error may lie in the test's *expectation* rather than the code itself. It's crucial to manually trace the code's execution with the test's inputs to verify the expected output before assuming the implementation is faulty.
+- **Code Separation for Testability:** Separating pure logic (like in `calculator.js`) from DOM manipulation code (in `script.js`) is a key pattern for making code easier to test.
+- The prototype provides a solid foundation for the core calculation logic.
+- The project now uses a local Node.js build process for Tailwind CSS.
 - Encountered issues with the default `npx` command, requiring the use of a specific portable Node.js path. A global `.clinerule` (`node-js-execution.md`) was created to address this for future tasks.

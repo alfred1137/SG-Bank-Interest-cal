@@ -18,14 +18,15 @@ graph TD
 ```
 
 ## Key Technical Decisions
-- **Frontend Framework/Library:** None. Pure HTML, CSS, and JavaScript for simplicity and minimal overhead, suitable for a "minisite." All source code files (`index.html`, `style.css`, `script.js`) are located in the repository root for direct GitHub Pages deployment.
-- **Styling:** Tailwind CSS CDN for utility-first styling, supplemented by inline CSS for specific custom styles.
-- **Data Storage:** No persistent data storage (database, local storage) is used. All inputs are ephemeral and processed in real-time.
-- **Backend:** No backend required. All calculations are performed client-side.
+- **Frontend Framework/Library:** None. Pure HTML, CSS, and JavaScript for simplicity and minimal overhead.
+- **Styling:** Tailwind CSS, managed via a local Node.js build process (`npm run build`) that compiles `src/input.css` into a static `style.css` file. This avoids reliance on a CDN and is compatible with static hosting platforms like GitHub Pages.
+- **Testing:** Jest is used as the testing framework to ensure the accuracy of the calculation logic. Tests are run via the `npm test` command.
+- **Data Storage:** No persistent data storage is used. All inputs are ephemeral and processed in real-time.
+- **Backend:** No backend is required. All calculations are performed client-side.
 
 ## Design Patterns in Use
-- **Module Pattern (Implicit):** JavaScript functions are grouped logically (e.g., `calculateUOBInterest`, `findOptimalAllocation`) within the global scope, acting as implicit modules.
-- **Event-Driven Programming:** UI updates are triggered by user input events (e.g., `input` on total funds, `change` on radio buttons).
+- **Module Pattern:** The JavaScript code is organized into modules. `calculator.js` contains all the pure calculation logic, which is then imported and used by `script.js` for DOM manipulation and handling user events. This separation of concerns makes the code more maintainable and easier to test.
+- **Event-Driven Programming:** UI updates are triggered by user input events (e.g., `input` on total funds, `change` on radio buttons), which are handled in `script.js`.
 
 ## Component Relationships
 - **HTML Structure:** Defines the layout and input fields.

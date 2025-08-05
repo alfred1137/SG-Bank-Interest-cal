@@ -234,25 +234,16 @@ export function findOptimalAllocation(totalFunds, uobCondition, scConditions, db
     // 4. If any funds remain, allocate them to the bank with the best "fallback" rate
     // (i.e., the rate for funds above the bonus cap).
     if (remainingFunds > 0) {
-        let bestFallbackBank = 'CIMB'; // Default fallback
-        let maxFallbackRate = 0.0080; // CIMB's >75k rate
+        const fallbacks = [
+            { bank: 'CIMB', rate: 0.0080 },
+            { bank: 'UOB', rate: (calculateUOBInterest(150001, uobCondition).total - calculateUOBInterest(150000, uobCondition).total) * 12 },
+            { bank: 'SC', rate: 0.0005 },
+            { bank: 'DBS', rate: 0.0005 }
+        ];
 
-        // UOB fallback
-        let uobRates = {};
-        switch (uobCondition) {
-            case 'spend_only': uobRates = { t4: 0.0005 }; break;
-            case 'spend_giro_debit': uobRates = { t4: 0.0005 }; break;
-            case 'spend_salary_giro': uobRates = { t4: 0.0005 }; break;
-        }
-        if (uobRates.t4 > maxFallbackRate) {
-            maxFallbackRate = uobRates.t4;
-            bestFallbackBank = 'UOB';
-        }
-
-        // SC & DBS fallback rate is 0.0005, which is lower than CIMB's.
-        // So we only need to compare with UOB.
+        fallbacks.sort((a, b) => b.rate - a.rate);
         
-        allocation[bestFallbackBank] += remainingFunds;
+        allocation[fallbacks[0].bank] += remainingFunds;
     }
 
     const uobResult = calculateUOBInterest(allocation["UOB"], uobCondition);

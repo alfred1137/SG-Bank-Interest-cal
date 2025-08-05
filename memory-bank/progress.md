@@ -23,8 +23,8 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 
 ### Phase 1: Core Enhancements
 
-- [X] Implement automated tests for the calculation logic.
-- [X] Address potential performance/reliability concerns related to Tailwind CSS CDN by migrating to a local build process.
+- [X] **Implemented automated tests for the calculation logic.**
+- [X] **Migrated to a local Tailwind CSS build process.**
 
 ### Phase 2: Enhancing Display and User Options
 
@@ -45,7 +45,7 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 
 ## Known Issues
 
-- The optimal allocation algorithm might need further review for edge cases and absolute mathematical optimality.
+- No known issues at this time. The core calculation logic has been validated by a comprehensive test suite.
 
 ## Evolution of Project Decisions
 

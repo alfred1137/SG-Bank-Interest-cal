@@ -119,3 +119,42 @@ describe('findOptimalAllocation', () => {
         expect(allocation.CIMB).toBeGreaterThan(75000); // CIMB is the fallback
     });
 });
+
+describe('Comprehensive Optimal Allocation Tests', () => {
+    test('Scenario 1: Low funds, best option takes all', () => {
+        const { allocation, totalMonthlyInterest } = findOptimalAllocation(50000, 'spend_salary_giro', [], 'income_3_cat_30000_plus');
+        expect(allocation.DBS).toBe(50000);
+        expect(allocation.UOB).toBe(0);
+        expect(allocation.SC).toBe(0);
+        expect(allocation.CIMB).toBe(0);
+        expect(totalMonthlyInterest).toBeCloseTo(170.83, 2);
+    });
+
+    test('Scenario 2: Mid funds, split between top 2 banks', () => {
+        const { allocation, totalMonthlyInterest } = findOptimalAllocation(150000, 'spend_salary_giro', ['salary_credit', 'card_spend'], 'income_3_cat_30000_plus');
+        expect(allocation.DBS).toBe(100000);
+        expect(allocation.SC).toBe(50000);
+        expect(allocation.UOB).toBe(0);
+        expect(allocation.CIMB).toBe(0);
+        expect(totalMonthlyInterest).toBeCloseTo(470.83, 2);
+    });
+
+    test('Scenario 3: High funds, testing fallback mechanism', () => {
+        const { allocation, totalMonthlyInterest } = findOptimalAllocation(500000, 'spend_only', [], 'income_1_cat_500_to_15000');
+        expect(allocation.DBS).toBe(50000);
+        expect(allocation.UOB).toBe(150000);
+        expect(allocation.SC).toBe(100000);
+        expect(allocation.CIMB).toBe(200000); // 75k bonus cap + 125k fallback
+        expect(totalMonthlyInterest).toBeCloseTo(313.75, 2);
+    });
+
+    test('Scenario 4: Different conditions changing the allocation order', () => {
+        // Here, SC with full bonus should be better than UOB with mid-tier bonus
+        const { allocation, totalMonthlyInterest } = findOptimalAllocation(200000, 'spend_giro_debit', ['salary_credit', 'card_spend', 'invest'], 'income_1_cat_500_to_15000');
+        expect(allocation.SC).toBe(100000);
+        expect(allocation.DBS).toBe(50000);
+        expect(allocation.CIMB).toBe(50000);
+        expect(allocation.UOB).toBe(0);
+        expect(totalMonthlyInterest).toBeCloseTo(597.08, 2);
+    });
+});
