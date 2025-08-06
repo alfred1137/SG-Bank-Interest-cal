@@ -45,8 +45,8 @@ export function calculateUOBInterest(balance, uobCondition) {
     return { total: totalMonthlyInterest, breakdown };
 }
 
-export function calculateSCInterest(balance, scConditions) {
-    if (scConditions.includes('no_account')) {
+export function calculateSCInterest(balance, scAccountStatus, scConditions) {
+    if (scAccountStatus === 'no_account') {
         return { total: 0, breakdown: {} };
     }
     let totalMonthlyInterest = 0;
@@ -130,7 +130,10 @@ export function calculateDBSInterest(balance, dbsCondition) {
     return { total: totalMonthlyInterest, breakdown };
 }
 
-export function calculateCIMBInterest(balance) {
+export function calculateCIMBInterest(balance, cimbCondition) {
+    if (cimbCondition === 'no_account') {
+        return { total: 0, breakdown: {} };
+    }
     let totalMonthlyInterest = 0;
     let breakdown = {};
     const rates = {
@@ -175,7 +178,7 @@ export function calculateCIMBInterest(balance) {
     return { total: totalMonthlyInterest, breakdown };
 }
 
-export function findOptimalAllocation(totalFunds, uobCondition, scConditions, dbsCondition) {
+export function findOptimalAllocation(totalFunds, uobCondition, scAccountStatus, scConditions, dbsCondition, cimbCondition) {
     const segments = [];
 
     // 1. Extract Interest Segments from Each Bank
@@ -196,7 +199,7 @@ export function findOptimalAllocation(totalFunds, uobCondition, scConditions, db
     }
 
     // SC Segments
-    if (scConditions.includes('no_account')) {
+    if (scAccountStatus === 'no_account') {
         segments.push({ bank: 'SC', tierName: 'No Account', minBalance: 0, maxBalance: Infinity, amount: Infinity, rate: 0, currentAllocation: 0 });
     } else {
         const scBaseRate = 0.0005;
@@ -210,7 +213,7 @@ export function findOptimalAllocation(totalFunds, uobCondition, scConditions, db
     }
 
     // DBS Segments
-    if (dbsCondition === 'no_account' || dbsCondition === 'fail_requirement') {
+    if (dbsCondition === 'no_account') {
         segments.push({ bank: 'DBS', tierName: 'No Account/Fail', minBalance: 0, maxBalance: Infinity, amount: Infinity, rate: 0, currentAllocation: 0 });
     } else {
         let dbsRate = 0, dbsCap = 0;
@@ -231,11 +234,15 @@ export function findOptimalAllocation(totalFunds, uobCondition, scConditions, db
 
 
     // CIMB Segments
-    const cimbRates = { t1: 0.0088, t2: 0.0178, t3: 0.0250, t4: 0.0080 };
-    segments.push({ bank: 'CIMB', tierName: 'Tier 1 (S$0-S$25k)', minBalance: 0, maxBalance: 25000, amount: 25000, rate: cimbRates.t1, currentAllocation: 0 });
-    segments.push({ bank: 'CIMB', tierName: 'Tier 2 (S$25k-S$50k)', minBalance: 25000, maxBalance: 50000, amount: 25000, rate: cimbRates.t2, currentAllocation: 0 });
-    segments.push({ bank: 'CIMB', tierName: 'Tier 3 (S$50k-S$75k)', minBalance: 50000, maxBalance: 75000, amount: 25000, rate: cimbRates.t3, currentAllocation: 0 });
-    segments.push({ bank: 'CIMB', tierName: 'Tier 4 (>S$75k)', minBalance: 75000, maxBalance: Infinity, amount: Infinity, rate: cimbRates.t4, currentAllocation: 0 });
+    if (cimbCondition === 'no_account') {
+        segments.push({ bank: 'CIMB', tierName: 'No Account', minBalance: 0, maxBalance: Infinity, amount: Infinity, rate: 0, currentAllocation: 0 });
+    } else {
+        const cimbRates = { t1: 0.0088, t2: 0.0178, t3: 0.0250, t4: 0.0080 };
+        segments.push({ bank: 'CIMB', tierName: 'Tier 1 (S$0-S$25k)', minBalance: 0, maxBalance: 25000, amount: 25000, rate: cimbRates.t1, currentAllocation: 0 });
+        segments.push({ bank: 'CIMB', tierName: 'Tier 2 (S$25k-S$50k)', minBalance: 25000, maxBalance: 50000, amount: 25000, rate: cimbRates.t2, currentAllocation: 0 });
+        segments.push({ bank: 'CIMB', tierName: 'Tier 3 (S$50k-S$75k)', minBalance: 50000, maxBalance: 75000, amount: 25000, rate: cimbRates.t3, currentAllocation: 0 });
+        segments.push({ bank: 'CIMB', tierName: 'Tier 4 (>S$75k)', minBalance: 75000, maxBalance: Infinity, amount: Infinity, rate: cimbRates.t4, currentAllocation: 0 });
+    }
 
     // 2. Sort Segments and Allocate Funds
     segments.sort((a, b) => b.rate - a.rate);

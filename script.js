@@ -15,8 +15,10 @@ const formatCurrency = (amount) => {
 
 const totalFundsInput = document.getElementById('totalFunds');
 const uobConditionRadios = document.querySelectorAll('input[name="uobCondition"]');
+const scAccountStatusRadios = document.querySelectorAll('input[name="scAccountStatus"]');
 const scConditionCheckboxes = document.querySelectorAll('input[name="scCondition"]');
 const dbsConditionRadios = document.querySelectorAll('input[name="dbsCondition"]');
+const cimbConditionRadios = document.querySelectorAll('input[name="cimbCondition"]');
 const allocationResultsDiv = document.getElementById('allocationResults');
 const interestBreakdownDiv = document.getElementById('interestBreakdown');
 const monthlyInterestSpan = document.getElementById('monthlyInterest');
@@ -33,10 +35,12 @@ function updateAllocation() {
     }
 
     const selectedUOBCondition = document.querySelector('input[name="uobCondition"]:checked').value;
+    const selectedSCAccountStatus = document.querySelector('input[name="scAccountStatus"]:checked').value;
     const selectedSCConditions = Array.from(document.querySelectorAll('input[name="scCondition"]:checked')).map(cb => cb.value);
     const selectedDBSCondition = document.querySelector('input[name="dbsCondition"]:checked').value;
+    const selectedCIMBCondition = document.querySelector('input[name="cimbCondition"]:checked').value;
 
-    const { allocation, totalMonthlyInterest, breakdown } = findOptimalAllocation(totalFunds, selectedUOBCondition, selectedSCConditions, selectedDBSCondition);
+    const { allocation, totalMonthlyInterest, breakdown } = findOptimalAllocation(totalFunds, selectedUOBCondition, selectedSCAccountStatus, selectedSCConditions, selectedDBSCondition, selectedCIMBCondition);
 
     // Display allocation results
     allocationResultsDiv.innerHTML = '';
@@ -90,8 +94,25 @@ function updateAllocation() {
 // Add event listeners
 totalFundsInput.addEventListener('input', updateAllocation);
 uobConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
+scAccountStatusRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+        const scCheckboxes = document.querySelectorAll('input[name="scCondition"]');
+        if (radio.value === 'no_account') {
+            scCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+            });
+        } else {
+            scCheckboxes.forEach(checkbox => {
+                checkbox.disabled = false;
+            });
+        }
+        updateAllocation();
+    });
+});
 scConditionCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateAllocation));
 dbsConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
+cimbConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
 
 // Initial calculation on page load
 window.onload = updateAllocation;

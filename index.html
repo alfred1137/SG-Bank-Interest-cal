@@ -40,14 +40,32 @@
             </div>
 
             <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-3 text-gray-700">SC Account Conditions:</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="scCondition" value="no_account" checked>
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">CIMB Account Conditions:</h2>
+                <div class="toggle-group">
+                    <label class="toggle-option">
+                        <input type="radio" name="cimbCondition" value="has_account" checked>
+                        <span>Has account</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="cimbCondition" value="no_account">
                         <span>No account / Not applicable</span>
                     </label>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">SC Account Conditions:</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="toggle-option">
+                        <input type="radio" name="scAccountStatus" value="no_account" checked>
+                        <span>No account / Not applicable</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="scAccountStatus" value="has_account">
+                        <span>Has Account</span>
+                    </label>
                     <label class="checkbox-option">
-                        <input type="checkbox" name="scCondition" value="salary_credit">
+                        <input type="checkbox" name="scCondition" value="salary_credit" disabled>
                         <span>Salary Credit (min. S$3k)</span>
                     </label>
                     <label class="checkbox-option">
@@ -71,10 +89,6 @@
                     <label class="toggle-option">
                         <input type="radio" name="dbsCondition" value="no_account" checked>
                         <span>No account / Not applicable</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="fail_requirement">
-                        <span>Fail requirement (0% p.a.)</span>
                     </label>
                     <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 1 Category (Cap: S$50k)</h4>
                     <label class="toggle-option">
