@@ -6,47 +6,34 @@ With the testing framework now in place and the core logic validated, the curren
 
 ## Recent Changes
 
-- **Automated Tests Implemented:**
-  - Successfully set up a testing environment using Jest and Babel to handle ES Modules.
-  - Separated core calculation logic from `script.js` into a dedicated `calculator.js` file to facilitate testing.
-  - Created `__tests__/script.test.js` with a comprehensive suite of 23 tests.
-  - All tests for `calculateXInterest` and `findOptimalAllocation` are passing, ensuring the logic is robust and accurate.
-- **Phase 1 Complete: Migrated to Local Tailwind CSS Build Process**
-  - Installed `tailwindcss`, `postcss`, and `autoprefixer`.
-  - Configured `tailwind.config.js` and `postcss.config.js`.
-  - Added a `build` script to `package.json` to process `src/input.css` into the final `style.css`.
-  - Updated `index.html` to remove the Tailwind CDN and link to the local `style.css`.
 - Created `memory-bank/` directory and core files.
 - Moved `Prototype.html` content to `index.html`.
 - Initialized Git repository and made an initial commit.
 - Separated JavaScript into `script.js` and `calculator.js`, and CSS into `style.css`.
 - User has provided interest rate reference images in `memory-bank/interest-rates/`.
 - The phased implementation plan has been approved.
-- Implemented "No account" and "Failed requirements" options for UOB, SC, and DBS.
+- Automated Tests Implemented:
+  - Successfully set up a testing environment using Jest and Babel to handle ES Modules.
+  - Separated core calculation logic from `script.js` into a dedicated `calculator.js` file to facilitate testing.
+  - Created `__tests__/script.test.js` with a comprehensive suite of 23 tests.
+  - All tests for `calculateXInterest` and `findOptimalAllocation` are passing, ensuring the logic is robust and accurate.
+- Phase 1 Complete: Migrated to Local Tailwind CSS Build Process
+  - Installed `tailwindcss`, `postcss`, and `autoprefixer`.
+  - Configured `tailwind.config.js` and `postcss.config.js`.
+  - Added a `build` script to `package.json` to process `src/input.css` into the final `style.css`.
+  - Updated `index.html` to remove the Tailwind CDN and link to the local `style.css`.
+  - Implement Display Revisions (Completed):
+        - **Objective:** Enhanced the display of interest calculations by showing full account names, annualized interest rates per tier, right-aligning monetary values, and displaying the overall equivalent annualized interest rate.
+        - **Action:** This involved modifications to `calculator.js` (to return annualized rates), `script.js` (for display logic and new calculations, including account name mappings and equivalent rate calculation), `index.html` (for new display elements), and `style.css` (for alignment).
+
+  - Add "No account" and "Failed requirements" Options (Completed):
+        - **Objective:** Addressed reported issues with the "No account" and "Failed requirements" options for DBS, SC, and added a "No account" option for CIMB.
+        - **Action:** This involved modifications to `index.html` (removed DBS "Fail requirement", changed SC "No account" to radio, added CIMB "No account"), `calculator.js` (updated function signatures and logic for SC and CIMB), and `script.js` (updated element selectors, `findOptimalAllocation` parameters, and added logic to disable SC checkboxes when "No account" is selected).
 
 ## Next Steps
 
 The following is the execution plan to address the "What's Left to Build" items:
 
-### Phase 2: Enhancing Display and User Options (Current Focus)
-
-1.  **Implement Display Revisions (Completed):**
-    *   **Objective:** Enhanced the display of interest calculations by showing full account names, annualized interest rates per tier, right-aligning monetary values, and displaying the overall equivalent annualized interest rate.
-    *   **Action:** This involved modifications to `calculator.js` (to return annualized rates), `script.js` (for display logic and new calculations, including account name mappings and equivalent rate calculation), `index.html` (for new display elements), and `style.css` (for alignment).
-
-2.  **Add "No account" and "Failed requirements" Options (Revisions Planned):**
-    *   **Objective:** To address reported issues with the "No account" and "Failed requirements" options for DBS, SC, and to add a "No account" option for CIMB.
-    *   **Detailed Plan:**
-        1.  **DBS "Fail requirement" Option Removal:**
-            *   **`index.html`:** Remove the "Fail requirement (0% p.a.)" radio button for DBS (value `fail_requirement`).
-            *   **`calculator.js`:** Remove the explicit `fail_requirement` check in `findOptimalAllocation`. The `default` case in `calculateDBSInterest` will implicitly handle any unselected conditions as 0% interest.
-        2.  **SC Bonus Saver Multiple Choice Correction:**
-            *   **`index.html`:** Change the "No account / Not applicable" input for SC to a `radio` button within a new radio group. Other SC conditions will remain checkboxes.
-            *   **`script.js`:** Add JavaScript logic to disable and uncheck other SC checkboxes when "No account" is selected.
-            *   **`calculator.js`:** No changes needed, as existing logic correctly handles `scConditions.includes('no_account')`.
-        3.  **CIMB "No account" Option:**
-            *   **`index.html`:** Add a new `toggle-group` for CIMB and include a "No account / Not applicable" radio button.
-            *   **`calculator.js`:** Modify `calculateCIMBInterest` to accept a `cimbCondition` parameter and return 0 interest if `cimbCondition` is 'no_account'. Update `findOptimalAllocation` to pass this parameter and push a `rate: 0` segment for CIMB when 'no_account' is selected.
 
 ### Phase 3: Integrating New Bank Accounts
 
@@ -66,10 +53,24 @@ The following is the execution plan to address the "What's Left to Build" items:
    - __Integration:__ Update `findOptimalAllocation` to consider OCBC 365 as another "project" for fund allocation.
    - __UI:__ Update `updateAllocation` to display OCBC 365 results.
 
-__Phase 4: Documentation Update__
+__Phase 4: Fix allocation__
 
-1. __Update `progress.md`:__ After each phase, I will update the `progress.md` file to reflect the completed tasks and any new known issues or decisions.
-2. __Update `activeContext.md`:__ I will also update `activeContext.md` to reflect the current work focus and any new learnings.
+The current `findOptimalAllocation` function in `calculator.js` has a logical flaw in how it handles tiered interest accounts. It attempts to treat each tier as an independent segment and sorts them by rate, which is incorrect for accounts where lower tiers must be filled to unlock higher-tier rates.
+
+My plan is to refactor the `findOptimalAllocation` function to correctly implement an optimal allocation strategy for tiered interest accounts. This will involve:
+
+1. __Creating Helper Functions for Marginal Rates:__ I will implement new helper functions (`getUOBNextMarginalSegment`, `getSCNextMarginalSegment`, `getDBSNextMarginalSegment`, `getCIMBNextMarginalSegment`) within `calculator.js`. These functions will take a bank's current balance and conditions, and return the details of the *next* tier that funds would enter (i.e., the amount needed to fill that tier and the annual interest rate for that tier).
+
+2. __Refactoring `findOptimalAllocation`:__ I will modify `findOptimalAllocation` to use an iterative greedy approach. In each step, it will:
+
+   - Determine, for each bank, what the marginal interest rate would be for adding funds to its *next* available tier, using the new helper functions.
+   - Allocate a portion of the remaining total funds to the bank that offers the highest marginal interest rate, filling up to the next tier breakpoint or until all funds are allocated.
+   - This process will repeat until all `totalFunds` are allocated.
+
+3. __Verifying Allocation and Breakdown:__ After the allocation loop, the function will use the existing `calculateUOBInterest`, `calculateSCInterest`, `calculateDBSInterest`, and `calculateCIMBInterest` functions to accurately calculate the total monthly interest and a detailed breakdown for the final allocated balances in each bank.
+
+4. __Adding a Test Case:__ I will add a new test case to `__tests__/script.test.js` to thoroughly verify the correctness of the refactored `findOptimalAllocation` function with various scenarios and tiered interest conditions.
+
 
 
 ## Active Decisions and Considerations

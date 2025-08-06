@@ -29,16 +29,18 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 ### Phase 2: Enhancing Display and User Options
 
 - [X] Implement Display Revisions.
-- [ ] Add `No account` and `Failed requirements` options to all bank account selections.
+- [X] Add `No account` and `Failed requirements` options to all bank account selections.
+- [ ] Update left column (options) on the page to display full account names of different bank accounts
+- [ ] Have the left column (options) be scrollable while keeping the right column (calculator)
 
 ### Phase 3: Integrating New Bank Accounts
 
 - [ ] Add UOB Stash account.
 - [ ] Add OCBC 365 account.
 
-### Phase 4: Documentation Update
+### Phase 4: Fix allocation
 
-- [ ] Update `progress.md` and `activeContext.md` after each phase.
+- [ ] The current `findOptimalAllocation` function in `calculator.js` has a logical flaw in how it handles tiered interest accounts. It attempts to treat each tier as an independent segment and sorts them by rate, which is incorrect for accounts where lower tiers must be filled to unlock higher-tier rates.
 
 ## Known Issues
 

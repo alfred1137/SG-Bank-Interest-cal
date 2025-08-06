@@ -4,9 +4,14 @@ body {
     color: #334155;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: stretch;
     min-height: 100vh;
     padding: 2rem;
+}
+.input-section {
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    padding-right: 1rem; /* Add some padding for the scrollbar */
 }
 .container {
     background-color: #ffffff;
