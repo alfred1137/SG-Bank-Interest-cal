@@ -23,12 +23,12 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 
 ### Phase 1: Core Enhancements
 
-- [X] **Implemented automated tests for the calculation logic.**
-- [X] **Migrated to a local Tailwind CSS build process.**
+- [X] Implemented automated tests for the calculation logic.
+- [X] Migrated to a local Tailwind CSS build process.
 
 ### Phase 2: Enhancing Display and User Options
 
-- [ ] Implement Display Revisions (Planned).
+- [X] Implement Display Revisions.
 - [ ] Add `No account` and `Failed requirements` options to all bank account selections.
 
 ### Phase 3: Integrating New Bank Accounts

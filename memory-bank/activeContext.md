@@ -29,15 +29,29 @@ The following is the execution plan to address the "What's Left to Build" items:
 
 ### Phase 2: Enhancing Display and User Options (Current Focus)
 
-1.  **Implement Display Revisions (Planned):**
-    *   **Objective:** Enhance the display of interest calculations by showing full account names, annualized interest rates per tier, right-aligning monetary values, and displaying the overall equivalent annualized interest rate.
-    *   **Action:** This involves modifications to `calculator.js` (to return annualized rates), `script.js` (for display logic and new calculations, including account name mappings and equivalent rate calculation), `index.html` (for new display elements), and `style.css` (for alignment).
+1.  **Implement Display Revisions (Completed):**
+    *   **Objective:** Enhanced the display of interest calculations by showing full account names, annualized interest rates per tier, right-aligning monetary values, and displaying the overall equivalent annualized interest rate.
+    *   **Action:** This involved modifications to `calculator.js` (to return annualized rates), `script.js` (for display logic and new calculations, including account name mappings and equivalent rate calculation), `index.html` (for new display elements), and `style.css` (for alignment).
 
-2.  **Add "No account" and "Failed requirements" Options:**
-    *   **Action:** For UOB, SC, and DBS, add new radio/checkbox options in `index.html` for "No account" and "Failed requirements".
-    *   **Logic:** Update the respective `calculateUOBInterest`, `calculateSCInterest`, and `calculateDBSInterest` functions in `script.js` to handle these new conditions, returning 0 interest and 0 breakdown for these selections.
+2.  **Add "No account" and "Failed requirements" Options (In Progress):**
+    *   **Objective:** To allow users to explicitly select "No account" or "Failed requirements" for UOB, SC, and DBS accounts, which will result in no interest (0) or only the prevailing interest rate (if available) respectively for calculation for those banks.
+    *   **Detailed Plan:**
+        1.  **Modify `index.html`:**
+            *   **UOB:** Add a new radio option with `value="no_account"` and appropriate text (e.g., "No account / Not applicable") at the beginning of the `uobCondition` toggle group.
+            *   **SC:** Add a new checkbox option with `value="no_account"` and appropriate text (e.g., "No account / Not applicable") at the beginning of the `scCondition` grid.
+            *   **DBS:** Add a new radio option with `value="no_account"` and appropriate text (e.g., "No account / Not applicable") at the beginning of the `dbsCondition` toggle group. The existing "Fail requirement" option will remain as is.
+        2.  **Modify `script.js`:**
+            *   No significant changes are expected here, as the existing `querySelectorAll` and `checked` logic should correctly capture the new radio/checkbox values.
+        3.  **Modify `calculator.js`:**
+            *   **`calculateUOBInterest` function:** Add a new `case 'no_account':` to the `switch (uobCondition)` statement. This case will return `{ total: 0, breakdown: {} }`.
+            *   **`calculateSCInterest` function:** At the beginning of the function, add a check: `if (scConditions.includes('no_account')) { return { total: 0, breakdown: {} }; }`.
+            *   **`calculateDBSInterest` function:** Add a new `case 'no_account':` to the `switch (dbsCondition)` statement. This case will return `{ total: 0, breakdown: {} }`. Ensure the `default` case for `dbsCondition` (which currently handles 'fail_requirement') correctly sets `rate = 0.0000` and `cap = 0`.
+            *   **`findOptimalAllocation` function:**
+                *   **UOB Segments:** If `uobCondition` is `'no_account'`, push a single segment for UOB with `rate: 0`, `amount: Infinity`, `minBalance: 0`, `maxBalance: Infinity`.
+                *   **SC Segments:** If `scConditions` includes `'no_account'`, push a single segment for SC with `rate: 0`, `amount: Infinity`, `minBalance: 0`, `maxBalance: Infinity`.
+                *   **DBS Segments:** If `dbsCondition` is `'no_account'` or `'fail_requirement'`, push a single segment for DBS with `rate: 0`, `amount: Infinity`, `minBalance: 0`, `maxBalance: Infinity`.
 
-__Phase 3: Integrating New Bank Accounts__
+### Phase 3: Integrating New Bank Accounts
 
 1. __Add UOB Stash Account:__
 

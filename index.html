@@ -21,7 +21,11 @@
                 <h2 class="text-xl font-semibold mb-3 text-gray-700">UOB Account Conditions (Updated):</h2>
                 <div class="toggle-group">
                     <label class="toggle-option">
-                        <input type="radio" name="uobCondition" value="spend_only" checked>
+                        <input type="radio" name="uobCondition" value="no_account" checked>
+                        <span>No account / Not applicable</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="uobCondition" value="spend_only">
                         <span>Spend min. S$500 on eligible UOB Card</span>
                     </label>
                     <label class="toggle-option">
@@ -38,6 +42,10 @@
             <div class="mb-6">
                 <h2 class="text-xl font-semibold mb-3 text-gray-700">SC Account Conditions:</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="scCondition" value="no_account" checked>
+                        <span>No account / Not applicable</span>
+                    </label>
                     <label class="checkbox-option">
                         <input type="checkbox" name="scCondition" value="salary_credit">
                         <span>Salary Credit (min. S$3k)</span>
@@ -61,7 +69,11 @@
                 <h2 class="text-xl font-semibold mb-3 text-gray-700">DBS Account Conditions:</h2>
                 <div class="toggle-group-dbs">
                     <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="fail_requirement" checked>
+                        <input type="radio" name="dbsCondition" value="no_account" checked>
+                        <span>No account / Not applicable</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="dbsCondition" value="fail_requirement">
                         <span>Fail requirement (0% p.a.)</span>
                     </label>
                     <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 1 Category (Cap: S$50k)</h4>

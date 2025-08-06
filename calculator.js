@@ -4,6 +4,8 @@ export function calculateUOBInterest(balance, uobCondition) {
     let rates = {};
 
     switch (uobCondition) {
+        case 'no_account':
+            return { total: 0, breakdown: {} };
         case 'spend_only':
             rates = { t1: 0.0065, t2: 0.0005, t3: 0.0005, t4: 0.0005 };
             break;
@@ -44,6 +46,9 @@ export function calculateUOBInterest(balance, uobCondition) {
 }
 
 export function calculateSCInterest(balance, scConditions) {
+    if (scConditions.includes('no_account')) {
+        return { total: 0, breakdown: {} };
+    }
     let totalMonthlyInterest = 0;
     let breakdown = {};
     const baseRate = 0.0005 / 12;
@@ -92,6 +97,7 @@ export function calculateDBSInterest(balance, dbsCondition) {
 
     // Determine rate and cap based on the condition
     switch (dbsCondition) {
+        case 'no_account':                  return { total: 0, breakdown: {} };
         case 'income_1_cat_500_to_15000':    rate = 0.0180; cap = 50000; break;
         case 'income_1_cat_15000_to_30000':  rate = 0.0190; cap = 50000; break;
         case 'income_1_cat_30000_plus':      rate = 0.0220; cap = 50000; break;
@@ -174,45 +180,53 @@ export function findOptimalAllocation(totalFunds, uobCondition, scConditions, db
 
     // 1. Extract Interest Segments from Each Bank
     // UOB Segments
-    let uobRates = {};
-    switch (uobCondition) {
-        case 'spend_only': uobRates = { t1: 0.0065, t2: 0.0005, t3: 0.0005, t4: 0.0005 }; break;
-        case 'spend_giro_debit': uobRates = { t1: 0.0100, t2: 0.0200, t3: 0.0005, t4: 0.0005 }; break;
-        case 'spend_salary_giro': uobRates = { t1: 0.0150, t2: 0.0300, t3: 0.0450, t4: 0.0005 }; break;
+    if (uobCondition === 'no_account') {
+        segments.push({ bank: 'UOB', tierName: 'No Account', minBalance: 0, maxBalance: Infinity, amount: Infinity, rate: 0, currentAllocation: 0 });
+    } else {
+        let uobRates = {};
+        switch (uobCondition) {
+            case 'spend_only': uobRates = { t1: 0.0065, t2: 0.0005, t3: 0.0005, t4: 0.0005 }; break;
+            case 'spend_giro_debit': uobRates = { t1: 0.0100, t2: 0.0200, t3: 0.0005, t4: 0.0005 }; break;
+            case 'spend_salary_giro': uobRates = { t1: 0.0150, t2: 0.0300, t3: 0.0450, t4: 0.0005 }; break;
+        }
+        segments.push({ bank: 'UOB', tierName: 'Tier 1 (S$0-S$75k)', minBalance: 0, maxBalance: 75000, amount: 75000, rate: uobRates.t1, currentAllocation: 0 });
+        segments.push({ bank: 'UOB', tierName: 'Tier 2 (S$75k-S$125k)', minBalance: 75000, maxBalance: 125000, amount: 50000, rate: uobRates.t2, currentAllocation: 0 });
+        segments.push({ bank: 'UOB', tierName: 'Tier 3 (S$125k-S$150k)', minBalance: 125000, maxBalance: 150000, amount: 25000, rate: uobRates.t3, currentAllocation: 0 });
+        segments.push({ bank: 'UOB', tierName: 'Tier 4 (>S$150k)', minBalance: 150000, maxBalance: Infinity, amount: Infinity, rate: uobRates.t4, currentAllocation: 0 });
     }
-    segments.push({ bank: 'UOB', tierName: 'Tier 1 (S$0-S$75k)', minBalance: 0, maxBalance: 75000, amount: 75000, rate: uobRates.t1, currentAllocation: 0 });
-    segments.push({ bank: 'UOB', tierName: 'Tier 2 (S$75k-S$125k)', minBalance: 75000, maxBalance: 125000, amount: 50000, rate: uobRates.t2, currentAllocation: 0 });
-    segments.push({ bank: 'UOB', tierName: 'Tier 3 (S$125k-S$150k)', minBalance: 125000, maxBalance: 150000, amount: 25000, rate: uobRates.t3, currentAllocation: 0 });
-    segments.push({ bank: 'UOB', tierName: 'Tier 4 (>S$150k)', minBalance: 150000, maxBalance: Infinity, amount: Infinity, rate: uobRates.t4, currentAllocation: 0 });
 
     // SC Segments
-    const scBaseRate = 0.0005;
-    let scBonusRate = 0;
-    if (scConditions.includes('salary_credit')) { scBonusRate += 0.0150; }
-    if (scConditions.includes('card_spend')) { scBonusRate += 0.0155; }
-    if (scConditions.includes('insure')) { scBonusRate += 0.0250; }
-    if (scConditions.includes('invest')) { scBonusRate += 0.0250; }
-    segments.push({ bank: 'SC', tierName: 'Tier 1 (S$0-S$100k)', minBalance: 0, maxBalance: 100000, amount: 100000, rate: scBaseRate + scBonusRate, currentAllocation: 0 });
-    segments.push({ bank: 'SC', tierName: 'Tier 2 (>S$100k)', minBalance: 100000, maxBalance: Infinity, amount: Infinity, rate: scBaseRate, currentAllocation: 0 });
+    if (scConditions.includes('no_account')) {
+        segments.push({ bank: 'SC', tierName: 'No Account', minBalance: 0, maxBalance: Infinity, amount: Infinity, rate: 0, currentAllocation: 0 });
+    } else {
+        const scBaseRate = 0.0005;
+        let scBonusRate = 0;
+        if (scConditions.includes('salary_credit')) { scBonusRate += 0.0150; }
+        if (scConditions.includes('card_spend')) { scBonusRate += 0.0155; }
+        if (scConditions.includes('insure')) { scBonusRate += 0.0250; }
+        if (scConditions.includes('invest')) { scBonusRate += 0.0250; }
+        segments.push({ bank: 'SC', tierName: 'Tier 1 (S$0-S$100k)', minBalance: 0, maxBalance: 100000, amount: 100000, rate: scBaseRate + scBonusRate, currentAllocation: 0 });
+        segments.push({ bank: 'SC', tierName: 'Tier 2 (>S$100k)', minBalance: 100000, maxBalance: Infinity, amount: Infinity, rate: scBaseRate, currentAllocation: 0 });
+    }
 
     // DBS Segments
-    let dbsRate = 0, dbsCap = 0;
-    switch (dbsCondition) {
-        case 'income_1_cat_500_to_15000':    dbsRate = 0.0180; dbsCap = 50000; break;
-        case 'income_1_cat_15000_to_30000':  dbsRate = 0.0190; dbsCap = 50000; break;
-        case 'income_1_cat_30000_plus':      dbsRate = 0.0220; dbsCap = 50000; break;
-        case 'income_2_cat_500_to_15000':    dbsRate = 0.0210; dbsCap = 100000; break;
-        case 'income_2_cat_15000_to_30000':  dbsRate = 0.0220; dbsCap = 100000; break;
-        case 'income_2_cat_30000_plus':      dbsRate = 0.0300; dbsCap = 100000; break;
-        case 'income_3_cat_500_to_15000':    dbsRate = 0.0240; dbsCap = 100000; break;
-        case 'income_3_cat_15000_to_30000':  dbsRate = 0.0250; dbsCap = 100000; break;
-        case 'income_3_cat_30000_plus':      dbsRate = 0.0410; dbsCap = 100000; break;
-    }
-    if (dbsCap > 0) {
+    if (dbsCondition === 'no_account' || dbsCondition === 'fail_requirement') {
+        segments.push({ bank: 'DBS', tierName: 'No Account/Fail', minBalance: 0, maxBalance: Infinity, amount: Infinity, rate: 0, currentAllocation: 0 });
+    } else {
+        let dbsRate = 0, dbsCap = 0;
+        switch (dbsCondition) {
+            case 'income_1_cat_500_to_15000':    dbsRate = 0.0180; dbsCap = 50000; break;
+            case 'income_1_cat_15000_to_30000':  dbsRate = 0.0190; dbsCap = 50000; break;
+            case 'income_1_cat_30000_plus':      dbsRate = 0.0220; dbsCap = 50000; break;
+            case 'income_2_cat_500_to_15000':    dbsRate = 0.0210; dbsCap = 100000; break;
+            case 'income_2_cat_15000_to_30000':  dbsRate = 0.0220; dbsCap = 100000; break;
+            case 'income_2_cat_30000_plus':      dbsRate = 0.0300; dbsCap = 100000; break;
+            case 'income_3_cat_500_to_15000':    dbsRate = 0.0240; dbsCap = 100000; break;
+            case 'income_3_cat_15000_to_30000':  dbsRate = 0.0250; dbsCap = 100000; break;
+            case 'income_3_cat_30000_plus':      dbsRate = 0.0410; dbsCap = 100000; break;
+        }
         segments.push({ bank: 'DBS', tierName: `Tier 1 (S$0-S$${dbsCap/1000}k)`, minBalance: 0, maxBalance: dbsCap, amount: dbsCap, rate: dbsRate, currentAllocation: 0 });
         segments.push({ bank: 'DBS', tierName: `Tier 2 (>S$${dbsCap/1000}k)`, minBalance: dbsCap, maxBalance: Infinity, amount: Infinity, rate: 0.0005, currentAllocation: 0 });
-    } else {
-        segments.push({ bank: 'DBS', tierName: 'Tier 1 (S$0-S$0k)', minBalance: 0, maxBalance: Infinity, amount: Infinity, rate: 0, currentAllocation: 0 });
     }
 
 
