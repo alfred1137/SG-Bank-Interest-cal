@@ -35,10 +35,7 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 
 ### Phase 3: Fix allocation
 
-- [X] The current `findOptimalAllocation` function in `calculator.js` has a logical flaw in how it handles tiered interest accounts. It attempts to treat each tier as an independent segment and sorts them by rate, which is incorrect for accounts where lower tiers must be filled to unlock higher-tier rates.
->>>>>>>
-- The `findOptimalAllocation` function has been refactored to correctly handle tiered interest accounts by dynamically selecting the best marginal rate from the available tiers in each step of the allocation process.
-- The test suite has been updated to reflect the correct logic and all tests are now passing.
+- [X] The `findOptimalAllocation` function in `calculator.js` has been completely refactored to ensure a globally optimal fund allocation. The final implementation evaluates all possible subsets of active bank accounts to find the combination that yields the absolute maximum interest, intelligently discarding less beneficial accounts if necessary. This resolves a critical bug where the previous greedy algorithm produced suboptimal results. A new test file, `__tests__/optimal_allocation.test.js`, was created to verify this specific fix.
 
 ### Phase 4: Further enhancement of display
 

@@ -12,11 +12,11 @@ With the display enhancements now complete, the current focus is on executing **
     - Modified `style.css` to make the main container flexible (`max-width: 90vw`) and increase the gap between columns to `4rem`.
     - Updated the grid layout for wider screens to `2fr 1fr` to give more space to the input section.
     - Implemented a sorting function in `script.js` to ensure the interest breakdown tiers are always displayed in ascending numerical order.
-- **Phase 3 Complete: Fixed Allocation Logic**
-  - Refactored the `findOptimalAllocation` function in `calculator.js` to correctly implement a marginal rate allocation strategy that respects tiered dependencies.
-  - The new logic iteratively selects the best available tier from any bank, ensuring a truly optimal distribution of funds.
-  - Updated the Jest test suite in `__tests__/script.test.js` with new scenarios and corrected expected values to validate the new algorithm.
-  - All tests are now passing, confirming the accuracy of the core calculation engine.
+- **Phase 3 Complete: Fixed Allocation Logic (Globally Optimal)**
+  - The `findOptimalAllocation` function in `calculator.js` has been significantly refactored to ensure a *globally* optimal allocation.
+  - The new logic now evaluates all possible subsets of active bank accounts. For each subset, it calculates the best possible interest, and then returns the allocation from the subset that yields the absolute highest return.
+  - This approach solves a critical bug where including a lower-yield account (even if active) could lead to a suboptimal overall result. The algorithm can now intelligently discard a less beneficial account to maximize total interest.
+  - A new, specific test case (`__tests__/optimal_allocation.test.js`) was created to codify this exact scenario and verify the fix. All tests are passing.
 
 ## Next Steps
 

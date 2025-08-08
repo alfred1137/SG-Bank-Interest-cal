@@ -242,73 +242,69 @@ function getCIMBTierSegments(cimbCondition) {
 }
 
 export function findOptimalAllocation(totalFunds, uobCondition, scAccountStatus, scConditions, dbsCondition, cimbCondition) {
-    let allocation = { "UOB": 0, "SC": 0, "DBS": 0, "CIMB": 0 };
-    let remainingFunds = totalFunds;
+    const accounts = [
+        { name: 'UOB', condition: uobCondition, tiers: getUOBTierSegments(uobCondition), status: uobCondition !== 'no_account' },
+        { name: 'SC', condition: scAccountStatus, tiers: getSCTierSegments(scAccountStatus, scConditions), status: scAccountStatus !== 'no_account' },
+        { name: 'DBS', condition: dbsCondition, tiers: getDBSTierSegments(dbsCondition), status: dbsCondition !== 'no_account' },
+        { name: 'CIMB', condition: cimbCondition, tiers: getCIMBTierSegments(cimbCondition), status: cimbCondition !== 'no_account' }
+    ];
 
-    const uobTiers = getUOBTierSegments(uobCondition);
-    const scTiers = getSCTierSegments(scAccountStatus, scConditions);
-    const dbsTiers = getDBSTierSegments(dbsCondition);
-    const cimbTiers = getCIMBTierSegments(cimbCondition);
+    const activeAccounts = accounts.filter(acc => acc.status);
+    let bestAllocation = { allocation: {}, totalMonthlyInterest: -1, breakdown: {} };
 
-    const tierPointers = { uob: 0, sc: 0, dbs: 0, cimb: 0 };
-
-    while (remainingFunds > 0) {
-        let bestOption = { bank: null, rate: -1, amount: 0 };
-
-        // Find the best marginal rate from the current available tiers
-        if (tierPointers.uob < uobTiers.length) {
-            const tier = uobTiers[tierPointers.uob];
-            if (tier.rate > bestOption.rate) bestOption = { bank: 'UOB', ...tier };
-        }
-        if (tierPointers.sc < scTiers.length) {
-            const tier = scTiers[tierPointers.sc];
-            if (tier.rate > bestOption.rate) bestOption = { bank: 'SC', ...tier };
-        }
-        if (tierPointers.dbs < dbsTiers.length) {
-            const tier = dbsTiers[tierPointers.dbs];
-            if (tier.rate > bestOption.rate) bestOption = { bank: 'DBS', ...tier };
-        }
-        if (tierPointers.cimb < cimbTiers.length) {
-            const tier = cimbTiers[tierPointers.cimb];
-            if (tier.rate > bestOption.rate) bestOption = { bank: 'CIMB', ...tier };
+    // Generate all subsets of active accounts
+    for (let i = 0; i < (1 << activeAccounts.length); i++) {
+        const subset = [];
+        for (let j = 0; j < activeAccounts.length; j++) {
+            if ((i & (1 << j)) > 0) {
+                subset.push(activeAccounts[j]);
+            }
         }
 
-        if (bestOption.bank === null || bestOption.rate === -1) {
-            // No more tiers to allocate to, break the loop
-            break;
+        if (subset.length === 0) continue;
+
+        let allocation = { "UOB": 0, "SC": 0, "DBS": 0, "CIMB": 0 };
+        let remainingFunds = totalFunds;
+        let availableTiers = [];
+        subset.forEach(acc => {
+            acc.tiers.forEach(tier => availableTiers.push({ ...tier, bank: acc.name, remainingCapacity: tier.amount }));
+        });
+
+        while (remainingFunds > 0) {
+            const activeTiers = availableTiers.filter(t => t.remainingCapacity > 0 && t.rate > 0).sort((a, b) => b.rate - a.rate);
+            if (activeTiers.length === 0) break;
+
+            const bestTier = activeTiers[0];
+            const amountToAllocate = Math.min(remainingFunds, bestTier.remainingCapacity);
+            allocation[bestTier.bank] += amountToAllocate;
+            remainingFunds -= amountToAllocate;
+            bestTier.remainingCapacity -= amountToAllocate;
         }
 
-        const amountToAllocate = Math.min(remainingFunds, bestOption.amount);
-        allocation[bestOption.bank] += amountToAllocate;
-        remainingFunds -= amountToAllocate;
+        if (remainingFunds > 0) {
+            allocation[subset[0].name] += remainingFunds; // Allocate remaining to the first bank in subset
+        }
 
-        // Move to the next tier for the chosen bank
-        switch (bestOption.bank) {
-            case 'UOB': tierPointers.uob++; break;
-            case 'SC': tierPointers.sc++; break;
-            case 'DBS': tierPointers.dbs++; break;
-            case 'CIMB': tierPointers.cimb++; break;
+        const uobResult = calculateUOBInterest(allocation.UOB, uobCondition);
+        const scResult = calculateSCInterest(allocation.SC, scAccountStatus, scConditions);
+        const dbsResult = calculateDBSInterest(allocation.DBS, dbsCondition);
+        const cimbResult = calculateCIMBInterest(allocation.CIMB, cimbCondition);
+
+        const totalMonthlyInterest = uobResult.total + scResult.total + dbsResult.total + cimbResult.total;
+
+        if (totalMonthlyInterest > bestAllocation.totalMonthlyInterest) {
+            bestAllocation = {
+                allocation,
+                totalMonthlyInterest,
+                breakdown: {
+                    "UOB One Account": uobResult.breakdown,
+                    "SC BonusSaver Account": scResult.breakdown,
+                    "DBS Multiplier Account": dbsResult.breakdown,
+                    "CIMB FastSaver Account": cimbResult.breakdown
+                }
+            };
         }
     }
-    
-    // If there are still funds left (e.g., all primary tiers are full), allocate to the first available fallback
-    if (remainingFunds > 0) {
-        allocation.UOB += remainingFunds;
-    }
 
-    // Calculate final interest and breakdown based on the optimal allocation
-    const uobResult = calculateUOBInterest(allocation.UOB, uobCondition);
-    const scResult = calculateSCInterest(allocation.SC, scAccountStatus, scConditions);
-    const dbsResult = calculateDBSInterest(allocation.DBS, dbsCondition);
-    const cimbResult = calculateCIMBInterest(allocation.CIMB, cimbCondition);
-
-    const totalMonthlyInterest = uobResult.total + scResult.total + dbsResult.total + cimbResult.total;
-    const breakdown = {
-        "UOB": uobResult.breakdown,
-        "SC": scResult.breakdown,
-        "DBS": dbsResult.breakdown,
-        "CIMB": cimbResult.breakdown
-    };
-
-    return { allocation, totalMonthlyInterest, breakdown };
+    return bestAllocation;
 }
