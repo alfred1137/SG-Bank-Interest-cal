@@ -40,7 +40,13 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 - The `findOptimalAllocation` function has been refactored to correctly handle tiered interest accounts by dynamically selecting the best marginal rate from the available tiers in each step of the allocation process.
 - The test suite has been updated to reflect the correct logic and all tests are now passing.
 
-### Phase 4: Integrating New Bank Accounts
+### Phase 4: Further enhancement of display
+
+- [X] **Expand overall layout to use more available width:** Modified `style.css` to change the container's `max-width` to `90vw` for a flexible, responsive layout.
+- [X] **Increase spacing between the left (options) and right (calculator) columns:** Updated the `gap` property in `style.css` to `4rem` for better visual separation.
+- [X] **Display tiered interest breakdown in ascending order:** Implemented a sorting function in `script.js` to ensure interest tiers are displayed numerically.
+
+### Phase 5: Integrating New Bank Accounts
 
 - [ ] Update the parameters in calculator, so that they specify which specific account is being assessed (e.g. `uobCondition` can be `uobOneCondition` for UOB ONE account). This is in preparation for adding more account options which may come from the same bank.
 - [ ] Add UOB Stash account.

@@ -18,15 +18,15 @@ body {
     border-radius: 1rem;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     padding: 2.5rem;
-    max-width: 900px;
+    max-width: 90vw;
     width: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 4rem;
 }
 @media (min-width: 768px) {
     .container {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 2fr 1fr;
     }
 }
 input[type="number"] {

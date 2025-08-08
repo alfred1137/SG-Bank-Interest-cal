@@ -67,7 +67,13 @@ function updateAllocation() {
         bankTitle.textContent = `${bankAccountNames[bank] || bank}:`;
         interestBreakdownDiv.appendChild(bankTitle);
         
-        for (const tier in breakdown[bank]) {
+        const sortedTiers = Object.keys(breakdown[bank]).sort((a, b) => {
+            const aNum = parseInt(a.match(/\d+/)?.[0] || '0');
+            const bNum = parseInt(b.match(/\d+/)?.[0] || '0');
+            return aNum - bNum;
+        });
+
+        for (const tier of sortedTiers) {
             const tierData = breakdown[bank][tier];
             if (tierData.interest > 0) {
                 const tierItem = document.createElement('div');

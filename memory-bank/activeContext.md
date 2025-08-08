@@ -2,39 +2,16 @@
 
 ## Current Work Focus
 
-With the core allocation logic now corrected and validated, the current focus is on executing **Phase 4: Integrating New Bank Accounts**.
+With the display enhancements now complete, the current focus is on executing **Phase 5: Integrating New Bank Accounts**.
 
 ## Recent Changes
 
-- **Phase 3 Complete: Fixed Allocation Logic**
-  - Refactored the `findOptimalAllocation` function in `calculator.js` to correctly implement a marginal rate allocation strategy that respects tiered dependencies.
-  - The new logic iteratively selects the best available tier from any bank, ensuring a truly optimal distribution of funds.
-  - Updated the Jest test suite in `__tests__/script.test.js` with new scenarios and corrected expected values to validate the new algorithm.
-  - All tests are now passing, confirming the accuracy of the core calculation engine.
-- Created `memory-bank/` directory and core files.
-- Moved `Prototype.html` content to `index.html`.
-- Initialized Git repository and made an initial commit.
-- Separated JavaScript into `script.js` and `calculator.js`, and CSS into `style.css`.
-- User has provided interest rate reference images in `memory-bank/interest-rates/`.
-- The phased implementation plan has been approved.
-- Automated Tests Implemented:
-  - Successfully set up a testing environment using Jest and Babel to handle ES Modules.
-  - Separated core calculation logic from `script.js` into a dedicated `calculator.js` file to facilitate testing.
-  - Created `__tests__/script.test.js` with a comprehensive suite of 23 tests.
-  - All tests for `calculateXInterest` and `findOptimalAllocation` are passing, ensuring the logic is robust and accurate.
-- Phase 1 Complete: Migrated to Local Tailwind CSS Build Process
-  - Installed `tailwindcss`, `postcss`, and `autoprefixer`.
-  - Configured `tailwind.config.js` and `postcss.config.js`.
-  - Added a `build` script to `package.json` to process `src/input.css` into the final `style.css`.
-  - Updated `index.html` to remove the Tailwind CDN and link to the local `style.css`.
-  - Implement Display Revisions (Completed):
-        - **Objective:** Enhanced the display of interest calculations by showing full account names, annualized interest rates per tier, right-aligning monetary values, and displaying the overall equivalent annualized interest rate.
-        - **Action:** This involved modifications to `calculator.js` (to return annualized rates), `script.js` (for display logic and new calculations, including account name mappings and equivalent rate calculation), `index.html` (for new display elements), and `style.css` (for alignment).
-
-  - Add "No account" and "Failed requirements" Options (Completed):
-        - **Objective:** Addressed reported issues with the "No account" and "Failed requirements" options for DBS, SC, and added a "No account" option for CIMB.
-        - **Action:** This involved modifications to `index.html` (removed DBS "Fail requirement", changed SC "No account" to radio, added CIMB "No account"), `calculator.js` (updated function signatures and logic for SC and CIMB), and `script.js` (updated element selectors, `findOptimalAllocation` parameters, and added logic to disable SC checkboxes when "No account" is selected).
->>>>>>>
+- **Phase 4 Complete: Further enhancement of display**
+  - **Objective:** Improve the overall layout and readability of the application.
+  - **Actions:**
+    - Modified `style.css` to make the main container flexible (`max-width: 90vw`) and increase the gap between columns to `4rem`.
+    - Updated the grid layout for wider screens to `2fr 1fr` to give more space to the input section.
+    - Implemented a sorting function in `script.js` to ensure the interest breakdown tiers are always displayed in ascending numerical order.
 - **Phase 3 Complete: Fixed Allocation Logic**
   - Refactored the `findOptimalAllocation` function in `calculator.js` to correctly implement a marginal rate allocation strategy that respects tiered dependencies.
   - The new logic iteratively selects the best available tier from any bank, ensuring a truly optimal distribution of funds.
@@ -43,25 +20,20 @@ With the core allocation logic now corrected and validated, the current focus is
 
 ## Next Steps
 
-The following is the execution plan to address the "What's Left to Build" items:
+The following is the execution plan for **Phase 5: Integrating New Bank Accounts**:
 
-### Phase 4: Integrating New Bank Accounts
-
-1. __Add UOB Stash Account:__
-
-   - __Data:__ Research and define the tiered interest rates and conditions for UOB Stash.
-   - __HTML:__ Add a new section in `index.html` for UOB Stash conditions (if any) and input fields.
-   - __JavaScript:__ Create a new `calculateUOBStashInterest` function in `script.js`.
-   - __Integration:__ Update `findOptimalAllocation` to consider UOB Stash as another "project" for fund allocation.
-   - __UI:__ Update `updateAllocation` to display UOB Stash results.
-
-2. __Add OCBC 365 Account:__
-
-   - __Data:__ Research and define the tiered interest rates and conditions for OCBC 365.
-   - __HTML:__ Add a new section in `index.html` for OCBC 365 conditions (if any) and input fields.
-   - __JavaScript:__ Create a new `calculateOCBC365Interest` function in `script.js`.
-   - __Integration:__ Update `findOptimalAllocation` to consider OCBC 365 as another "project" for fund allocation.
-   - __UI:__ Update `updateAllocation` to display OCBC 365 results.
+1.  **Update calculator parameters:**
+    *   Modify the function signatures and calls in `calculator.js` and `script.js` to specify which account is being assessed (e.g., `uobCondition` becomes `uobOneCondition`).
+2.  **Add UOB Stash Account:**
+    *   Research and define the tiered interest rates and conditions for UOB Stash.
+    *   Add a new section in `index.html` for UOB Stash conditions.
+    *   Create a new `calculateUOBStashInterest` function in `calculator.js`.
+    *   Update `findOptimalAllocation` to include the UOB Stash account.
+3.  **Add OCBC 365 Account:**
+    *   Research and define the tiered interest rates and conditions for OCBC 365.
+    *   Add a new section in `index.html` for OCBC 365 conditions.
+    *   Create a new `calculateOCBC365Interest` function in `calculator.js`.
+    *   Update `findOptimalAllocation` to include the OCBC 365 account.
 
 
 

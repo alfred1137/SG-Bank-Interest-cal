@@ -23,3 +23,20 @@ Successes:
 Improvements_Identified_For_Consolidation:
 - The pattern for debugging complex calculation logic: When a test fails, don't just assume the code is wrong. Re-read the implementation carefully and manually trace the execution with the specific test inputs. The test's expectation might be the source of the error.
 - The standard setup for a Jest/Babel environment is a valuable, reusable piece of knowledge.
+---
+Date: 2025-08-08
+TaskRef: "Further enhancement of display"
+
+Learnings:
+- Using `vw` (viewport width) units for `max-width` in CSS allows for a more flexible and responsive layout that adapts to different screen sizes, as opposed to a fixed pixel value.
+- When sorting strings that contain numbers (e.g., "Tier 1", "Tier 2"), it's necessary to extract the numerical part for a correct numerical sort, otherwise a standard string sort will produce incorrect order (e.g., "Tier 10" before "Tier 2").
+
+Difficulties:
+- No significant difficulties were encountered during this task. The plan was straightforward and the implementation was successful.
+
+Successes:
+- Successfully updated the layout to be more responsive and utilize more screen space.
+- Successfully implemented the sorting of interest breakdown tiers, improving the clarity of the results display.
+
+Improvements_Identified_For_Consolidation:
+- The technique for sorting strings with embedded numbers is a useful and reusable pattern for data presentation.
