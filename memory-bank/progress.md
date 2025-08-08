@@ -30,17 +30,21 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 
 - [X] Implement Display Revisions.
 - [X] Add `No account` and `Failed requirements` options to all bank account selections.
-- [ ] Update left column (options) on the page to display full account names of different bank accounts
-- [ ] Have the left column (options) be scrollable while keeping the right column (calculator)
+- [X] Update left column (options) on the page to display full account names of different bank accounts
+- [X] Have the left column (options) be scrollable while keeping the right column (calculator)
 
-### Phase 3: Integrating New Bank Accounts
+### Phase 3: Fix allocation
 
+- [X] The current `findOptimalAllocation` function in `calculator.js` has a logical flaw in how it handles tiered interest accounts. It attempts to treat each tier as an independent segment and sorts them by rate, which is incorrect for accounts where lower tiers must be filled to unlock higher-tier rates.
+>>>>>>>
+- The `findOptimalAllocation` function has been refactored to correctly handle tiered interest accounts by dynamically selecting the best marginal rate from the available tiers in each step of the allocation process.
+- The test suite has been updated to reflect the correct logic and all tests are now passing.
+
+### Phase 4: Integrating New Bank Accounts
+
+- [ ] Update the parameters in calculator, so that they specify which specific account is being assessed (e.g. `uobCondition` can be `uobOneCondition` for UOB ONE account). This is in preparation for adding more account options which may come from the same bank.
 - [ ] Add UOB Stash account.
 - [ ] Add OCBC 365 account.
-
-### Phase 4: Fix allocation
-
-- [ ] The current `findOptimalAllocation` function in `calculator.js` has a logical flaw in how it handles tiered interest accounts. It attempts to treat each tier as an independent segment and sorts them by rate, which is incorrect for accounts where lower tiers must be filled to unlock higher-tier rates.
 
 ## Known Issues
 

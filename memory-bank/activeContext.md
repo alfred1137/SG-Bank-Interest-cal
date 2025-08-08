@@ -2,10 +2,15 @@
 
 ## Current Work Focus
 
-With the testing framework now in place and the core logic validated, the current focus is on executing **Phase 2: Enhancing Display and User Options**.
+With the core allocation logic now corrected and validated, the current focus is on executing **Phase 4: Integrating New Bank Accounts**.
 
 ## Recent Changes
 
+- **Phase 3 Complete: Fixed Allocation Logic**
+  - Refactored the `findOptimalAllocation` function in `calculator.js` to correctly implement a marginal rate allocation strategy that respects tiered dependencies.
+  - The new logic iteratively selects the best available tier from any bank, ensuring a truly optimal distribution of funds.
+  - Updated the Jest test suite in `__tests__/script.test.js` with new scenarios and corrected expected values to validate the new algorithm.
+  - All tests are now passing, confirming the accuracy of the core calculation engine.
 - Created `memory-bank/` directory and core files.
 - Moved `Prototype.html` content to `index.html`.
 - Initialized Git repository and made an initial commit.
@@ -29,13 +34,18 @@ With the testing framework now in place and the core logic validated, the curren
   - Add "No account" and "Failed requirements" Options (Completed):
         - **Objective:** Addressed reported issues with the "No account" and "Failed requirements" options for DBS, SC, and added a "No account" option for CIMB.
         - **Action:** This involved modifications to `index.html` (removed DBS "Fail requirement", changed SC "No account" to radio, added CIMB "No account"), `calculator.js` (updated function signatures and logic for SC and CIMB), and `script.js` (updated element selectors, `findOptimalAllocation` parameters, and added logic to disable SC checkboxes when "No account" is selected).
+>>>>>>>
+- **Phase 3 Complete: Fixed Allocation Logic**
+  - Refactored the `findOptimalAllocation` function in `calculator.js` to correctly implement a marginal rate allocation strategy that respects tiered dependencies.
+  - The new logic iteratively selects the best available tier from any bank, ensuring a truly optimal distribution of funds.
+  - Updated the Jest test suite in `__tests__/script.test.js` with new scenarios and corrected expected values to validate the new algorithm.
+  - All tests are now passing, confirming the accuracy of the core calculation engine.
 
 ## Next Steps
 
 The following is the execution plan to address the "What's Left to Build" items:
 
-
-### Phase 3: Integrating New Bank Accounts
+### Phase 4: Integrating New Bank Accounts
 
 1. __Add UOB Stash Account:__
 
@@ -52,24 +62,6 @@ The following is the execution plan to address the "What's Left to Build" items:
    - __JavaScript:__ Create a new `calculateOCBC365Interest` function in `script.js`.
    - __Integration:__ Update `findOptimalAllocation` to consider OCBC 365 as another "project" for fund allocation.
    - __UI:__ Update `updateAllocation` to display OCBC 365 results.
-
-__Phase 4: Fix allocation__
-
-The current `findOptimalAllocation` function in `calculator.js` has a logical flaw in how it handles tiered interest accounts. It attempts to treat each tier as an independent segment and sorts them by rate, which is incorrect for accounts where lower tiers must be filled to unlock higher-tier rates.
-
-My plan is to refactor the `findOptimalAllocation` function to correctly implement an optimal allocation strategy for tiered interest accounts. This will involve:
-
-1. __Creating Helper Functions for Marginal Rates:__ I will implement new helper functions (`getUOBNextMarginalSegment`, `getSCNextMarginalSegment`, `getDBSNextMarginalSegment`, `getCIMBNextMarginalSegment`) within `calculator.js`. These functions will take a bank's current balance and conditions, and return the details of the *next* tier that funds would enter (i.e., the amount needed to fill that tier and the annual interest rate for that tier).
-
-2. __Refactoring `findOptimalAllocation`:__ I will modify `findOptimalAllocation` to use an iterative greedy approach. In each step, it will:
-
-   - Determine, for each bank, what the marginal interest rate would be for adding funds to its *next* available tier, using the new helper functions.
-   - Allocate a portion of the remaining total funds to the bank that offers the highest marginal interest rate, filling up to the next tier breakpoint or until all funds are allocated.
-   - This process will repeat until all `totalFunds` are allocated.
-
-3. __Verifying Allocation and Breakdown:__ After the allocation loop, the function will use the existing `calculateUOBInterest`, `calculateSCInterest`, `calculateDBSInterest`, and `calculateCIMBInterest` functions to accurately calculate the total monthly interest and a detailed breakdown for the final allocated balances in each bank.
-
-4. __Adding a Test Case:__ I will add a new test case to `__tests__/script.test.js` to thoroughly verify the correctness of the refactored `findOptimalAllocation` function with various scenarios and tiered interest conditions.
 
 
 
