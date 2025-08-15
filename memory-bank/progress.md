@@ -43,11 +43,19 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 - [X] **Increase spacing between the left (options) and right (calculator) columns:** Updated the `gap` property in `style.css` to `4rem` for better visual separation.
 - [X] **Display tiered interest breakdown in ascending order:** Implemented a sorting function in `script.js` to ensure interest tiers are displayed numerically.
 
-### Phase 5: Integrating New Bank Accounts
+### Phase 5: Overhaul calculator
 
-- [ ] Update the parameters in calculator, so that they specify which specific account is being assessed (e.g. `uobCondition` can be `uobOneCondition` for UOB ONE account). This is in preparation for adding more account options which may come from the same bank.
-- [ ] Add UOB Stash account.
-- [ ] Add OCBC 365 account.
+- [X] **feat(calculator): Redevelop allocation engine for correctness and accuracy.** Key changes include:
+    - **Architectural Refactor:** The core logic is now decoupled into a dedicated `allocation-engine.js`, with `calculator.js` refactored to serve as a pure data module for bank interest tiers.
+    - **Correct Algorithm:** A new `findOptimalAllocationAndInterest` function correctly sorts all available interest tiers by their marginal rate and allocates funds sequentially, ensuring a globally optimal result. Interest is calculated simultaneously with allocation to guarantee accuracy.
+    - **UI Integration:** The main `script.js` has been updated to integrate with the new, modular engine.
+    - **Test Overhaul:** The testing suite has been completely revamped. The old, irrelevant tests were removed, and new unit tests for the allocation engine and comprehensive integration tests were created. All tests are now passing.
+
+### Phase 6: Integrating New Bank Accounts
+
+- [ ] **Update Parameters for Specificity:** Refactor function parameters to be account-specific (e.g., `uobCondition` to `uobOneCondition`) to prepare for multiple accounts from the same bank.
+- [ ] **Add UOB Stash Account:** Integrate the UOB Stash account, including its interest rate tiers, conditions, and UI elements.
+- [ ] **Add OCBC 360 Account:** Integrate the OCBC 360 account, including its interest rate tiers, conditions, and UI elements.
 
 ## Known Issues
 

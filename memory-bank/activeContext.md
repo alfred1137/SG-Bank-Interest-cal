@@ -2,38 +2,32 @@
 
 ## Current Work Focus
 
-With the display enhancements now complete, the current focus is on executing **Phase 5: Integrating New Bank Accounts**.
+The project is now in **Phase 6: Integrating New Bank Accounts**. The primary objective is to expand the calculator's functionality by adding new bank account options and refactoring the existing code to support this expansion.
 
 ## Recent Changes
 
-- **Phase 4 Complete: Further enhancement of display**
-  - **Objective:** Improve the overall layout and readability of the application.
-  - **Actions:**
-    - Modified `style.css` to make the main container flexible (`max-width: 90vw`) and increase the gap between columns to `4rem`.
-    - Updated the grid layout for wider screens to `2fr 1fr` to give more space to the input section.
-    - Implemented a sorting function in `script.js` to ensure the interest breakdown tiers are always displayed in ascending numerical order.
-- **Phase 3 Complete: Fixed Allocation Logic (Globally Optimal)**
-  - The `findOptimalAllocation` function in `calculator.js` has been significantly refactored to ensure a *globally* optimal allocation.
-  - The new logic now evaluates all possible subsets of active bank accounts. For each subset, it calculates the best possible interest, and then returns the allocation from the subset that yields the absolute highest return.
-  - This approach solves a critical bug where including a lower-yield account (even if active) could lead to a suboptimal overall result. The algorithm can now intelligently discard a less beneficial account to maximize total interest.
-  - A new, specific test case (`__tests__/optimal_allocation.test.js`) was created to codify this exact scenario and verify the fix. All tests are passing.
+- **Phase 5 Complete: Allocation Engine Redevelopment**
+  - **Objective:** The core allocation logic was completely redeveloped to ensure correctness, accuracy, and efficiency.
+  - **Key Outcomes:**
+    - **Architectural Refactor:** The logic was decoupled into a dedicated `allocation-engine.js`, with `calculator.js` now serving as a pure data module for bank interest tiers.
+    - **Correct Algorithm:** A new `findOptimalAllocationAndInterest` function was implemented, which correctly uses the "Marginal Rate Allocation" strategy for globally optimal results.
+    - **UI Integration:** `script.js` was updated to integrate with the new modular engine.
+    - **Test Overhaul:** The test suite was revamped with new unit and integration tests, all of which are passing.
 
 ## Next Steps
 
-The following is the execution plan for **Phase 5: Integrating New Bank Accounts**:
+The following is the execution plan for **Phase 6: Integrating New Bank Accounts**:
 
-1.  **Update calculator parameters:**
-    *   Modify the function signatures and calls in `calculator.js` and `script.js` to specify which account is being assessed (e.g., `uobCondition` becomes `uobOneCondition`).
+1.  **Update Parameters for Specificity:**
+    *   Refactor function parameters in the codebase to be account-specific (e.g., changing `uobCondition` to `uobOneCondition`). This is a prerequisite for adding multiple accounts from the same bank.
 2.  **Add UOB Stash Account:**
-    *   Research and define the tiered interest rates and conditions for UOB Stash.
-    *   Add a new section in `index.html` for UOB Stash conditions.
-    *   Create a new `calculateUOBStashInterest` function in `calculator.js`.
-    *   Update `findOptimalAllocation` to include the UOB Stash account.
-3.  **Add OCBC 365 Account:**
-    *   Research and define the tiered interest rates and conditions for OCBC 365.
-    *   Add a new section in `index.html` for OCBC 365 conditions.
-    *   Create a new `calculateOCBC365Interest` function in `calculator.js`.
-    *   Update `findOptimalAllocation` to include the OCBC 365 account.
+    *   Define the interest rate tiers and conditions for the UOB Stash account in `calculator.js`.
+    *   Add the necessary UI elements and event listeners for the UOB Stash account in `index.html` and `script.js`.
+    *   Integrate the new account into the `allocation-engine.js`.
+3.  **Add OCBC 360 Account:**
+    *   Define the interest rate tiers and conditions for the OCBC 360 account in `calculator.js`.
+    *   Add the necessary UI elements and event listeners for the OCBC 360 account in `index.html` and `script.js`.
+    *   Integrate the new account into the `allocation-engine.js`.
 
 
 

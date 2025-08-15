@@ -14,7 +14,7 @@
 - **Package Manager:** npm for managing project dependencies.
 - **Build Process:** An `npm run build` script uses `tailwindcss` and `postcss` to compile `src/input.css` into the final `style.css`.
 - **Testing:** An `npm test` script runs the Jest test suite located in the `__tests__` directory.
-- **Local Server:** A simple local HTTP server (e.g., VS Code's Live Server extension) can be used to serve `index.html`.
+- **Local Server:** The project can be hosted locally for testing by running `npm start`. This command serves `index.html` and allows for local verification of changes.
 
 ## Technical Constraints
 - **Client-Side Only:** All logic must run in the browser.

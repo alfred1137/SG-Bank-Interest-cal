@@ -1,4 +1,5 @@
-import { findOptimalAllocation } from './calculator.js';
+import { getUOBTierSegments, getSCTierSegments, getDBSTierSegments, getCIMBTierSegments } from './calculator.js';
+import { findOptimalAllocationAndInterest } from './allocation-engine.js';
 
 // Bank account names mapping
 const bankAccountNames = {
@@ -40,7 +41,15 @@ function updateAllocation() {
     const selectedDBSCondition = document.querySelector('input[name="dbsCondition"]:checked').value;
     const selectedCIMBCondition = document.querySelector('input[name="cimbCondition"]:checked').value;
 
-    const { allocation, totalMonthlyInterest, breakdown } = findOptimalAllocation(totalFunds, selectedUOBCondition, selectedSCAccountStatus, selectedSCConditions, selectedDBSCondition, selectedCIMBCondition);
+    // Consolidate all available tiers from selected banks
+    const allTiers = [
+        ...getUOBTierSegments(selectedUOBCondition),
+        ...getSCTierSegments(selectedSCAccountStatus, selectedSCConditions),
+        ...getDBSTierSegments(selectedDBSCondition),
+        ...getCIMBTierSegments(selectedCIMBCondition)
+    ];
+
+    const { allocation, totalMonthlyInterest, breakdown } = findOptimalAllocationAndInterest(totalFunds, allTiers);
 
     // Display allocation results
     allocationResultsDiv.innerHTML = '';
@@ -64,13 +73,13 @@ function updateAllocation() {
 
         const bankTitle = document.createElement('h4');
         bankTitle.className = 'font-semibold text-sm mt-3';
-        bankTitle.textContent = `${bankAccountNames[bank] || bank}:`;
+        bankTitle.textContent = `${bank}:`;
         interestBreakdownDiv.appendChild(bankTitle);
         
         const sortedTiers = Object.keys(breakdown[bank]).sort((a, b) => {
-            const aNum = parseInt(a.match(/\d+/)?.[0] || '0');
-            const bNum = parseInt(b.match(/\d+/)?.[0] || '0');
-            return aNum - bNum;
+            const rateA = parseFloat(a.match(/\(([^)]+)\)/)[1]);
+            const rateB = parseFloat(b.match(/\(([^)]+)\)/)[1]);
+            return rateB - rateA;
         });
 
         for (const tier of sortedTiers) {
@@ -79,7 +88,7 @@ function updateAllocation() {
                 const tierItem = document.createElement('div');
                 tierItem.className = 'interest-breakdown-item';
                 tierItem.innerHTML = `
-                    <span>${tier} (${(tierData.rate * 100).toFixed(2)}% p.a.)</span>
+                    <span>${tier} p.a.</span>
                     <span>${formatCurrency(tierData.interest)}</span>
                 `;
                 interestBreakdownDiv.appendChild(tierItem);
