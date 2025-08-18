@@ -27,6 +27,37 @@ The `script.js` file implements distinct interest rate structures for each bank,
         *   Tier 3 (Next S$25k): 4.50%
         *   Tier 4 (Above S$150k): 0.05%
 
+*   **UOB Stash Account:** Tiered structure with a base rate and a bonus rate for increasing the monthly average balance (MAB).
+    *   Base Rate (if MAB is not increased): 0.05% on all balances.
+    *   Bonus Rates (if MAB is increased):
+        *   Tier 1 (First S$10k): 0.05%
+        *   Tier 2 (Next S$30k): 1.60%
+        *   Tier 3 (Next S$30k): 2.20%
+        *   Tier 4 (Next S$30k): 3.00%
+        *   Tier 5 (Above S$100k): 0.05%
+
+*   **OCBC 360 Account:** Multi-component structure with a base rate and bonus rates based on qualifying activities. Balances above S$100,000 earn base interest (assumed 0.05% p.a.).
+    *   Base Rate: 0.05% (Assumed).
+    *   Bonus Rates (per qualifying activity):
+        *   **Salary** (Credit salary of at least S$1,800):
+            *   First S$75k: 1.20%
+            *   Next S$25k: 2.40%
+        *   **Save** (Increase average daily balance by at least S$500):
+            *   First S$75k: 0.40%
+            *   Next S$25k: 0.80%
+        *   **Spend** (Charge at least S$500 to selected OCBC Credit Cards):
+            *   First S$75k: 0.40%
+            *   Next S$25k: 0.40%
+        *   **Insure** (Purchase an eligible insurance product):
+            *   First S$75k: 1.20%
+            *   Next S$25k: 2.40%
+        *   **Invest** (Purchase an eligible investment product):
+            *   First S$75k: 1.20%
+            *   Next S$25k: 2.40%
+        *   **Grow** (Maintain average daily balance of at least S$250,000):
+            *   First S$75k: 2.00%
+            *   Next S$25k: 2.00%
+
 *   **Standard Chartered (SC) BonusSaver:** Multi-tiered structure with a base rate and bonus rates based on qualifying activities.
     *   Base Rate: 0.05%.
     *   Bonus Rates (per qualifying activity):
@@ -64,6 +95,8 @@ The `script.js` file implements distinct interest rate structures for each bank,
 *   `memory-bank/interest-rates/21-DBS-Multiplier-20250804.png`: Image reference for DBS Multiplier rates as of 4 August 2025.
 *   `memory-bank/interest-rates/31-SC-bonussaver-20250804.png`: Image reference for Standard Chartered BonusSaver rates as of 4 August 2025.
 *   `memory-bank/interest-rates/41-UOB-One-20250901.png`: Image reference for UOB One rates as of 1 September 2025.
+*   `memory-bank/interest-rates/42-UOB-Stash-20250805.png`: Image reference for UOB Stash rates as of 5 August 2025.
+*   `memory-bank/interest-rates/51-OCBC-360-20250805.png`: Image reference for OCBC 360 rates as of 5 August 2025.
 
 ## Analysis and Insights
 

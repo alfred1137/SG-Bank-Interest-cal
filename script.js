@@ -1,9 +1,11 @@
-import { getUOBTierSegments, getSCTierSegments, getDBSTierSegments, getCIMBTierSegments } from './calculator.js';
+import { getUOBOneTierSegments, getUOBStashTierSegments, getOCBC360TierSegments, getSCTierSegments, getDBSTierSegments, getCIMBTierSegments } from './calculator.js';
 import { findOptimalAllocationAndInterest } from './allocation-engine.js';
 
 // Bank account names mapping
 const bankAccountNames = {
-    "UOB": "UOB One Account",
+    "UOB One": "UOB One Account",
+    "UOB Stash": "UOB Stash Account",
+    "OCBC 360": "OCBC 360 Account",
     "SC": "SC Bonus$aver Account",
     "DBS": "DBS Multiplier Account",
     "CIMB": "CIMB FastSaver Account"
@@ -16,6 +18,9 @@ const formatCurrency = (amount) => {
 
 const totalFundsInput = document.getElementById('totalFunds');
 const uobConditionRadios = document.querySelectorAll('input[name="uobCondition"]');
+const uobStashConditionRadios = document.querySelectorAll('input[name="uobStashCondition"]');
+const ocbc360AccountStatusRadios = document.querySelectorAll('input[name="ocbc360AccountStatus"]');
+const ocbc360ConditionCheckboxes = document.querySelectorAll('input[name="ocbc360Condition"]');
 const scAccountStatusRadios = document.querySelectorAll('input[name="scAccountStatus"]');
 const scConditionCheckboxes = document.querySelectorAll('input[name="scCondition"]');
 const dbsConditionRadios = document.querySelectorAll('input[name="dbsCondition"]');
@@ -35,15 +40,20 @@ function updateAllocation() {
         return;
     }
 
-    const selectedUOBCondition = document.querySelector('input[name="uobCondition"]:checked').value;
+    const selectedUOBOneCondition = document.querySelector('input[name="uobCondition"]:checked').value;
     const selectedSCAccountStatus = document.querySelector('input[name="scAccountStatus"]:checked').value;
     const selectedSCConditions = Array.from(document.querySelectorAll('input[name="scCondition"]:checked')).map(cb => cb.value);
     const selectedDBSCondition = document.querySelector('input[name="dbsCondition"]:checked').value;
     const selectedCIMBCondition = document.querySelector('input[name="cimbCondition"]:checked').value;
+    const selectedUOBStashCondition = document.querySelector('input[name="uobStashCondition"]:checked').value;
+    const selectedOCBC360AccountStatus = document.querySelector('input[name="ocbc360AccountStatus"]:checked').value;
+    const selectedOCBC360Conditions = Array.from(document.querySelectorAll('input[name="ocbc360Condition"]:checked')).map(cb => cb.value);
 
     // Consolidate all available tiers from selected banks
     const allTiers = [
-        ...getUOBTierSegments(selectedUOBCondition),
+        ...getUOBOneTierSegments(selectedUOBOneCondition),
+        ...getUOBStashTierSegments(selectedUOBStashCondition),
+        ...getOCBC360TierSegments(selectedOCBC360AccountStatus === 'no_account' ? 'no_account' : selectedOCBC360Conditions),
         ...getSCTierSegments(selectedSCAccountStatus, selectedSCConditions),
         ...getDBSTierSegments(selectedDBSCondition),
         ...getCIMBTierSegments(selectedCIMBCondition)
@@ -109,6 +119,24 @@ function updateAllocation() {
 // Add event listeners
 totalFundsInput.addEventListener('input', updateAllocation);
 uobConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
+uobStashConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
+ocbc360AccountStatusRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+        const ocbc360Checkboxes = document.querySelectorAll('input[name="ocbc360Condition"]');
+        if (radio.value === 'no_account') {
+            ocbc360Checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+            });
+        } else {
+            ocbc360Checkboxes.forEach(checkbox => {
+                checkbox.disabled = false;
+            });
+        }
+        updateAllocation();
+    });
+});
+ocbc360ConditionCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateAllocation));
 scAccountStatusRadios.forEach(radio => {
     radio.addEventListener('change', () => {
         const scCheckboxes = document.querySelectorAll('input[name="scCondition"]');

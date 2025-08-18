@@ -40,6 +40,20 @@
             </div>
 
             <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">UOB Stash Account Conditions:</h2>
+                <div class="toggle-group">
+                    <label class="toggle-option">
+                        <input type="radio" name="uobStashCondition" value="no_account" checked>
+                        <span>No account / Not applicable</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="uobStashCondition" value="maintain_balance">
+                        <span>Maintain previous month's Monthly Average Balance (MAB)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-6">
                 <h2 class="text-xl font-semibold mb-3 text-gray-700">CIMB FastSaver Account Conditions:</h2>
                 <div class="toggle-group">
                     <label class="toggle-option">
@@ -79,6 +93,36 @@
                     <label class="checkbox-option">
                         <input type="checkbox" name="scCondition" value="invest">
                         <span>Invest (min. S$20k)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">OCBC 360 Account Conditions:</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="toggle-option">
+                        <input type="radio" name="ocbc360AccountStatus" value="no_account" checked>
+                        <span>No account / Not applicable</span>
+                    </label>
+                    <label class="toggle-option">
+                        <input type="radio" name="ocbc360AccountStatus" value="has_account">
+                        <span>Has Account</span>
+                    </label>
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="ocbc360Condition" value="salary" disabled>
+                        <span>Salary Credit (min. S$1.8k)</span>
+                    </label>
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="ocbc360Condition" value="save" disabled>
+                        <span>Save (increase balance by S$500)</span>
+                    </label>
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="ocbc360Condition" value="insure" disabled>
+                        <span>Insure</span>
+                    </label>
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="ocbc360Condition" value="invest" disabled>
+                        <span>Invest</span>
                     </label>
                 </div>
             </div>

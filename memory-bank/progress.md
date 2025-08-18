@@ -19,7 +19,7 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 - Git repository is initialized and the initial state is committed.
 - The project is compatible with GitHub Pages deployment as a static site.
 
-## What's Left to Build
+## What's Left to Build (TODOs)
 
 ### Phase 1: Core Enhancements
 

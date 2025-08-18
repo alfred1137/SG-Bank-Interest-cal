@@ -1,17 +1,17 @@
-export function getUOBTierSegments(uobCondition) {
-    if (uobCondition === 'no_account') return [];
+export function getUOBOneTierSegments(uobOneCondition) {
+    if (uobOneCondition === 'no_account') return [];
     let rates = {};
-    switch (uobCondition) {
+    switch (uobOneCondition) {
         case 'spend_only': rates = { t1: 0.0065, t2: 0.0005, t3: 0.0005, t4: 0.0005 }; break;
         case 'spend_giro_debit': rates = { t1: 0.0100, t2: 0.0200, t3: 0.0005, t4: 0.0005 }; break;
         case 'spend_salary_giro': rates = { t1: 0.0150, t2: 0.0300, t3: 0.0450, t4: 0.0005 }; break;
         default: return [];
     }
     return [
-        { bank: 'UOB', capacity: 75000, rate: rates.t1 },
-        { bank: 'UOB', capacity: 50000, rate: rates.t2 },
-        { bank: 'UOB', capacity: 25000, rate: rates.t3 },
-        { bank: 'UOB', capacity: Infinity, rate: rates.t4 }
+        { bank: 'UOB One', capacity: 75000, rate: rates.t1 },
+        { bank: 'UOB One', capacity: 50000, rate: rates.t2 },
+        { bank: 'UOB One', capacity: 25000, rate: rates.t3 },
+        { bank: 'UOB One', capacity: Infinity, rate: rates.t4 }
     ];
 }
 
@@ -58,5 +58,43 @@ export function getCIMBTierSegments(cimbCondition) {
         { bank: 'CIMB', capacity: 25000, rate: rates.t2 },
         { bank: 'CIMB', capacity: 25000, rate: rates.t3 },
         { bank: 'CIMB', capacity: Infinity, rate: rates.t4 }
+    ];
+}
+
+export function getUOBStashTierSegments(uobStashCondition) {
+    if (uobStashCondition === 'no_account') return [];
+    const rates = {
+        'below_10k': 0.0005,
+        '10k_to_40k': 0.0005,
+        '40k_to_70k': 0.0005,
+        '70k_to_100k': 0.0005,
+        'above_100k': 0.0005
+    };
+    if (uobStashCondition === 'maintain_balance') {
+        rates['below_10k'] = 0.006;
+        rates['10k_to_40k'] = 0.006;
+        rates['40k_to_70k'] = 0.01;
+        rates['70k_to_100k'] = 0.03;
+    }
+    return [
+        { bank: 'UOB Stash', capacity: 10000, rate: rates['below_10k'] },
+        { bank: 'UOB Stash', capacity: 30000, rate: rates['10k_to_40k'] },
+        { bank: 'UOB Stash', capacity: 30000, rate: rates['40k_to_70k'] },
+        { bank: 'UOB Stash', capacity: 30000, rate: rates['70k_to_100k'] },
+        { bank: 'UOB Stash', capacity: Infinity, rate: rates['above_100k'] }
+    ];
+}
+
+export function getOCBC360TierSegments(ocbc360Condition) {
+    if (ocbc360Condition === 'no_account') return [];
+    let rate = 0.0005;
+    if (ocbc360Condition.includes('salary')) rate += 0.012;
+    if (ocbc360Condition.includes('save')) rate += 0.005;
+    if (ocbc360Condition.includes('insure')) rate += 0.006;
+    if (ocbc360Condition.includes('invest')) rate += 0.006;
+    return [
+        { bank: 'OCBC 360', capacity: 75000, rate: rate },
+        { bank: 'OCBC 360', capacity: 25000, rate: 0.0005 },
+        { bank: 'OCBC 360', capacity: Infinity, rate: 0.0005 }
     ];
 }
