@@ -21,41 +21,34 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 
 ## What's Left to Build (TODOs)
 
-### Phase 1: Core Enhancements
+### Phase 7: Add Legal Disclaimers
 
-- [X] Implemented automated tests for the calculation logic.
-- [X] Migrated to a local Tailwind CSS build process.
+- [X] Add a disclaimer to the top of the `README.md` file.
+- [ ] Add a concise disclaimer near the calculation results on the webpage.
+- [ ] Add a comprehensive disclaimer in the page footer, linked to a modal.
+- [ ] Implement the modal containing the full disclaimer text.
 
-### Phase 2: Enhancing Display and User Options
+### Phase 8: More UI improvements
 
-- [X] Implement Display Revisions.
-- [X] Add `No account` and `Failed requirements` options to all bank account selections.
-- [X] Update left column (options) on the page to display full account names of different bank accounts
-- [X] Have the left column (options) be scrollable while keeping the right column (calculator)
+- [ ] Favicon
+- [ ] no horizontally scrollable bank selection panel unless out of space
+- [ ] Title `Fund Allocation Optimizer` outside of the interaction space (to the top)
+- [ ] `Total Funds (SGD):` input to the right panel above calculator
+- [ ] Tier display improvement (e.g `Tier (2.50%) p.a.` to `Tier 1 (10k) at 2.50% p.a.`)
 
-### Phase 3: Fix allocation
+### Phase 9: other expected components
 
-- [X] The `findOptimalAllocation` function in `calculator.js` has been completely refactored to ensure a globally optimal fund allocation. The final implementation evaluates all possible subsets of active bank accounts to find the combination that yields the absolute maximum interest, intelligently discarding less beneficial accounts if necessary. This resolves a critical bug where the previous greedy algorithm produced suboptimal results. A new test file, `__tests__/optimal_allocation.test.js`, was created to verify this specific fix.
+- [ ] about page
+- [ ] social button to github and blog
 
-### Phase 4: Further enhancement of display
+## Completed Milestones
 
-- [X] **Expand overall layout to use more available width:** Modified `style.css` to change the container's `max-width` to `90vw` for a flexible, responsive layout.
-- [X] **Increase spacing between the left (options) and right (calculator) columns:** Updated the `gap` property in `style.css` to `4rem` for better visual separation.
-- [X] **Display tiered interest breakdown in ascending order:** Implemented a sorting function in `script.js` to ensure interest tiers are displayed numerically.
-
-### Phase 5: Overhaul calculator
-
-- [X] **feat(calculator): Redevelop allocation engine for correctness and accuracy.** Key changes include:
-    - **Architectural Refactor:** The core logic is now decoupled into a dedicated `allocation-engine.js`, with `calculator.js` refactored to serve as a pure data module for bank interest tiers.
-    - **Correct Algorithm:** A new `findOptimalAllocationAndInterest` function correctly sorts all available interest tiers by their marginal rate and allocates funds sequentially, ensuring a globally optimal result. Interest is calculated simultaneously with allocation to guarantee accuracy.
-    - **UI Integration:** The main `script.js` has been updated to integrate with the new, modular engine.
-    - **Test Overhaul:** The testing suite has been completely revamped. The old, irrelevant tests were removed, and new unit tests for the allocation engine and comprehensive integration tests were created. All tests are now passing.
-
-### Phase 6: Integrating New Bank Accounts
-
-- [ ] **Update Parameters for Specificity:** Refactor function parameters to be account-specific (e.g., `uobCondition` to `uobOneCondition`) to prepare for multiple accounts from the same bank.
-- [ ] **Add UOB Stash Account:** Integrate the UOB Stash account, including its interest rate tiers, conditions, and UI elements.
-- [ ] **Add OCBC 360 Account:** Integrate the OCBC 360 account, including its interest rate tiers, conditions, and UI elements.
+- **Phase 1: Core Enhancements:** Implemented automated tests and migrated to a local Tailwind CSS build process.
+- **Phase 2: UI/UX Improvements:** Revised the display, added options for account selection, made the options column scrollable, and displayed full account names.
+- **Phase 3: Allocation Fix:** Refactored the `findOptimalAllocation` function to ensure globally optimal fund allocation, resolving a critical bug.
+- **Phase 4: Display Enhancements:** Expanded the layout width, increased column spacing, and sorted the tiered interest breakdown.
+- **Phase 5: Calculator Overhaul:** Redeveloped the allocation engine for correctness and accuracy, decoupling logic into `allocation-engine.js` and revamping the test suite.
+- **Phase 6: New Bank Accounts:** Integrated UOB Stash and OCBC 360 accounts, refactoring parameters for specificity.
 
 ## Known Issues
 

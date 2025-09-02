@@ -6,6 +6,15 @@ This is a personal hobby project, primarily developed with ***vibes***!
 
 The **SG Fund Allocation Optimizer** minisite is a web-based tool designed to help individuals in Singapore maximize their monthly interest earnings by calculating the optimal fund allocation across various local bank accounts (UOB, SC, DBS, CIMB). It addresses the complexity of tiered interest rates and varying bank conditions, providing clear insights and simplifying financial decisions.
 
+## Disclaimer
+
+-   **Not Financial Advice:** The information provided by this tool is for general informational purposes only and does not constitute financial, investment, legal, or tax advice.
+-   **Accuracy of Information:** While I strive to keep the information up to date and correct, I make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, or suitability of the interest rates and bank conditions presented.
+-   **Hypothetical Results:** The calculations are based on publicly available data and assume certain conditions. Actual interest earned may vary.
+-   **Use at Your Own Risk:** Any reliance you place on such information is therefore strictly at your own risk.
+-   **No Liability:** In no event will I be liable for any opportunity cost, loss or damage including without limitation, indirect or consequential loss or damage, arising out of, or in connection with, the use of this tool.
+-   **Consult a Professional:** You should consult with a qualified financial professional before making any financial decisions.
+
 ## Features
 
 *   **Total Funds Input:** Users can input their total available funds.
