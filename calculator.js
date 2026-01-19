@@ -4,7 +4,7 @@ export function getUOBOneTierSegments(uobOneCondition) {
     switch (uobOneCondition) {
         case 'spend_only': rates = { t1: 0.0065, t2: 0.0005, t3: 0.0005, t4: 0.0005 }; break;
         case 'spend_giro_debit': rates = { t1: 0.0100, t2: 0.0200, t3: 0.0005, t4: 0.0005 }; break;
-        case 'spend_salary_giro': rates = { t1: 0.0150, t2: 0.0300, t3: 0.0450, t4: 0.0005 }; break;
+        case 'spend_salary_giro': rates = { t1: 0.0100, t2: 0.0250, t3: 0.0340, t4: 0.0005 }; break;
         default: return [];
     }
     return [

@@ -15,7 +15,7 @@ describe('Integration Test for Allocation Engine', () => {
         // Optimal: 25k to UOB (4.5%), 100k to DBS (4.1%), 25k to UOB (3.0%)
         expect(allocation.DBS).toBe(100000);
         expect(allocation['UOB One']).toBe(50000);
-        expect(totalMonthlyInterest).toBeCloseTo(497.92, 2); 
+        expect(totalMonthlyInterest).toBeCloseTo(464.58, 2);
     });
 
     test('Scenario 2: Funds spread across multiple banks', () => {
@@ -54,7 +54,7 @@ describe('Integration Test for Allocation Engine', () => {
         expect(allocation.SC).toBe(100000);
         expect(allocation.CIMB).toBe(150000);
 
-        expect(totalMonthlyInterest).toBeCloseTo(940.83, 2);
+        expect(totalMonthlyInterest).toBeCloseTo(865.83, 2);
     });
 
     test('Scenario 4: $200k allocation with complex interaction', () => {
@@ -74,7 +74,7 @@ describe('Integration Test for Allocation Engine', () => {
         expect(allocation.SC).toBe(75000);
         expect(allocation.CIMB).toBeUndefined();
 
-        expect(totalMonthlyInterest).toBeCloseTo(629.17, 2);
+        expect(totalMonthlyInterest).toBeCloseTo(606.25, 2);
     });
 
     test('Scenario 5: UOB Stash and OCBC 360 accounts included', () => {
@@ -116,6 +116,6 @@ describe('Integration Test for Allocation Engine', () => {
         expect(allocation.DBS).toBe(100000);
         expect(allocation.CIMB).toBe(515000);
 
-        expect(totalMonthlyInterest).toBeCloseTo(2014.37, 2);
+        expect(totalMonthlyInterest).toBeCloseTo(1939.37, 2);
     });
 });
