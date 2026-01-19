@@ -1,60 +1,68 @@
-# System Patterns: Optimal Fund Allocation Minisite
+# System Patterns: SG Fund Allocation Optimizer
 
-## Architecture Overview
-The minisite is a single-page application (SPA) implemented using HTML, CSS (Tailwind CSS), and JavaScript. It follows a client-side architecture where all logic for calculations and UI updates resides within the browser.
+## 1. System Architecture
+
+The application follows a simple **Single-Page Application (SPA)** and **Client-Side Architecture**.
 
 ```mermaid
 graph TD
-    User[User] --> Browser[Web Browser]
-    Browser --> HTML[index.html]
-    HTML --> CSS[Tailwind CSS & Inline Styles]
-    HTML --> JS[JavaScript Logic]
-    JS --> Calculation[Interest Calculation Functions]
-    JS --> Allocation[Optimal Allocation Algorithm]
-    JS --> UIUpdate[DOM Manipulation for Results]
-    Calculation --> Allocation
-    Allocation --> UIUpdate
-    UIUpdate --> User
+    subgraph Browser
+        A[index.html]
+        B[style.css]
+        C[script.js]
+        D[calculator.js]
+        E[allocation-engine.js]
+    end
+
+    User[User] --> A
+    A --> B
+    A --> C
+    C --> D
+    C --> E
+    E --> C
+    C --> User
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#cfc,stroke:#333,stroke-width:2px
+    style D fill:#cfc,stroke:#333,stroke-width:2px
+    style E fill:#cfc,stroke:#333,stroke-width:2px
 ```
 
-## Key Technical Decisions
-- **Frontend Framework/Library:** None. Pure HTML, CSS, and JavaScript for simplicity and minimal overhead.
-- **Styling:** Tailwind CSS, managed via a local Node.js build process (`npm run build`) that compiles `src/input.css` into a static `style.css` file. This avoids reliance on a CDN and is compatible with static hosting platforms like GitHub Pages.
-- **Testing:** Jest is used as the testing framework to ensure the accuracy of the calculation logic. Tests are run via the `npm test` command.
-- **Data Storage:** No persistent data storage is used. All inputs are ephemeral and processed in real-time.
-- **Backend:** No backend is required. All calculations are performed client-side.
+-   **No Backend**: The entire application runs in the user's web browser. There is no server-side logic, database, or API. All data and calculations are handled and stored in-memory on the client-side.
+-   **Static Site**: The project is deployed as a collection of static files (HTML, CSS, JavaScript) on GitHub Pages.
+-   **Modularity**: The JavaScript logic is organized into modules with clear responsibilities, promoting separation of concerns.
 
-## Design Patterns in Use
-- **Module Pattern:** The JavaScript code is organized into modules. `calculator.js` contains all the pure calculation logic, which is then imported and used by `script.js` for DOM manipulation and handling user events. This separation of concerns makes the code more maintainable and easier to test.
-- **Event-Driven Programming:** UI updates are triggered by user input events (e.g., `input` on total funds, `change` on radio buttons), which are handled in `script.js`.
+## 2. Key Design Patterns & Concepts
 
-## Component Relationships
-- **HTML Structure:** Defines the layout and input fields.
-- **CSS:** Styles the HTML elements for visual presentation.
-- **JavaScript:**
-    - Reads input values from HTML elements.
-    - Contains functions for calculating interest for each bank.
-    - Implements an algorithm to find the optimal fund allocation.
-    - Updates the HTML DOM to display results.
+### a. Modular Design
 
-## Critical Implementation Paths
-- **Interest Calculation Functions:** Each bank's interest calculation logic (`calculateUOBInterest`, `calculateSCInterest`, `calculateDBSInterest`, `calculateCIMBInterest`) must accurately reflect the bank's tiered rates and conditions.
-- **Optimal Allocation Algorithm (`findOptimalAllocation`):** This is the core logic that determines how funds are distributed. It must correctly identify the highest marginal interest rate at each step to ensure optimal allocation.
-- **UI Update Logic:** The `updateAllocation` function is responsible for reading inputs, calling the allocation algorithm, and rendering the results dynamically.
+The JavaScript code is split into three main files, each with a distinct purpose:
+-   `calculator.js`: The **Data Module**. It is responsible for defining the interest rate structures for each bank. It contains pure functions that take user conditions as input and return an array of interest rate tiers. This isolates the complex and frequently changing bank-specific data.
+-   `allocation-engine.js`: The **Core Logic Module**. It contains the primary algorithm (`findOptimalAllocationAndInterest`) for calculating the optimal fund distribution. It is a pure function that takes the total funds and a consolidated list of all available tiers as input. It is completely decoupled from the UI and the bank-specific data structures.
+-   `script.js`: The **View/Controller Module**. It handles all DOM manipulation, user input (event listeners), and orchestrates the flow of data between the UI, `calculator.js`, and `allocation-engine.js`.
 
-## Algorithmic Patterns
+### b. Greedy Algorithm
 
-### Marginal Rate Allocation for Tiered Optimization
+The core of the `allocation-engine.js` uses a **greedy algorithm**.
+1.  **Consolidate and Sort**: It gathers all available interest rate tiers from all selected banks into a single list.
+2.  **Prioritize by Rate**: It sorts this list in descending order based on the interest rate (`rate`). This ensures that funds are always allocated to the tier that provides the highest possible marginal return first.
+3.  **Iterative Allocation**: It iterates through the sorted list, filling each tier to its `capacity` with the remaining funds until all funds are allocated.
 
-**Problem:** When allocating a single pool of funds across multiple investment options, each with its own tiered return structure (e.g., different interest rates for different balance amounts), a simple greedy algorithm that picks the "best" option based on an overall effective rate can fail. This is because it doesn't account for the diminishing returns once a high-yield tier is filled.
+This approach is highly efficient and guarantees an optimal solution because each allocation step makes the locally optimal choice (i.e., puts money where the interest rate is highest).
 
-**Solution:** The optimal approach is **Marginal Rate Allocation**.
+### c. State Management
 
-1.  **Deconstruct Tiers into Segments:** Break down every tier from every available option into a discrete "segment". Each segment has a `size` (how much funds it can hold) and a `rate` (the marginal return for funds within that segment).
-2.  **Create a Unified Pool:** Collect all segments from all options into a single list.
-3.  **Sort by Marginal Rate:** Sort the list of all segments in descending order based on their `rate`.
-4.  **Allocate Iteratively:** Iterate through the sorted list, allocating funds to each segment until it is full, before moving to the next-best segment. Continue until all funds are allocated.
+-   **DOM as State**: The application's state is primarily managed within the DOM itself. User selections (radio buttons, checkboxes) and input values are read directly from the DOM whenever a calculation is needed.
+-   **Stateless Logic**: The core calculation functions in `calculator.js` and `allocation-engine.js` are stateless and pure. They do not hold any internal state and their output depends solely on their input, making them predictable and easy to test.
 
-**Why it Works:** This method guarantees that every dollar is placed in the highest-yield spot available to it anywhere in the system, ensuring a globally optimal allocation. It avoids the pitfalls of the greedy approach by correctly valuing each subsequent block of investment at its true marginal return.
+## 3. Data Flow
 
-**Implementation in this Project:** The `findOptimalAllocation` function in `calculator.js` implements this pattern. It deconstructs the interest tiers of all banks into a single `segments` array, sorts it by rate, and then allocates the user's total funds across these segments to find the true maximum interest.
+The data flows in a unidirectional pattern:
+
+1.  **User Input**: The user interacts with the form elements in `index.html`.
+2.  **Event Trigger**: An event listener in `script.js` (e.g., `input`, `change`) fires the `updateAllocation()` function.
+3.  **Data Gathering**: `updateAllocation()` reads the current values from all relevant form inputs.
+4.  **Tier Generation**: It calls the respective functions in `calculator.js` to get the interest rate tiers for each selected bank based on the user's conditions.
+5.  **Optimal Calculation**: It passes the total funds and the consolidated list of all tiers to `findOptimalAllocationAndInterest()` in `allocation-engine.js`.
+6.  **Result Rendering**: `updateAllocation()` receives the results (allocation, interest breakdown) and updates the relevant sections of the DOM to display them to the user.

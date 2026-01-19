@@ -1,34 +1,62 @@
-# Technical Context: Optimal Fund Allocation Minisite
+# Tech Context: SG Fund Allocation Optimizer
 
-## Technologies Used
-- **HTML5:** For structuring the web content.
-- **CSS3:** For styling.
-- **Tailwind CSS:** A utility-first CSS framework used for styling. It is managed as a local dependency and compiled into `style.css` via a build script.
-- **JavaScript (ES6+):** For all interactive logic, calculations, and DOM manipulation. The code is structured using ES Modules (`import`/`export`).
-- **Node.js:** Used for package management (`npm`) and running build/test scripts.
-- **Jest:** The testing framework used for unit testing the JavaScript logic.
-- **Babel:** Used to transpile modern JavaScript for compatibility with the Jest testing environment.
+## 1. Core Technologies
 
-## Development Setup
-- **Editor:** VS Code.
-- **Package Manager:** npm for managing project dependencies.
-- **Build Process:** An `npm run build` script uses `tailwindcss` and `postcss` to compile `src/input.css` into the final `style.css`.
-- **Testing:** An `npm test` script runs the Jest test suite located in the `__tests__` directory.
-- **Local Server:** The project can be hosted locally for testing by running `npm start`. This command serves `index.html` and allows for local verification of changes.
+-   **HTML5**: Used for the structure and content of the web page (`index.html`).
+-   **CSS (via Tailwind CSS)**: The primary styling is done using the Tailwind CSS utility-first framework. The final CSS is compiled into a single `style.css` file.
+-   **JavaScript (ES6+)**: All application logic is written in modern JavaScript. Key features used include ES Modules (`import`/`export`) to structure the code. No external JavaScript frameworks (like React, Vue, or Angular) are used.
+-   **Node.js**: Serves as the runtime environment for all development-related tasks, including dependency management, running the local server, building CSS, and executing tests.
 
-## Technical Constraints
-- **Client-Side Only:** All logic must run in the browser.
-- **Static Site:** The project is a static site, making it suitable for deployment on platforms like GitHub Pages.
-- **Browser Compatibility:** Should aim for compatibility with modern browsers (Chrome, Firefox, Edge, Safari).
+## 2. Development Setup & Workflow
 
-## Dependencies
-- **npm Packages (devDependencies):**
-  - `tailwindcss`, `postcss`, `autoprefixer` for the CSS build process.
-  - `jest`, `babel-jest`, `@babel/core`, `@babel/preset-env` for the testing framework.
-- **Google Fonts (Inter):** `https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap`
+### a. Prerequisites
 
-## Tool Usage Patterns
-- **File Editing:** `write_to_file` and `replace_in_file` for modifying HTML, CSS, and JavaScript.
-- **Directory Management:** `mkdir` for creating project structure (e.g., `memory-bank/`).
-- **Version Control:** `git` commands for repository initialization and management.
-- **Browser Interaction:** `browser_action` for testing the UI and functionality.
+-   A Node.js and npm (or equivalent) installation is required.
+
+### b. Installation
+
+-   To set up the development environment, clone the repository and run the following command in the root directory to install all necessary development dependencies:
+    ```bash
+    npm install
+    ```
+
+### c. Running the Application Locally
+
+-   A simple HTTP server is used for local development. To start it, run:
+    ```bash
+    npm start
+    ```
+    This will serve the `index.html` file, typically at `http://localhost:8080`.
+
+### d. Building CSS
+
+-   The project uses Tailwind CSS for styling. The source CSS file is located at `src/input.css`. To compile the Tailwind utilities into the final `style.css` file used by the application, run:
+    ```bash
+    npm run build
+    ```
+    This command must be run whenever changes are made to the HTML that involve new Tailwind classes or if `tailwind.config.js` is modified.
+
+### e. Testing
+
+-   Unit tests are written using the **Jest** framework.
+-   Test files are located in the `__tests__` directory.
+-   Babel (`@babel/preset-env`) is used to transpile ES6 modules within the test environment, allowing `import`/`export` syntax to be used in test files.
+-   To run all tests, use the command:
+    ```bash
+    npm test
+    ```
+
+## 3. Dependencies
+
+All dependencies are for development purposes only; the final application has no runtime dependencies.
+
+-   **`jest`**: The testing framework.
+-   **`babel`**: Transpiles JavaScript for the test runner.
+-   **`tailwindcss`, `postcss`, `autoprefixer`**: For the CSS build process.
+-   **`http-server`**: For the local development server.
+
+## 4. Technical Constraints & Decisions
+
+-   **No Backend**: The decision to keep the application purely client-side simplifies development and deployment significantly. It means no databases, no server-side code, and no APIs are necessary.
+-   **No JS Frameworks**: The project intentionally avoids frameworks like React or Vue. This keeps the project lightweight and free of external runtime dependencies, but means all DOM manipulation must be handled manually.
+-   **Static Deployment**: The application is designed to be hosted on any static site hosting service, like GitHub Pages. This is a direct benefit of the "No Backend" constraint.

@@ -1,63 +1,42 @@
-# Progress: Optimal Fund Allocation Minisite
+# Progress: SG Fund Allocation Optimizer
 
-## Current Status
-The basic project scaffolding is complete, and the codebase has been reviewed for GitHub Pages deployment. This includes:
+## 1. What Works
 
-- Creation of `memory-bank/` directory.
-- Initialization of core memory bank files (`projectBrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`).
-- Migration of the prototype HTML content into `index.html` in the repository root.
-- Separation of CSS into `style.css` and JavaScript into `script.js` in the repository root.
-- Initialization of a Git repository and an initial commit.
-- Review of the codebase for GitHub Pages compatibility.
+As of the current analysis, the application is fully functional according to its core requirements.
+-   **Fund Input**: Users can input their total funds.
+-   **Bank Selection**: All bank account options and their corresponding conditions are selectable in the UI.
+-   **Calculation Engine**: The allocation algorithm correctly calculates and distributes funds based on the selected inputs and the hardcoded interest rate tiers.
+-   **Results Display**: The optimal allocation, total monthly interest, and detailed interest breakdown are displayed clearly and update in real-time as user inputs change.
+-   **Development Environment**: The `npm` scripts for starting a local server (`npm start`), building CSS (`npm run build`), and running tests (`npm test`) are functional.
 
-## What Works
+## 2. What's Left to Build
 
-- The `memory-bank/` directory structure is set up.
-- The memory bank is populated with initial context and updated with deployment plan.
-- The `index.html` file is in place and correctly links to external CSS and JavaScript files.
-- The core calculation logic and UI functionality are preserved.
-- Git repository is initialized and the initial state is committed.
-- The project is compatible with GitHub Pages deployment as a static site.
+The core functionality is complete. Future work is likely to fall into these categories:
 
-## What's Left to Build (TODOs)
+-   **Maintenance & Updates**:
+    -   **Interest Rate Updates**: The interest rates and tier conditions for the banks are subject to change. The `calculator.js` file will need to be updated periodically to reflect the latest market conditions.
+    -   **Dependency Updates**: Development dependencies in `package.json` may need to be updated over time.
 
-### Phase 7: Add Legal Disclaimers
+-   **Potential New Features (Not Yet Prioritized)**:
+    -   Adding more banks to the calculator.
+    -   Allowing users to save or share their results.
+    -   Implementing a more visually engaging results display (e.g., charts, graphs).
+    -   Providing historical interest rate data.
 
-- [X] Add a disclaimer to the top of the `README.md` file.
-- [ ] Add a concise disclaimer near the calculation results on the webpage.
-- [ ] Add a comprehensive disclaimer in the page footer, linked to a modal.
-- [ ] Implement the modal containing the full disclaimer text.
+## 3. Current Status
 
-### Phase 8: More UI improvements
+-   **Version**: 1.0.0 (as per `package.json`).
+-   **State**: The project is in a stable, " MVP" (Minimum Viable Product) state. It successfully fulfills its primary purpose.
+-   **Current Activity**: The project is undergoing a documentation phase to establish a comprehensive "Memory Bank" to ensure future maintainability.
 
-- [ ] Favicon
-- [ ] no horizontally scrollable bank selection panel unless out of space
-- [ ] Title `Fund Allocation Optimizer` outside of the interaction space (to the top)
-- [ ] `Total Funds (SGD):` input to the right panel above calculator
-- [ ] Tier display improvement (e.g `Tier (2.50%) p.a.` to `Tier 1 (10k) at 2.50% p.a.`)
+## 4. Known Issues
 
-### Phase 9: other expected components
+-   There are no known bugs or functional issues with the application at this time.
+-   The primary "issue" is not a bug, but a maintenance consideration: the hardcoded interest rate data will inevitably become outdated.
 
-- [ ] about page
-- [ ] social button to github and blog
+## 5. Evolution of Project Decisions
 
-## Completed Milestones
-
-- **Phase 1: Core Enhancements:** Implemented automated tests and migrated to a local Tailwind CSS build process.
-- **Phase 2: UI/UX Improvements:** Revised the display, added options for account selection, made the options column scrollable, and displayed full account names.
-- **Phase 3: Allocation Fix:** Refactored the `findOptimalAllocation` function to ensure globally optimal fund allocation, resolving a critical bug.
-- **Phase 4: Display Enhancements:** Expanded the layout width, increased column spacing, and sorted the tiered interest breakdown.
-- **Phase 5: Calculator Overhaul:** Redeveloped the allocation engine for correctness and accuracy, decoupling logic into `allocation-engine.js` and revamping the test suite.
-- **Phase 6: New Bank Accounts:** Integrated UOB Stash and OCBC 360 accounts, refactoring parameters for specificity.
-
-## Known Issues
-
-- No known issues at this time. The core calculation logic has been validated by a comprehensive test suite.
-
-## Evolution of Project Decisions
-
-- Initial decision to keep the project as a single HTML file for rapid prototyping has been executed. The next phase involved modularizing the code by separating CSS and JavaScript.
-- The memory bank has been established as the primary source of truth for project context and progress.
-- The project is confirmed to be suitable for GitHub Pages deployment after a simple file relocation.
-- A phased implementation plan has been adopted to systematically enhance the application, starting with core improvements like testing and local asset bundling, followed by feature enhancements and new account integrations.
-- The project has been migrated from using the Tailwind CSS CDN to a local Node.js build process to improve reliability and enable customization.
+-   **Initial Concept**: A personal hobby project to solve a real-world problem.
+-   **Technology Choice**: The decision to use vanilla JavaScript without a major framework was likely made to keep the project lightweight and simple for its single-purpose scope.
+-   **Architectural Pattern**: The separation of concerns into `calculator.js` (data), `allocation-engine.js` (logic), and `script.js` (view) was a key decision that makes the code clean, testable, and easy to maintain. This pattern has proven effective.
+-   **Current State**: The project has matured from a simple script to a well-structured, albeit small, web application with a proper development workflow (testing, CSS builds). The current focus on documentation reflects a shift towards ensuring its long-term viability.
