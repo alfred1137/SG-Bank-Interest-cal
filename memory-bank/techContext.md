@@ -32,3 +32,9 @@
 - **Directory Management:** `mkdir` for creating project structure (e.g., `memory-bank/`).
 - **Version Control:** `git` commands for repository initialization and management.
 - **Browser Interaction:** `browser_action` for testing the UI and functionality.
+
+## Technical Debt & Improvements (Added 2026-01-19)
+- **Configuration Hardcoding:** Interest rates and logic are tightly coupled. Need to separate configuration (rates/tiers) from the calculation logic.
+- **Directory Structure:** The root directory is cluttered. Source code should be organized into `src/` subdirectories (e.g., `src/logic`, `src/config`).
+- **Input Validation:** Some internal functions lack robust input validation, potentially leading to runtime errors with unexpected data types.
+- **Test Fragility:** Integration tests rely on specific hardcoded values, making them brittle to rate changes. Tests should ideally be decoupled from specific rate values.

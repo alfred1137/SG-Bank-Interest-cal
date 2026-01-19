@@ -1,4 +1,4 @@
-import { findOptimalAllocationAndInterest } from '../allocation-engine.js';
+import { findOptimalAllocationAndInterest } from '../src/logic/allocation-engine.js';
 
 describe('Allocation Engine', () => {
     const mockTiers = [

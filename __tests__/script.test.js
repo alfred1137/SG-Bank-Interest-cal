@@ -1,5 +1,5 @@
-import { getUOBOneTierSegments, getUOBStashTierSegments, getOCBC360TierSegments, getSCTierSegments, getDBSTierSegments, getCIMBTierSegments } from '../calculator.js';
-import { findOptimalAllocationAndInterest } from '../allocation-engine.js';
+import { getUOBOneTierSegments, getUOBStashTierSegments, getOCBC360TierSegments, getSCTierSegments, getDBSTierSegments, getCIMBTierSegments } from '../src/logic/calculator.js';
+import { findOptimalAllocationAndInterest } from '../src/logic/allocation-engine.js';
 
 describe('Integration Test for Allocation Engine', () => {
 

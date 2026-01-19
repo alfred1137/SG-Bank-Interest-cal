@@ -1,23 +1,18 @@
 # Progress: Optimal Fund Allocation Minisite
 
 ## Current Status
-The basic project scaffolding is complete, and the codebase has been reviewed for GitHub Pages deployment. This includes:
+The project has undergone a major refactoring to improve maintainability and scalability. The codebase is now modular, with logic separated from UI and configuration externalized.
 
-- Creation of `memory-bank/` directory.
-- Initialization of core memory bank files (`projectBrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`).
-- Migration of the prototype HTML content into `index.html` in the repository root.
-- Separation of CSS into `style.css` and JavaScript into `script.js` in the repository root.
-- Initialization of a Git repository and an initial commit.
-- Review of the codebase for GitHub Pages compatibility.
+- **Refactoring Complete:** Core logic is in `src/logic`, UI code in `src/ui`, and rates in `src/config`.
+- **Tests Passing:** Unit and integration tests verified against the new structure.
+- **Ready for Features:** The stable codebase is ready for the remaining UI and content tasks.
 
 ## What Works
 
 - The `memory-bank/` directory structure is set up.
-- The memory bank is populated with initial context and updated with deployment plan.
-- The `index.html` file is in place and correctly links to external CSS and JavaScript files.
-- The core calculation logic and UI functionality are preserved.
-- Git repository is initialized and the initial state is committed.
-- The project is compatible with GitHub Pages deployment as a static site.
+- The `index.html` file correctly links to the new modular JavaScript files.
+- The core calculation logic is robust and config-driven.
+- Git repository is initialized and the project is compatible with GitHub Pages.
 
 ## What's Left to Build (TODOs)
 
@@ -49,6 +44,7 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 - **Phase 4: Display Enhancements:** Expanded the layout width, increased column spacing, and sorted the tiered interest breakdown.
 - **Phase 5: Calculator Overhaul:** Redeveloped the allocation engine for correctness and accuracy, decoupling logic into `allocation-engine.js` and revamping the test suite.
 - **Phase 6: New Bank Accounts:** Integrated UOB Stash and OCBC 360 accounts, refactoring parameters for specificity.
+- **Refactoring:** Modularized codebase (`src/logic`, `src/ui`) and externalized configuration (`src/config/bank-rates.js`).
 
 ## Known Issues
 
@@ -61,3 +57,4 @@ The basic project scaffolding is complete, and the codebase has been reviewed fo
 - The project is confirmed to be suitable for GitHub Pages deployment after a simple file relocation.
 - A phased implementation plan has been adopted to systematically enhance the application, starting with core improvements like testing and local asset bundling, followed by feature enhancements and new account integrations.
 - The project has been migrated from using the Tailwind CSS CDN to a local Node.js build process to improve reliability and enable customization.
+- **Refactoring Decision:** To prevent "spaghetti code" and make rate updates easier, we adopted a config-driven architecture and separated logic from UI.

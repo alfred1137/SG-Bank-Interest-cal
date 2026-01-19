@@ -1,5 +1,5 @@
-import { getUOBOneTierSegments, getUOBStashTierSegments, getOCBC360TierSegments, getSCTierSegments, getDBSTierSegments, getCIMBTierSegments } from './calculator.js';
-import { findOptimalAllocationAndInterest } from './allocation-engine.js';
+import { getUOBOneTierSegments, getUOBStashTierSegments, getOCBC360TierSegments, getSCTierSegments, getDBSTierSegments, getCIMBTierSegments } from '../logic/calculator.js';
+import { findOptimalAllocationAndInterest } from '../logic/allocation-engine.js';
 
 // Bank account names mapping
 const bankAccountNames = {
