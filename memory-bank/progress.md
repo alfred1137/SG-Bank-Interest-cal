@@ -26,9 +26,9 @@ The project has undergone a major refactoring to improve maintainability and sca
 ### Phase 7: Add Legal Disclaimers
 
 - [X] Add a disclaimer to the top of the `README.md` file.
-- [ ] Add a concise disclaimer near the calculation results on the webpage.
-- [ ] Add a comprehensive disclaimer in the page footer, linked to a modal.
-- [ ] Implement the modal containing the full disclaimer text.
+- [X] Add a concise disclaimer near the calculation results on the webpage.
+- [X] Add a comprehensive disclaimer in the page footer, linked to a modal.
+- [X] Implement the modal containing the full disclaimer text.
 
 ### Phase 8: More UI improvements
 

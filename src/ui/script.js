@@ -204,5 +204,30 @@ setupConditionalCheckboxes('scAccountStatus', 'scCondition');
 setupConditionalCheckboxes('ocbc360AccountStatus', 'ocbc360Condition');
 
 
+// Modal Logic
+const disclaimerModal = document.getElementById('disclaimerModal');
+const openDisclaimerBtn = document.getElementById('openDisclaimer');
+const closeDisclaimerX = document.getElementById('closeDisclaimer');
+const closeDisclaimerBtn = document.getElementById('closeDisclaimerBtn');
+
+function toggleModal(show) {
+    if (show) {
+        disclaimerModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    } else {
+        disclaimerModal.classList.add('hidden');
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+}
+
+openDisclaimerBtn.addEventListener('click', () => toggleModal(true));
+closeDisclaimerX.addEventListener('click', () => toggleModal(false));
+closeDisclaimerBtn.addEventListener('click', () => toggleModal(false));
+
+// Close on outside click
+disclaimerModal.addEventListener('click', (e) => {
+    if (e.target === disclaimerModal) toggleModal(false);
+});
+
 // Initial calculation on page load
 window.addEventListener('load', updateAllocation);
