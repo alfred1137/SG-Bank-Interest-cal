@@ -7,11 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="src/output.css">
 </head>
-<body class="bg-gray-100">
-    <header class="bg-white shadow-md">
+<body class="bg-ctp-bg text-ctp-text">
+    <header class="bg-ctp-surface shadow-md">
         <div class="container mx-auto px-6 py-4">
-            <h1 class="text-2xl font-bold text-gray-800">Singapore Savings Account Optimizer</h1>
-            <p class="text-gray-600">Maximize your monthly interest by optimally allocating your funds across high-interest savings accounts.</p>
+            <h1 class="text-2xl font-bold text-ctp-primary">Singapore Savings Account Optimizer</h1>
+            <p class="text-ctp-subtext">Maximize your monthly interest by optimally allocating your funds across high-interest savings accounts.</p>
         </div>
     </header>
 
@@ -20,14 +20,14 @@
             <!-- Left Scrolling Workspace -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Card 1: Total Funds -->
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <label for="totalFunds" class="block text-lg font-semibold text-gray-800 mb-2">Total Funds (SGD):</label>
-                    <input type="number" id="totalFunds" value="250000" min="0" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                    <label for="totalFunds" class="block text-lg font-semibold text-ctp-text mb-2">Total Funds (SGD):</label>
+                    <input type="number" id="totalFunds" value="250000" min="0" class="w-full p-3 bg-ctp-bg border border-ctp-overlay/20 rounded-lg text-ctp-text focus:ring-ctp-primary focus:border-ctp-primary transition duration-200">
                 </div>
 
                 <!-- Card 2: UOB One -->
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h2 class="text-xl font-semibold mb-3 text-gray-800">UOB One Account</h2>
+                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-ctp-primary">UOB One Account</h2>
                     <div class="toggle-group">
                         <label class="toggle-option"><input type="radio" name="uobCondition" value="no_account" checked><span>No account / Not applicable</span></label>
                         <label class="toggle-option"><input type="radio" name="uobCondition" value="spend_only"><span>Spend min. S$500</span></label>
@@ -37,8 +37,8 @@
                 </div>
 
                 <!-- Card 3: UOB Stash -->
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h2 class="text-xl font-semibold mb-3 text-gray-800">UOB Stash Account</h2>
+                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-ctp-primary">UOB Stash Account</h2>
                     <div class="toggle-group">
                         <label class="toggle-option"><input type="radio" name="uobStashCondition" value="no_account" checked><span>No account / Not applicable</span></label>
                         <label class="toggle-option"><input type="radio" name="uobStashCondition" value="maintain_balance"><span>Maintain previous month's MAB</span></label>
@@ -46,8 +46,8 @@
                 </div>
 
                 <!-- Card 4: SC Bonus$aver -->
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h2 class="text-xl font-semibold mb-3 text-gray-800">SC Bonus$aver Account</h2>
+                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-ctp-primary">SC Bonus$aver Account</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <label class="toggle-option"><input type="radio" name="scAccountStatus" value="no_account" checked><span>No account</span></label>
                         <label class="toggle-option"><input type="radio" name="scAccountStatus" value="has_account"><span>Has Account</span></label>
@@ -59,8 +59,8 @@
                 </div>
 
                  <!-- Card 5: OCBC 360 -->
-                 <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h2 class="text-xl font-semibold mb-3 text-gray-800">OCBC 360 Account</h2>
+                 <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-ctp-primary">OCBC 360 Account</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <label class="toggle-option"><input type="radio" name="ocbc360AccountStatus" value="no_account" checked><span>No account</span></label>
                         <label class="toggle-option"><input type="radio" name="ocbc360AccountStatus" value="has_account"><span>Has Account</span></label>
@@ -72,19 +72,19 @@
                 </div>
 
                  <!-- Card 6: DBS Multiplier -->
-                 <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h2 class="text-xl font-semibold mb-3 text-gray-800">DBS Multiplier Account</h2>
+                 <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-ctp-primary">DBS Multiplier Account</h2>
                     <div class="toggle-group-dbs">
                          <label class="toggle-option"><input type="radio" name="dbsCondition" value="no_account" checked><span>No account</span></label>
-                         <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 1 Category (Cap: S$50k)</h4>
+                         <h4 class="font-semibold text-sm mt-3 text-ctp-subtext">Income + 1 Category (Cap: S$50k)</h4>
                          <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_1_cat_500_to_15000"><span>≥ S$500 to < S$15k (1.80% p.a.)</span></label>
                          <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_1_cat_15000_to_30000"><span>≥ S$15k to < S$30k (1.90% p.a.)</span></label>
                          <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_1_cat_30000_plus"><span>≥ S$30k (2.20% p.a.)</span></label>
-                         <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 2 Categories (Cap: S$100k)</h4>
+                         <h4 class="font-semibold text-sm mt-3 text-ctp-subtext">Income + 2 Categories (Cap: S$100k)</h4>
                          <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_2_cat_500_to_15000"><span>≥ S$500 to < S$15k (2.10% p.a.)</span></label>
                          <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_2_cat_15000_to_30000"><span>≥ S$15k to < S$30k (2.20% p.a.)</span></label>
                          <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_2_cat_30000_plus"><span>≥ S$30k (3.00% p.a.)</span></label>
-                         <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 3+ Categories (Cap: S$100k)</h4>
+                         <h4 class="font-semibold text-sm mt-3 text-ctp-subtext">Income + 3+ Categories (Cap: S$100k)</h4>
                          <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_3_cat_500_to_15000"><span>≥ S$500 to < S$15k (2.40% p.a.)</span></label>
                          <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_3_cat_15000_to_30000"><span>≥ S$15k to < S$30k (2.50% p.a.)</span></label>
                          <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_3_cat_30000_plus"><span>≥ S$30k (4.10% p.a.)</span></label>
@@ -92,8 +92,8 @@
                 </div>
 
                 <!-- Card 7: CIMB FastSaver -->
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h2 class="text-xl font-semibold mb-3 text-gray-800">CIMB FastSaver Account</h2>
+                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-ctp-primary">CIMB FastSaver Account</h2>
                     <div class="toggle-group">
                         <label class="toggle-option"><input type="radio" name="cimbCondition" value="has_account" checked><span>Has account</span></label>
                         <label class="toggle-option"><input type="radio" name="cimbCondition" value="no_account"><span>No account / Not applicable</span></label>
@@ -106,15 +106,15 @@
             <div class="relative">
                 <div id="sticky-panel" class="sticky top-8 space-y-6">
                     <!-- Hero Section -->
-                    <div class="bg-green-600 text-white p-6 rounded-lg shadow-lg text-center">
+                    <div class="bg-ctp-success text-ctp-bg p-6 rounded-lg shadow-lg text-center">
                         <h2 class="text-lg font-semibold uppercase tracking-wider">Max Estimated Monthly Interest</h2>
                         <div id="monthlyInterest" class="text-5xl font-bold my-2">S$0.00</div>
-                        <div id="equivalentRate" class="text-green-200">Equivalent 0.00% p.a.</div>
+                        <div id="equivalentRate" class="opacity-80">Equivalent 0.00% p.a.</div>
                     </div>
 
                     <!-- Visual Allocation Chart -->
-                    <div class="bg-white p-6 rounded-lg shadow-sm">
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Optimal Allocation</h3>
+                    <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-4 text-ctp-primary">Optimal Allocation</h3>
                         <div id="allocation-visualizer">
                             <!-- JS will inject bar chart here -->
                         </div>
@@ -124,8 +124,8 @@
                     </div>
 
                     <!-- Breakdown Summary -->
-                    <div class="bg-white p-6 rounded-lg shadow-sm">
-                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Interest Breakdown</h3>
+                    <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-2 text-ctp-primary">Interest Breakdown</h3>
                         <div id="interestBreakdown" class="space-y-4">
                             <!-- JS will inject accordions here -->
                         </div>

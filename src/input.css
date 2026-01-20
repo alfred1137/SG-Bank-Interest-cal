@@ -1,17 +1,107 @@
 @import "tailwindcss";
 
 @theme {
-    --color-uob-one: #3b82f6;
-    --color-uob-stash: #60a5fa;
-    --color-ocbc-360: #ef4444;
-    --color-sc: #22c55e;
-    --color-dbs: #f87171;
-    --color-cimb: #eab308;
+    /* Catppuccin Mocha (Dark) */
+    --color-mocha-rosewater: #f5e0dc;
+    --color-mocha-flamingo: #f2cdcd;
+    --color-mocha-pink: #f5c2e7;
+    --color-mocha-mauve: #cba6f7;
+    --color-mocha-red: #f38ba8;
+    --color-mocha-maroon: #eba0ac;
+    --color-mocha-peach: #fab387;
+    --color-mocha-yellow: #f9e2af;
+    --color-mocha-green: #a6e3a1;
+    --color-mocha-teal: #94e2d5;
+    --color-mocha-sky: #89dceb;
+    --color-mocha-sapphire: #74c7ec;
+    --color-mocha-blue: #89b4fa;
+    --color-mocha-lavender: #b4befe;
+    --color-mocha-text: #cdd6f4;
+    --color-mocha-subtext1: #bac2de;
+    --color-mocha-subtext0: #a6adc8;
+    --color-mocha-overlay2: #9399b2;
+    --color-mocha-overlay1: #7f849c;
+    --color-mocha-overlay0: #6c7086;
+    --color-mocha-surface2: #585b70;
+    --color-mocha-surface1: #45475a;
+    --color-mocha-surface0: #313244;
+    --color-mocha-base: #1e1e2e;
+    --color-mocha-mantle: #181825;
+    --color-mocha-crust: #11111b;
+
+    /* Catppuccin Latte (Light) */
+    --color-latte-rosewater: #dc8a78;
+    --color-latte-flamingo: #dd7878;
+    --color-latte-pink: #ea76cb;
+    --color-latte-mauve: #8839ef;
+    --color-latte-red: #d20f39;
+    --color-latte-maroon: #e64553;
+    --color-latte-peach: #fe640b;
+    --color-latte-yellow: #df8e1d;
+    --color-latte-green: #40a02b;
+    --color-latte-teal: #179287;
+    --color-latte-sky: #04a5e5;
+    --color-latte-sapphire: #209fb5;
+    --color-latte-blue: #1e66f5;
+    --color-latte-lavender: #7287fd;
+    --color-latte-text: #4c4f69;
+    --color-latte-subtext1: #5c5f77;
+    --color-latte-subtext0: #6c6f85;
+    --color-latte-overlay2: #7c7f93;
+    --color-latte-overlay1: #8c8fa1;
+    --color-latte-overlay0: #9ca0b0;
+    --color-latte-surface2: #acb0be;
+    --color-latte-surface1: #bcc0cc;
+    --color-latte-surface0: #ccd0da;
+    --color-latte-base: #eff1f5;
+    --color-latte-mantle: #e6e9ef;
+    --color-latte-crust: #dce0e8;
+
+    /* Semantic Aliases - Default to Latte (Light) */
+    --color-ctp-primary: var(--color-latte-blue);
+    --color-ctp-bg: var(--color-latte-base);
+    --color-ctp-surface: var(--color-latte-surface0);
+    --color-ctp-text: var(--color-latte-text);
+    --color-ctp-subtext: var(--color-latte-subtext0);
+    --color-ctp-overlay: var(--color-latte-overlay0);
+    --color-ctp-success: var(--color-latte-green);
+    --color-ctp-error: var(--color-latte-red);
+    --color-ctp-warning: var(--color-latte-yellow);
+    --color-ctp-accent: var(--color-latte-mauve);
+
+    --color-uob-one: var(--color-latte-blue);
+    --color-uob-stash: var(--color-latte-sky);
+    --color-ocbc-360: var(--color-latte-red);
+    --color-sc: var(--color-latte-green);
+    --color-dbs: var(--color-latte-maroon);
+    --color-cimb: var(--color-latte-yellow);
+}
+
+@media (prefers-color-scheme: dark) {
+    @theme {
+        --color-ctp-primary: var(--color-mocha-blue);
+        --color-ctp-bg: var(--color-mocha-base);
+        --color-ctp-surface: var(--color-mocha-surface0);
+        --color-ctp-text: var(--color-mocha-text);
+        --color-ctp-subtext: var(--color-mocha-subtext0);
+        --color-ctp-overlay: var(--color-mocha-overlay0);
+        --color-ctp-success: var(--color-mocha-green);
+        --color-ctp-error: var(--color-mocha-red);
+        --color-ctp-warning: var(--color-mocha-yellow);
+        --color-ctp-accent: var(--color-mocha-mauve);
+
+        --color-uob-one: var(--color-mocha-blue);
+        --color-uob-stash: var(--color-mocha-sky);
+        --color-ocbc-360: var(--color-mocha-red);
+        --color-sc: var(--color-mocha-green);
+        --color-dbs: var(--color-mocha-maroon);
+        --color-cimb: var(--color-mocha-yellow);
+    }
 }
 
 @layer components {
     #allocation-visualizer {
-        @apply w-full h-8 bg-gray-200 rounded-full overflow-hidden flex;
+        @apply w-full h-8 bg-ctp-surface rounded-full overflow-hidden flex;
     }
 
     .allocation-bar-segment {
@@ -19,11 +109,11 @@
     }
 
     .accordion-header {
-        @apply flex justify-between items-center p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition duration-200;
+        @apply flex justify-between items-center p-3 bg-ctp-surface/50 rounded-lg cursor-pointer hover:bg-ctp-surface transition duration-200;
     }
 
     .accordion-content {
-        @apply hidden p-3 border-t border-gray-100 space-y-2;
+        @apply hidden p-3 border-t border-ctp-overlay/20 space-y-2;
     }
 
     .accordion-content.open {
@@ -31,7 +121,7 @@
     }
 
     .interest-breakdown-item {
-        @apply flex justify-between text-sm py-1;
+        @apply flex justify-between text-sm py-1 text-ctp-subtext;
     }
 
     .toggle-group, .toggle-group-dbs {
@@ -39,18 +129,18 @@
     }
 
     .toggle-option {
-        @apply flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer transition duration-200;
+        @apply flex items-center gap-3 p-3 rounded-lg border border-ctp-overlay/20 hover:bg-ctp-surface/50 cursor-pointer transition duration-200 text-ctp-text;
     }
 
     .toggle-option input[type="radio"], .toggle-option input[type="checkbox"] {
-        @apply w-4 h-4 text-blue-600 focus:ring-blue-500;
+        @apply w-4 h-4 text-ctp-primary focus:ring-ctp-primary bg-ctp-surface border-ctp-overlay/30;
     }
 
     .checkbox-option {
-        @apply flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer transition duration-200;
+        @apply flex items-center gap-3 p-3 rounded-lg border border-ctp-overlay/20 hover:bg-ctp-surface/50 cursor-pointer transition duration-200 text-ctp-text;
     }
 
     .checkbox-option input[type="checkbox"]:disabled + span {
-        @apply text-gray-400;
+        @apply text-ctp-subtext/50;
     }
 }

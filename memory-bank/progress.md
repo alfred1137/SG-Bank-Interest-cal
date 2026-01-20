@@ -16,6 +16,13 @@ The project has undergone a major refactoring to improve maintainability and sca
 
 ## What's Left to Build (TODOs)
 
+### Phase 10: Catppuccin Aesthetic
+
+- [X] Define Catppuccin colors in `src/input.css`.
+- [X] Update `index.html` to use Catppuccin-themed Tailwind classes.
+- [X] Implement support for both Light (Latte) and Dark (Mocha) modes using system preferences.
+- [X] Update component styles (toggles, cards, header) to match the aesthetic.
+
 ### Phase 7: Add Legal Disclaimers
 
 - [X] Add a disclaimer to the top of the `README.md` file.

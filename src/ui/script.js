@@ -11,13 +11,13 @@ const bankAccountNames = {
 };
 
 const bankColors = {
-    "UOB One": "bg-blue-500",
-    "UOB Stash": "bg-blue-400",
-    "OCBC 360": "bg-red-500",
-    "SC": "bg-green-500",
-    "DBS": "bg-red-400",
-    "CIMB": "bg-yellow-500",
-    "Unallocated": "bg-gray-300"
+    "UOB One": "bg-uob-one",
+    "UOB Stash": "bg-uob-stash",
+    "OCBC 360": "bg-ocbc-360",
+    "SC": "bg-sc",
+    "DBS": "bg-dbs",
+    "CIMB": "bg-cimb",
+    "Unallocated": "bg-ctp-overlay"
 };
 
 const formatCurrency = (amount) => new Intl.NumberFormat('en-SG', { style: 'currency', currency: 'SGD' }).format(amount);
@@ -46,7 +46,7 @@ function updateAllocationVisualizer(totalFunds, allocation) {
         if (allocation[bank] > 0) {
             const percentage = (allocation[bank] / totalFunds) * 100;
             const segment = document.createElement('div');
-            segment.className = `allocation-bar-segment ${bankColors[bank] || 'bg-gray-400'}`;
+            segment.className = `allocation-bar-segment ${bankColors[bank] || 'bg-ctp-overlay'}`;
             segment.style.width = `${percentage}%`;
             segment.title = `${bankAccountNames[bank]}: ${formatCurrency(allocation[bank])}`;
             allocationVisualizerDiv.appendChild(segment);
@@ -68,7 +68,7 @@ function updateAllocationVisualizer(totalFunds, allocation) {
 function updateAllocation() {
     const totalFunds = parseFloat(totalFundsInput.value);
     if (isNaN(totalFunds) || totalFunds < 0) {
-        allocationResultsDiv.innerHTML = '<p class="text-red-500">Please enter a valid fund amount.</p>';
+        allocationResultsDiv.innerHTML = '<p class="text-ctp-error">Please enter a valid fund amount.</p>';
         interestBreakdownDiv.innerHTML = '';
         monthlyInterestDiv.textContent = formatCurrency(0);
         equivalentRateDiv.textContent = 'Equivalent 0.00% p.a.';
@@ -113,10 +113,10 @@ function updateAllocation() {
     for (const [bank, amount] of sortedAllocation) {
         if (amount > 0) {
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'flex justify-between items-center text-sm';
+            itemDiv.className = 'flex justify-between items-center text-sm text-ctp-text';
             itemDiv.innerHTML = `
                 <span class="font-semibold">${bankAccountNames[bank] || bank}</span>
-                <span class="font-mono">${formatCurrency(amount)}</span>
+                <span class="font-mono text-ctp-subtext">${formatCurrency(amount)}</span>
             `;
             allocationResultsDiv.appendChild(itemDiv);
         }
@@ -133,10 +133,10 @@ function updateAllocation() {
         const accordion = document.createElement('div');
         accordion.innerHTML = `
             <div class="accordion-header">
-                <h4 class="font-semibold">${bankAccountNames[bank]}</h4>
+                <h4 class="font-semibold text-ctp-text">${bankAccountNames[bank]}</h4>
                 <div class="flex items-center gap-2">
-                    <span class="font-semibold text-green-700">${formatCurrency(totalBankInterest)}</span>
-                    <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <span class="font-semibold text-ctp-success">${formatCurrency(totalBankInterest)}</span>
+                    <svg class="w-4 h-4 transform transition-transform text-ctp-subtext" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </div>
             </div>
             <div class="accordion-content"></div>
@@ -151,8 +151,8 @@ function updateAllocation() {
                 const tierItem = document.createElement('div');
                 tierItem.className = 'interest-breakdown-item';
                 tierItem.innerHTML = `
-                    <span class="text-gray-600">${tier} p.a.</span>
-                    <span class="font-mono">${formatCurrency(tierData.interest)}</span>
+                    <span class="text-ctp-subtext">${tier} p.a.</span>
+                    <span class="font-mono text-ctp-text">${formatCurrency(tierData.interest)}</span>
                 `;
                 content.appendChild(tierItem);
             }
