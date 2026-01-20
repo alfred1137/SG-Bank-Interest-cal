@@ -4,6 +4,8 @@
 - **HTML5:** For structuring the web content.
 - **CSS3:** For styling.
 - **Tailwind CSS:** A utility-first CSS framework used for styling. It is managed as a local dependency and compiled into `style.css` via a build script.
+    - **Custom Theme:** Implements the **Catppuccin** color scheme (Latte/Mocha) with semantic aliases (`--color-ctp-*`) to support adaptive dark mode.
+    - **Semantic Aliases:** Includes `ctp-primary`, `ctp-bg`, `ctp-surface`, `ctp-crust`, `ctp-mantle`, `ctp-text`, `ctp-subtext`, `ctp-overlay`, `ctp-success`, `ctp-error`, `ctp-warning`, `ctp-accent`.
 - **JavaScript (ES6+):** For all interactive logic, calculations, and DOM manipulation. The code is structured using ES Modules (`import`/`export`).
 - **Node.js:** Used for package management (`npm`) and running build/test scripts.
 - **Jest:** The testing framework used for unit testing the JavaScript logic.

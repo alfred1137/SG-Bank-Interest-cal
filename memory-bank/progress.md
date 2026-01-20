@@ -1,11 +1,12 @@
 # Progress: Optimal Fund Allocation Minisite
 
 ## Current Status
-The project has undergone a major refactoring to improve maintainability and scalability. The codebase is now modular, with logic separated from UI and configuration externalized.
+The project has successfully completed the implementation of the Catppuccin aesthetic and legal disclaimers. A critical bug in the disclaimer modal was identified and resolved, and the project is now entering the final UI polish and additional components phases.
 
+- **Phase 7 Complete & Fixed:** Legal disclaimers and the functional modal are in place.
+- **Phase 10 (Catppuccin) Complete:** Adaptive dark mode and semantic color mapping implemented.
 - **Refactoring Complete:** Core logic is in `src/logic`, UI code in `src/ui`, and rates in `src/config`.
 - **Tests Passing:** Unit and integration tests verified against the new structure.
-- **Ready for Features:** The stable codebase is ready for the remaining UI and content tasks.
 
 ## What Works
 
