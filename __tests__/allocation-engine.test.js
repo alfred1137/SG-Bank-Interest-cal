@@ -25,6 +25,17 @@ describe('Allocation Engine', () => {
         expect(totalMonthlyInterest).toBeCloseTo(250.00, 2);
     });
 
+    it('should return a consistent breakdown object when funds exceed all capacities', () => {
+        const finiteTiers = [
+            { bank: 'A', capacity: 10000, rate: 0.05 },
+            { bank: 'B', capacity: 10000, rate: 0.04 }
+        ];
+        const { breakdown } = findOptimalAllocationAndInterest(30000, finiteTiers);
+        // Remaining 10000 should be in "B" (last bank), not "B Account"
+        expect(Object.keys(breakdown)).toContain('B');
+        expect(Object.keys(breakdown)).not.toContain('B Account');
+    });
+
     it('should return an empty object if total funds are zero', () => {
         const { allocation, totalMonthlyInterest } = findOptimalAllocationAndInterest(0, mockTiers);
         expect(allocation).toEqual({});

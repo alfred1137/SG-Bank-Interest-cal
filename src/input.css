@@ -1,3 +1,56 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+    --color-uob-one: #3b82f6;
+    --color-uob-stash: #60a5fa;
+    --color-ocbc-360: #ef4444;
+    --color-sc: #22c55e;
+    --color-dbs: #f87171;
+    --color-cimb: #eab308;
+}
+
+@layer components {
+    #allocation-visualizer {
+        @apply w-full h-8 bg-gray-200 rounded-full overflow-hidden flex;
+    }
+
+    .allocation-bar-segment {
+        @apply h-full transition-all duration-500 ease-out;
+    }
+
+    .accordion-header {
+        @apply flex justify-between items-center p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition duration-200;
+    }
+
+    .accordion-content {
+        @apply hidden p-3 border-t border-gray-100 space-y-2;
+    }
+
+    .accordion-content.open {
+        @apply block;
+    }
+
+    .interest-breakdown-item {
+        @apply flex justify-between text-sm py-1;
+    }
+
+    .toggle-group, .toggle-group-dbs {
+        @apply space-y-2;
+    }
+
+    .toggle-option {
+        @apply flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer transition duration-200;
+    }
+
+    .toggle-option input[type="radio"], .toggle-option input[type="checkbox"] {
+        @apply w-4 h-4 text-blue-600 focus:ring-blue-500;
+    }
+
+    .checkbox-option {
+        @apply flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer transition duration-200;
+    }
+
+    .checkbox-option input[type="checkbox"]:disabled + span {
+        @apply text-gray-400;
+    }
+}

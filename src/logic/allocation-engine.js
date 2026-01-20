@@ -45,7 +45,7 @@ export function findOptimalAllocationAndInterest(totalFunds, allTiers) {
             const interestForTier = remainingFunds * (lastTier.rate / 12);
             totalMonthlyInterest += interestForTier;
 
-            const bankBreakdownName = `${lastBank} Account`;
+            const bankBreakdownName = lastBank;
             if (!breakdown[bankBreakdownName]) {
                 breakdown[bankBreakdownName] = {};
             }

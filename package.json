@@ -6,7 +6,7 @@
   "scripts": {
     "start": "http-server -c-1",
     "test": "jest",
-    "build": "npx tailwindcss -i ./src/input.css -o ./style.css"
+    "build": "npx tailwindcss -i ./src/input.css -o ./src/output.css"
   },
   "keywords": [
     "singapore",
@@ -19,6 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
+    "@tailwindcss/cli": "^4.1.18",
     "autoprefixer": "^10.4.21",
     "babel-jest": "^30.0.5",
     "http-server": "^14.1.1",
