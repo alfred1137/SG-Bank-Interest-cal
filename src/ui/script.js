@@ -314,33 +314,84 @@ setupConditionalVisibility('ocbc360Toggle', 'ocbc360Conditions');
 setupConditionalVisibility('dbsToggle', 'dbsConditionsWrapper');
 
 
-// Modal Logic
-const disclaimerModal = document.getElementById('disclaimerModal');
-const openDisclaimerBtn = document.getElementById('openDisclaimer');
-const closeDisclaimerX = document.getElementById('closeDisclaimer');
-const closeDisclaimerBtn = document.getElementById('closeDisclaimerBtn');
+// Modal Logic Helper
+function setupModal(modalId, openBtnId, closeBtnId, closeXId) {
+    const modal = document.getElementById(modalId);
+    const openBtn = document.getElementById(openBtnId);
+    const closeBtn = document.getElementById(closeBtnId);
+    const closeX = document.getElementById(closeXId);
 
-function toggleModal(show) {
-    if (show) {
-        disclaimerModal.classList.remove('hidden');
-        disclaimerModal.classList.add('flex');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
-    } else {
-        disclaimerModal.classList.add('hidden');
-        disclaimerModal.classList.remove('flex');
-        document.body.style.overflow = ''; // Restore scrolling
-    }
+    if (!modal) return;
+
+    const toggle = (show) => {
+        if (show) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        } else {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+    };
+
+    if (openBtn) openBtn.addEventListener('click', () => toggle(true));
+    if (closeBtn) closeBtn.addEventListener('click', () => toggle(false));
+    if (closeX) closeX.addEventListener('click', () => toggle(false));
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) toggle(false);
+    });
 }
 
-if (openDisclaimerBtn) openDisclaimerBtn.addEventListener('click', () => toggleModal(true));
-if (closeDisclaimerX) closeDisclaimerX.addEventListener('click', () => toggleModal(false));
-if (closeDisclaimerBtn) closeDisclaimerBtn.addEventListener('click', () => toggleModal(false));
+// Setup Modals
+setupModal('disclaimerModal', 'openDisclaimer', 'closeDisclaimerBtn', 'closeDisclaimer');
+setupModal('aboutModal', 'openAbout', 'closeAboutBtn', 'closeAbout');
 
-// Close on outside click
-if (disclaimerModal) {
-    disclaimerModal.addEventListener('click', (e) => {
-        if (e.target === disclaimerModal) toggleModal(false);
-    });
+// Theme Toggle Logic
+const themeToggleBtn = document.getElementById('themeToggle');
+const htmlElement = document.documentElement;
+
+const getStoredTheme = () => localStorage.getItem('theme');
+const setStoredTheme = (theme) => localStorage.setItem('theme', theme);
+
+const applyTheme = (theme) => {
+    if (theme === 'dark') {
+        htmlElement.classList.add('dark');
+        htmlElement.classList.remove('light');
+    } else if (theme === 'light') {
+        htmlElement.classList.add('light');
+        htmlElement.classList.remove('dark');
+    } else {
+        htmlElement.classList.remove('dark', 'light');
+    }
+};
+
+const toggleTheme = () => {
+    const currentTheme = getStoredTheme();
+    if (currentTheme === 'dark') {
+        setStoredTheme('light');
+        applyTheme('light');
+    } else if (currentTheme === 'light') {
+        setStoredTheme('dark');
+        applyTheme('dark');
+    } else {
+        // If no theme stored, check system preference
+        const systemIsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const newTheme = systemIsDark ? 'light' : 'dark';
+        setStoredTheme(newTheme);
+        applyTheme(newTheme);
+    }
+};
+
+if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', toggleTheme);
+}
+
+// Initial theme application
+const storedTheme = getStoredTheme();
+if (storedTheme) {
+    applyTheme(storedTheme);
 }
 
 // Initial calculation on page load

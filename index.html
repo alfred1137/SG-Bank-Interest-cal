@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Optimal Fund Allocation</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -22,13 +23,13 @@
             <!-- Left Scrolling Workspace -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Card 1: Total Funds -->
-                <div class="bg-ctp-crust p-8 rounded-xl shadow-lg text-center">
+                <div class="bg-ctp-surface p-8 rounded-xl shadow-lg text-center border border-ctp-overlay/5">
                     <label for="totalFunds" class="block text-xl font-bold text-ctp-subtext mb-3">Total Funds to Allocate (SGD)</label>
-                    <input type="number" id="totalFunds" value="250000" min="0" class="w-full max-w-sm mx-auto p-4 bg-ctp-base border-2 border-ctp-surface1 rounded-lg text-ctp-text text-3xl font-mono text-center focus:ring-ctp-primary focus:border-ctp-primary transition duration-200" placeholder="e.g., 100000">
+                    <input type="number" id="totalFunds" value="250000" min="0" class="w-full max-w-sm mx-auto p-4 bg-ctp-bg border-2 border-ctp-mantle rounded-lg text-ctp-text text-3xl font-mono text-center focus:ring-ctp-primary focus:border-ctp-primary transition duration-200" placeholder="e.g., 100000">
                 </div>
 
                 <!-- Card 2: UOB One -->
-                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm border border-ctp-overlay/5">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex flex-col">
                             <h2 class="text-xl font-semibold text-ctp-primary">UOB One Account</h2>
@@ -55,7 +56,7 @@
                 </div>
 
                 <!-- Card 3: UOB Stash -->
-                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm border border-ctp-overlay/5">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex flex-col">
                             <h2 class="text-xl font-semibold text-ctp-primary">UOB Stash Account</h2>
@@ -79,7 +80,7 @@
                 </div>
 
                 <!-- Card 4: SC Bonus$aver -->
-                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm border border-ctp-overlay/5">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex flex-col">
                             <h2 class="text-xl font-semibold text-ctp-primary">SC Bonus$aver Account</h2>
@@ -102,7 +103,7 @@
                 </div>
 
                  <!-- Card 5: OCBC 360 -->
-                 <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                 <div class="bg-ctp-surface p-6 rounded-lg shadow-sm border border-ctp-overlay/5">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex flex-col">
                             <h2 class="text-xl font-semibold text-ctp-primary">OCBC 360 Account</h2>
@@ -125,7 +126,7 @@
                 </div>
 
                  <!-- Card 6: DBS Multiplier -->
-                 <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                 <div class="bg-ctp-surface p-6 rounded-lg shadow-sm border border-ctp-overlay/5">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex flex-col">
                             <h2 class="text-xl font-semibold text-ctp-primary">DBS Multiplier Account</h2>
@@ -190,7 +191,7 @@
                 </div>
 
                 <!-- Card 7: CIMB FastSaver -->
-                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                <div class="bg-ctp-surface p-6 rounded-lg shadow-sm border border-ctp-overlay/5">
                     <div class="flex items-center justify-between">
                         <div class="flex flex-col">
                             <h2 class="text-xl font-semibold text-ctp-primary">CIMB FastSaver Account</h2>
@@ -212,7 +213,7 @@
             <div class="relative">
                 <div id="sticky-panel" class="sticky top-8 space-y-6">
                     <!-- Hero Section -->
-                    <div class="bg-ctp-crust p-8 rounded-xl shadow-lg text-center">
+                    <div class="bg-ctp-surface p-8 rounded-xl shadow-lg text-center border border-ctp-overlay/5">
                         <h2 class="text-lg font-medium text-ctp-subtext mb-2">Total Monthly Interest</h2>
                         <p id="monthlyInterest" class="text-5xl font-bold text-ctp-success transition-colors duration-300">S$0.00</p>
                         <p id="annualInterest" class="text-lg text-ctp-primary mt-2 font-semibold">S$0.00 / year</p>
@@ -220,7 +221,7 @@
                     </div>
 
                     <!-- Visual Allocation Chart -->
-                    <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                    <div class="bg-ctp-surface p-6 rounded-lg shadow-sm border border-ctp-overlay/5">
                         <h3 class="text-xl font-semibold mb-4 text-ctp-primary">Optimal Allocation</h3>
                         <div class="relative h-64 mx-auto" style="max-width: 300px;">
                             <canvas id="allocationPieChart"></canvas>
@@ -231,7 +232,7 @@
                     </div>
 
                     <!-- Breakdown Summary -->
-                    <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
+                    <div class="bg-ctp-surface p-6 rounded-lg shadow-sm border border-ctp-overlay/5">
                         <h3 class="text-xl font-semibold mb-2 text-ctp-primary">Interest Breakdown</h3>
                         <div id="interestBreakdown" class="space-y-4">
                             <!-- JS will inject accordions here -->
@@ -243,13 +244,22 @@
     </main>
 
     <footer class="mt-32 mb-12 px-6 flex flex-col items-center gap-8">
-        <button 
-            id="openDisclaimer"
-            class="bg-ctp-surface/80 hover:bg-ctp-surface border border-ctp-overlay/10 px-6 py-2.5 rounded-full transition-all text-ctp-text hover:text-ctp-primary flex items-center gap-2 shadow-lg"
-        >
-            <i class="fas fa-circle-info text-xs text-ctp-primary"></i>
-            <span class="text-[11px] font-bold tracking-wide uppercase">Legal Disclaimer</span>
-        </button>
+        <div class="flex gap-4">
+            <button 
+                id="openAbout"
+                class="bg-ctp-surface/80 hover:bg-ctp-surface border border-ctp-overlay/10 px-6 py-2.5 rounded-full transition-all text-ctp-text hover:text-ctp-primary flex items-center gap-2 shadow-lg"
+            >
+                <i class="fas fa-circle-question text-xs text-ctp-primary"></i>
+                <span class="text-[11px] font-bold tracking-wide uppercase">About Project</span>
+            </button>
+            <button 
+                id="openDisclaimer"
+                class="bg-ctp-surface/80 hover:bg-ctp-surface border border-ctp-overlay/10 px-6 py-2.5 rounded-full transition-all text-ctp-text hover:text-ctp-primary flex items-center gap-2 shadow-lg"
+            >
+                <i class="fas fa-circle-info text-xs text-ctp-primary"></i>
+                <span class="text-[11px] font-bold tracking-wide uppercase">Legal Disclaimer</span>
+            </button>
+        </div>
 
         <div class="max-w-4xl w-full bg-ctp-surface/40 backdrop-blur-lg border border-ctp-overlay/10 rounded-[32px] p-8 md:p-10 flex flex-col items-center gap-6 shadow-2xl relative overflow-hidden">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-ctp-primary/40 rounded-full"></div>
@@ -282,6 +292,46 @@
         </div>
     </footer>
 
+    <!-- About Modal -->
+    <div id="aboutModal" class="fixed inset-0 bg-ctp-crust/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-ctp-surface max-w-2xl w-full rounded-xl shadow-2xl border border-ctp-overlay/20 max-h-[90vh] flex flex-col">
+            <div class="p-6 border-b border-ctp-overlay/10 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-ctp-primary">About This Project</h2>
+                <button id="closeAbout" class="text-ctp-subtext hover:text-ctp-text transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto text-ctp-text space-y-6 text-sm leading-relaxed">
+                <section class="space-y-2">
+                    <h3 class="text-lg font-bold text-ctp-accent">The Mission</h3>
+                    <p>Singapore's high-interest savings accounts are fantastic but complex. Between tiered interest rates, spending requirements, and salary credit conditions, it's hard to know exactly where your next dollar should go. This tool was built to solve that "optimization puzzle."</p>
+                </section>
+                
+                <section class="space-y-2">
+                    <h3 class="text-lg font-bold text-ctp-accent">How it Works</h3>
+                    <p>Under the hood, our allocation engine evaluates every available interest tier across all your selected accounts. It doesn't just fill one bank at a time; it identifies the <strong>globally optimal</strong> distribution that yields the highest total interest for your specific fund amount.</p>
+                </section>
+
+                <section class="space-y-2">
+                    <h3 class="text-lg font-bold text-ctp-accent">Tech Stack</h3>
+                    <ul class="list-disc list-inside space-y-1 text-ctp-subtext">
+                        <li>Styled with <strong>Catppuccin</strong> (Macchiato (dark)/Latte (light) flavors)</li>
+                        <li>Built with <strong>Tailwind CSS v4</strong></li>
+                        <li>Core logic in pure, modular <strong>JavaScript</strong></li>
+                        <li>Tested with <strong>Jest</strong> to ensure mathematical accuracy</li>
+                    </ul>
+                </section>
+
+                <div class="bg-ctp-mantle p-4 rounded-lg border border-ctp-overlay/10 text-xs italic text-ctp-subtext">
+                    "Developed with vibe to create a clear and modern interest optimization experience."
+                </div>
+            </div>
+            <div class="p-6 border-t border-ctp-overlay/10 text-right">
+                <button id="closeAboutBtn" class="bg-ctp-primary text-ctp-bg px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Disclaimer Modal -->
     <div id="disclaimerModal" class="fixed inset-0 bg-ctp-crust/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-ctp-surface max-w-2xl w-full rounded-xl shadow-2xl border border-ctp-overlay/20 max-h-[90vh] flex flex-col">
@@ -304,6 +354,12 @@
             </div>
         </div>
     </div>
+
+    <!-- Floating Theme Toggle -->
+    <button id="themeToggle" class="fixed bottom-6 right-6 p-4 rounded-full bg-ctp-primary text-ctp-bg shadow-2xl hover:scale-110 transition-all duration-300 z-[100] border-2 border-ctp-crust/10 group" title="Toggle Theme">
+        <i class="fas fa-moon dark:hidden text-xl group-hover:rotate-12 transition-transform"></i>
+        <i class="fas fa-sun hidden dark:block text-xl group-hover:rotate-45 transition-transform"></i>
+    </button>
 
     <script type="module" src="src/ui/script.js"></script>
 </body>

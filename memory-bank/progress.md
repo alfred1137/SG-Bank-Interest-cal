@@ -22,7 +22,7 @@ The project has completed a significant round of UI/UX improvements, focusing on
 
 - [X] Define Catppuccin colors in `src/input.css`.
 - [X] Update `index.html` to use Catppuccin-themed Tailwind classes.
-- [X] Implement support for both Light (Latte) and Dark (Mocha) modes using system preferences.
+- [X] Implement support for both Light (Latte) and Dark (Macchiato) modes using system preferences.
 - [X] Update component styles (toggles, cards, header) to match the aesthetic.
 
 ### Phase 7: Add Legal Disclaimers
@@ -34,20 +34,22 @@ The project has completed a significant round of UI/UX improvements, focusing on
 
 ### Phase 8: More UI improvements
 
-- [ ] Favicon
+- [X] Favicon
 - [X] Improved bank selection panel (Refactored to cleaner toggles/cards)
 - [X] Tier display improvement (Added allocated amount and cap information to breakdown)
 - [X] Transparent updates (Added "Last updated" dates and "Minimum qualifying requirement" labels)
 
 ### Phase 9: other expected components
 
-- [X] social button to github
-- [ ] light mode
-- [ ] dark / light mode toggle
-- [ ] overhaul README
+-   [X] social button to github
+- [X] light mode (Catppuccin Latte)
+- [X] dark mode (Catppuccin Macchiato)
+- [X] floating dark / light mode toggle
+- [X] overhaul README
 
 ## Completed Milestones
 
+- **Phase 9: Theme & Documentation (2026-01-20):** Implemented floating theme toggle, refined Latte palette, and updated README to professional standards.
 - **Phase 8: UI & Default Polish (2026-01-20):** Standardized default configurations, added "Last Updated" dates, "Minimum qualifying requirement" labels, and improved the detail level in the interest breakdown.
 - **Phase 1: Core Enhancements:** Implemented automated tests and migrated to a local Tailwind CSS build process.
 - **Phase 2: UI/UX Improvements:** Revised the display, added options for account selection, made the options column scrollable, and displayed full account names.

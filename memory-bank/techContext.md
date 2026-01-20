@@ -35,8 +35,10 @@
 - **Version Control:** `git` commands for repository initialization and management.
 - **Browser Interaction:** `browser_action` for testing the UI and functionality.
 
-## Technical Debt & Improvements (Added 2026-01-19)
-- **Configuration Hardcoding:** Interest rates and logic are tightly coupled. Need to separate configuration (rates/tiers) from the calculation logic.
-- **Directory Structure:** The root directory is cluttered. Source code should be organized into `src/` subdirectories (e.g., `src/logic`, `src/config`).
-- **Input Validation:** Some internal functions lack robust input validation, potentially leading to runtime errors with unexpected data types.
-- **Test Fragility:** Integration tests rely on specific hardcoded values, making them brittle to rate changes. Tests should ideally be decoupled from specific rate values.
+## Technical Debt & Improvements (Updated 2026-01-20)
+- **Resolved (2026-01-19):**
+    - **Configuration Hardcoding:** Separated interest rates and tier structures into `src/config/bank-rates.js`.
+    - **Directory Structure:** Organized source code into `src/logic`, `src/config`, and `src/ui`.
+- **Remaining Debt:**
+    - **Input Validation:** Some internal functions still lack robust input validation.
+    - **Test Fragility:** Integration tests rely on specific hardcoded values, making them brittle to rate changes. Tests should ideally be decoupled from specific rate values.

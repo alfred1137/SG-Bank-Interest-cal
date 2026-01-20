@@ -9,6 +9,15 @@ The project is now focusing on final UI/UX polish and additional components.
 
 ## Recent Changes
 
+-   **Theme & UI Polish (2026-01-20):**
+    -   Switched dark mode flavor to **Catppuccin Macchiato** (lighter/softer than Mocha).
+    -   Adjusted semantic mappings to ensure cards and blocks use **lighter surface levels** for better contrast and a cleaner look.
+    -   Implemented a **floating theme toggle** at the bottom right for better accessibility.
+    -   Refined the **Catppuccin Latte (Light Mode)** palette for better depth and consistency.
+    -   Added support for **manual theme overrides** (.dark/.light classes) with `localStorage` persistence.
+    -   **Overhauled README.md:** Switched to a professional, comprehensive template with clear installation and usage instructions.
+    -   **Favicon:** Integrated a bank-themed SVG favicon from SVG Find.
+    -   **About Modal:** Added an "About Project" section to explain the mission and tech stack.
 -   **Phase 8: UI Improvements - Defaults & Labels (2026-01-20):**
     -   Implemented default settings for all bank accounts as per user requirements.
     -   Added "Last updated" dates to each bank account card for transparency.
@@ -37,12 +46,10 @@ The project is now focusing on final UI/UX polish and additional components.
 
 ## Next Steps
 
-1.  **UI Polish (Phase 8):**
+1.  **UI Polish (Phase 8 Refinements):**
     -   Add Favicon.
-    -   Improve bank selection panel (remove horizontal scroll if possible).
-    -   Move Title to top (outside interaction space).
-    -   Move "Total Funds" input to the right panel.
-    -   Improve Tier display format in breakdown.
 2.  **Additional Components (Phase 9):**
-    -   Implement "About" page.
-    -   Add social links (GitHub, Blog).
+    -   Implement support for Light Mode (Latte).
+    -   Add Dark / Light mode toggle.
+    -   Overhaul README.
+    -   Implement "About" page / more social links (GitHub already linked).
