@@ -6,6 +6,7 @@
     <title>Optimal Fund Allocation</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="src/output.css">
 </head>
 <body class="bg-ctp-bg text-ctp-text">
@@ -241,11 +242,42 @@
         </div>
     </main>
 
-    <footer class="bg-ctp-mantle border-t border-ctp-surface1 py-8 mt-12">
-        <div class="container mx-auto px-6 text-center">
-            <p class="text-ctp-subtext text-sm">© 2026 Singapore Savings Account Optimizer. All rights reserved.</p>
-            <div class="mt-4 space-x-4">
-                <button id="openDisclaimer" class="text-ctp-primary hover:underline text-sm font-semibold">Legal Disclaimer</button>
+    <footer class="mt-32 mb-12 px-6 flex flex-col items-center gap-8">
+        <button 
+            id="openDisclaimer"
+            class="bg-ctp-surface/80 hover:bg-ctp-surface border border-ctp-overlay/10 px-6 py-2.5 rounded-full transition-all text-ctp-text hover:text-ctp-primary flex items-center gap-2 shadow-lg"
+        >
+            <i class="fas fa-circle-info text-xs text-ctp-primary"></i>
+            <span class="text-[11px] font-bold tracking-wide uppercase">Legal Disclaimer</span>
+        </button>
+
+        <div class="max-w-4xl w-full bg-ctp-surface/40 backdrop-blur-lg border border-ctp-overlay/10 rounded-[32px] p-8 md:p-10 flex flex-col items-center gap-6 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-ctp-primary/40 rounded-full"></div>
+            
+            <div class="flex flex-col items-center gap-6 text-center">
+                <div class="space-y-4 text-ctp-subtext text-[11px] md:text-xs font-medium leading-relaxed max-w-2xl">
+                    <p>
+                        Data provided by bank official sites (UOB, SC, DBS, CIMB, OCBC). 
+                        This tool is for informational purposes only. Always verify latest rates directly with the respective financial institutions.
+                    </p>
+                    <p>
+                        Developed with vibe to create a clear and modern interest optimization experience for those in Singapore.<br />
+                        <span class="text-ctp-overlay1 font-mono">v1.0.0</span>
+                    </p>
+                </div>
+
+                <a 
+                    href="https://github.com/alfred1137/SG-Bank-Interest-cal" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="bg-ctp-crust/40 hover:bg-ctp-crust/80 border border-ctp-overlay/10 px-6 py-3 rounded-2xl transition-all text-ctp-text flex items-center gap-5 group"
+                >
+                    <i class="fab fa-github text-[20px] group-hover:scale-110 transition-transform"></i>
+                    <div class="text-left">
+                        <span class="block text-[10px] font-black uppercase tracking-widest leading-none">Source code</span>
+                        <span class="block text-[9px] font-bold text-ctp-subtext group-hover:text-ctp-primary transition-colors uppercase tracking-tighter mt-1">alfred1137 / SG-Bank-Interest-cal</span>
+                    </div>
+                </a>
             </div>
         </div>
     </footer>

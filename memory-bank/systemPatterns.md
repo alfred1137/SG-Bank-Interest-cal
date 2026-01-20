@@ -33,8 +33,15 @@ graph TD
     -   **View/UI (`src/ui/`):** Handles DOM manipulation, event listeners, and rendering results (`script.js`).
 - **Config-Driven Logic:** Interest rates and tier definitions are externalized in `src/config/bank-rates.js`. The logic functions import this configuration, making rate updates simple and less error-prone.
 - **Module Pattern:** ES Modules are used throughout. `index.html` loads `src/ui/script.js` as a module.
+- **Event Delegation:** UI updates are managed using event delegation on the `document` level to handle dynamic inputs and simplify event listener management.
 
-## Component Relationships
+## UI Patterns
+- **Account Toggles:** Use peer-checked Tailwind classes for custom toggle switches.
+- **Collapsible Conditions:** Bank-specific conditions are grouped in collapsible `div` elements, managed by the `setupConditionalVisibility` utility.
+- **Status Labels:** 
+    - **Last Updated:** Small italicized date next to bank names for data freshness transparency.
+    - **Minimum Qualifying Requirement:** Bold, uppercase accent labels above critical baseline conditions (e.g., UOB One spend, DBS Multiplier volume).
+- **Interest Breakdown Accordions:** Interactive summaries that expand to show detailed tier-by-tier interest, allocated amounts, and applicable caps.
 - **`src/config/bank-rates.js`:** Exports `BANK_CONFIG` object containing all rate data.
 - **`src/logic/calculator.js`:** Imports `BANK_CONFIG` and exports functions to generate tier segments for each bank.
 - **`src/logic/allocation-engine.js`:** Pure logic to calculate optimal allocation given a set of tiers.

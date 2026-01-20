@@ -1,8 +1,9 @@
 # Progress: Optimal Fund Allocation Minisite
 
 ## Current Status
-The project has successfully completed the implementation of the Catppuccin aesthetic and legal disclaimers. A critical bug in the disclaimer modal was identified and resolved, and the project is now entering the final UI polish and additional components phases.
+The project has completed a significant round of UI/UX improvements, focusing on transparency and user-friendly defaults. The codebase has been merged into `main` and all changes are pushed.
 
+- **Phase 8 (UI Improvements) In Progress:** Defaults, labels, and breakdown enhancements completed.
 - **Phase 7 Complete & Fixed:** Legal disclaimers and the functional modal are in place.
 - **Phase 10 (Catppuccin) Complete:** Adaptive dark mode and semantic color mapping implemented.
 - **Refactoring Complete:** Core logic is in `src/logic`, UI code in `src/ui`, and rates in `src/config`.
@@ -34,18 +35,20 @@ The project has successfully completed the implementation of the Catppuccin aest
 ### Phase 8: More UI improvements
 
 - [ ] Favicon
-- [ ] no horizontally scrollable bank selection panel unless out of space
-- [ ] Title `Fund Allocation Optimizer` outside of the interaction space (to the top)
-- [ ] `Total Funds (SGD):` input to the right panel above calculator
-- [ ] Tier display improvement (e.g `Tier (2.50%) p.a.` to `Tier 1 (10k) at 2.50% p.a.`)
+- [X] Improved bank selection panel (Refactored to cleaner toggles/cards)
+- [X] Tier display improvement (Added allocated amount and cap information to breakdown)
+- [X] Transparent updates (Added "Last updated" dates and "Minimum qualifying requirement" labels)
 
 ### Phase 9: other expected components
 
-- [ ] about page
-- [ ] social button to github and blog
+- [X] social button to github
+- [ ] light mode
+- [ ] dark / light mode toggle
+- [ ] overhaul README
 
 ## Completed Milestones
 
+- **Phase 8: UI & Default Polish (2026-01-20):** Standardized default configurations, added "Last Updated" dates, "Minimum qualifying requirement" labels, and improved the detail level in the interest breakdown.
 - **Phase 1: Core Enhancements:** Implemented automated tests and migrated to a local Tailwind CSS build process.
 - **Phase 2: UI/UX Improvements:** Revised the display, added options for account selection, made the options column scrollable, and displayed full account names.
 - **Phase 3: Allocation Fix:** Refactored the `findOptimalAllocation` function to ensure globally optimal fund allocation, resolving a critical bug.

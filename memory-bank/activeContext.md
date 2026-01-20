@@ -9,6 +9,13 @@ The project is now focusing on final UI/UX polish and additional components.
 
 ## Recent Changes
 
+-   **Phase 8: UI Improvements - Defaults & Labels (2026-01-20):**
+    -   Implemented default settings for all bank accounts as per user requirements.
+    -   Added "Last updated" dates to each bank account card for transparency.
+    -   Introduced "Minimum qualifying requirement" labels to specific conditions (UOB One spend, UOB Stash MAB, DBS Multiplier volume).
+    -   Enhanced the interest breakdown UI to show the specific allocated amount and capacity (cap) for each tier.
+    -   Refined currency formatting to consistently use "S$" prefix.
+    -   **Merge:** Successfully merged all features into the `main` branch and pushed to origin.
 -   **Phase 7: Legal Disclaimers & Modal Fix (2026-01-20):** 
     -   Added concise disclaimer to hero section and full disclaimer in footer.
     -   Implemented the legal disclaimer modal.
