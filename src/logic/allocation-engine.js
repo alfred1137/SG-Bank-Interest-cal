@@ -29,9 +29,10 @@ export function findOptimalAllocationAndInterest(totalFunds, allTiers) {
         }
         const tierName = `Tier (${(tier.rate * 100).toFixed(2)}%)`;
         if (!breakdown[tier.bank][tierName]) {
-            breakdown[tier.bank][tierName] = { interest: 0, rate: tier.rate };
+            breakdown[tier.bank][tierName] = { interest: 0, rate: tier.rate, allocatedAmount: 0, capacity: tier.capacity };
         }
         breakdown[tier.bank][tierName].interest += interestForTier;
+        breakdown[tier.bank][tierName].allocatedAmount += amountToAllocate;
         
         remainingFunds -= amountToAllocate;
     }
@@ -51,9 +52,10 @@ export function findOptimalAllocationAndInterest(totalFunds, allTiers) {
             }
             const tierName = `Tier (${(lastTier.rate * 100).toFixed(2)}%)`;
              if (!breakdown[bankBreakdownName][tierName]) {
-                breakdown[bankBreakdownName][tierName] = { interest: 0, rate: lastTier.rate };
+                breakdown[bankBreakdownName][tierName] = { interest: 0, rate: lastTier.rate, allocatedAmount: 0, capacity: lastTier.capacity };
             }
             breakdown[bankBreakdownName][tierName].interest += interestForTier;
+            breakdown[bankBreakdownName][tierName].allocatedAmount += remainingFunds;
         }
     }
 

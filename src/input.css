@@ -143,4 +143,16 @@
     .checkbox-option input[type="checkbox"]:disabled + span {
         @apply text-ctp-subtext/50;
     }
+
+    .radio-tab {
+        @apply cursor-pointer;
+    }
+
+    .radio-tab .tab-label {
+        @apply block text-center p-2 rounded-lg border border-ctp-overlay/20 bg-ctp-surface/30 text-ctp-text text-sm transition duration-200;
+    }
+
+    .radio-tab input:checked + .tab-label {
+        @apply bg-ctp-primary text-ctp-bg border-ctp-primary font-semibold;
+    }
 }

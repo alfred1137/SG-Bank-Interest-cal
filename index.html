@@ -29,44 +29,71 @@
                 <!-- Card 2: UOB One -->
                 <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-semibold text-ctp-primary">UOB One Account</h2>
+                        <div class="flex flex-col">
+                            <h2 class="text-xl font-semibold text-ctp-primary">UOB One Account</h2>
+                            <span class="text-[10px] text-ctp-subtext italic">Last updated: 2025-12-01</span>
+                        </div>
                         <label class="flex items-center cursor-pointer">
-                            <span class="mr-3 text-sm font-medium text-ctp-text">Spend min. S$500</span>
+                            <span class="mr-3 text-sm font-medium text-ctp-text">Include Account</span>
                             <div class="relative">
-                                <input type="checkbox" id="uobSpendToggle" name="uobSpendToggle" class="sr-only peer">
+                                <input type="checkbox" id="uobToggle" name="uobAccountStatus" class="sr-only peer" checked>
                                 <div class="w-11 h-6 bg-ctp-overlay rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-ctp-primary"></div>
                             </div>
                         </label>
                     </div>
-                    <div id="uobConditions" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
-                        <label class="checkbox-option"><input type="checkbox" name="uobCondition" value="giro"><span>3 GIRO debits</span></label>
-                        <label class="checkbox-option"><input type="checkbox" name="uobCondition" value="salary"><span>Salary Credit</span></label>
+                    <div id="uobConditions" class="space-y-4">
+                        <div class="space-y-1">
+                            <span class="text-[10px] uppercase font-bold text-ctp-accent tracking-wider ml-1">Minimum qualifying requirement</span>
+                            <label class="checkbox-option"><input type="checkbox" id="uobSpendToggle" name="uobSpendToggle" checked><span>Min. S$500 card spend</span></label>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <label class="checkbox-option"><input type="checkbox" name="uobCondition" value="giro"><span>3 GIRO debits</span></label>
+                            <label class="checkbox-option"><input type="checkbox" name="uobCondition" value="salary" checked><span>Salary Credit</span></label>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Card 3: UOB Stash -->
                 <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
-                    <h2 class="text-xl font-semibold mb-3 text-ctp-primary">UOB Stash Account</h2>
-                    <div class="toggle-group">
-                        <label class="toggle-option"><input type="radio" name="uobStashCondition" value="no_account" checked><span>No account / Not applicable</span></label>
-                        <label class="toggle-option"><input type="radio" name="uobStashCondition" value="maintain_balance"><span>Maintain previous month's MAB</span></label>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex flex-col">
+                            <h2 class="text-xl font-semibold text-ctp-primary">UOB Stash Account</h2>
+                            <span class="text-[10px] text-ctp-subtext italic">Last updated: 2025-08-05</span>
+                        </div>
+                        <label class="flex items-center cursor-pointer">
+                            <span class="mr-3 text-sm font-medium text-ctp-text">Include Account</span>
+                            <div class="relative">
+                                <input type="checkbox" id="uobStashToggle" name="uobStashAccountStatus" class="sr-only peer">
+                                <div class="w-11 h-6 bg-ctp-overlay rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-ctp-primary"></div>
+                            </div>
+                        </label>
+                    </div>
+                    <div id="uobStashConditions" class="space-y-1">
+                        <span class="text-[10px] uppercase font-bold text-ctp-accent tracking-wider ml-1">Minimum qualifying requirement</span>
+                        <label class="checkbox-option">
+                            <input type="checkbox" id="uobStashMabToggle" name="uobStashMabToggle" checked>
+                            <span>Maintain previous month's Minimum Average Balance (MAB)</span>
+                        </label>
                     </div>
                 </div>
 
                 <!-- Card 4: SC Bonus$aver -->
                 <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-semibold text-ctp-primary">SC Bonus$aver Account</h2>
+                        <div class="flex flex-col">
+                            <h2 class="text-xl font-semibold text-ctp-primary">SC Bonus$aver Account</h2>
+                            <span class="text-[10px] text-ctp-subtext italic">Last updated: 2025-08-04</span>
+                        </div>
                         <label class="flex items-center cursor-pointer">
                             <span class="mr-3 text-sm font-medium text-ctp-text">Include Account</span>
                             <div class="relative">
-                                <input type="checkbox" id="scToggle" name="scAccountStatus" class="sr-only peer">
+                                <input type="checkbox" id="scToggle" name="scAccountStatus" class="sr-only peer" checked>
                                 <div class="w-11 h-6 bg-ctp-overlay rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-ctp-primary"></div>
                             </div>
                         </label>
                     </div>
-                    <div id="scConditions" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
-                        <label class="checkbox-option"><input type="checkbox" name="scCondition" value="salary_credit"><span>Salary Credit (min. S$3k)</span></label>
+                    <div id="scConditions" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="checkbox-option"><input type="checkbox" name="scCondition" value="salary_credit" checked><span>Salary Credit (min. S$3k)</span></label>
                         <label class="checkbox-option"><input type="checkbox" name="scCondition" value="card_spend"><span>Card Spend (min. S$1k)</span></label>
                         <label class="checkbox-option"><input type="checkbox" name="scCondition" value="insure"><span>Insure (min. S$2k premium)</span></label>
                         <label class="checkbox-option"><input type="checkbox" name="scCondition" value="invest"><span>Invest (min. S$20k)</span></label>
@@ -76,7 +103,10 @@
                  <!-- Card 5: OCBC 360 -->
                  <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-semibold text-ctp-primary">OCBC 360 Account</h2>
+                        <div class="flex flex-col">
+                            <h2 class="text-xl font-semibold text-ctp-primary">OCBC 360 Account</h2>
+                            <span class="text-[10px] text-ctp-subtext italic">Last updated: 2025-08-05</span>
+                        </div>
                         <label class="flex items-center cursor-pointer">
                             <span class="mr-3 text-sm font-medium text-ctp-text">Include Account</span>
                             <div class="relative">
@@ -85,9 +115,9 @@
                             </div>
                         </label>
                     </div>
-                    <div id="ocbc360Conditions" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
-                        <label class="checkbox-option"><input type="checkbox" name="ocbc360Condition" value="salary"><span>Salary Credit (min. S$1.8k)</span></label>
-                        <label class="checkbox-option"><input type="checkbox" name="ocbc360Condition" value="save"><span>Save (increase balance by S$500)</span></label>
+                    <div id="ocbc360Conditions" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="checkbox-option"><input type="checkbox" name="ocbc360Condition" value="salary" checked><span>Salary Credit (min. S$1.8k)</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="ocbc360Condition" value="save" checked><span>Save (increase balance by S$500)</span></label>
                         <label class="checkbox-option"><input type="checkbox" name="ocbc360Condition" value="insure"><span>Insure</span></label>
                         <label class="checkbox-option"><input type="checkbox" name="ocbc360Condition" value="invest"><span>Invest</span></label>
                     </div>
@@ -95,42 +125,64 @@
 
                  <!-- Card 6: DBS Multiplier -->
                  <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
-                    <h2 class="text-xl font-semibold mb-3 text-ctp-primary">DBS Multiplier Account</h2>
-                    <div class="toggle-group-dbs">
-                         <label class="toggle-option"><input type="radio" name="dbsCondition" value="no_account" checked><span>No account</span></label>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex flex-col">
+                            <h2 class="text-xl font-semibold text-ctp-primary">DBS Multiplier Account</h2>
+                            <span class="text-[10px] text-ctp-subtext italic">Last updated: 2025-08-04</span>
+                        </div>
+                        <label class="flex items-center cursor-pointer">
+                            <span class="mr-3 text-sm font-medium text-ctp-text">Include Account</span>
+                            <div class="relative">
+                                <input type="checkbox" id="dbsToggle" name="dbsAccountStatus" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-ctp-overlay rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-ctp-primary"></div>
+                            </div>
+                        </label>
                     </div>
-                    <div id="dbsConditions" class="space-y-3 mt-3">
-                        <div class="dbs-accordion">
-                            <div class="accordion-header cursor-pointer flex justify-between items-center p-2 bg-ctp-surface1 rounded-md">
-                                <h4 class="font-semibold text-sm text-ctp-subtext">Income + 1 Category (Cap: S$50k)</h4>
-                                <svg class="w-4 h-4 transform transition-transform text-ctp-subtext" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </div>
-                            <div class="accordion-content hidden pl-4 pt-2">
-                                <label class="toggle-option block"><input type="radio" name="dbsCondition" value="income_1_cat_500_to_15000"><span>≥ S$500 to < S$15k (1.80% p.a.)</span></label>
-                                <label class="toggle-option block"><input type="radio" name="dbsCondition" value="income_1_cat_15000_to_30000"><span>≥ S$15k to < S$30k (1.90% p.a.)</span></label>
-                                <label class="toggle-option block"><input type="radio" name="dbsCondition" value="income_1_cat_30000_plus"><span>≥ S$30k (2.20% p.a.)</span></label>
-                            </div>
-                        </div>
-                        <div class="dbs-accordion">
-                            <div class="accordion-header cursor-pointer flex justify-between items-center p-2 bg-ctp-surface1 rounded-md">
-                                <h4 class="font-semibold text-sm text-ctp-subtext">Income + 2 Categories (Cap: S$100k)</h4>
-                                 <svg class="w-4 h-4 transform transition-transform text-ctp-subtext" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </div>
-                            <div class="accordion-content hidden pl-4 pt-2">
-                                <label class="toggle-option block"><input type="radio" name="dbsCondition" value="income_2_cat_500_to_15000"><span>≥ S$500 to < S$15k (2.10% p.a.)</span></label>
-                                <label class="toggle-option block"><input type="radio" name="dbsCondition" value="income_2_cat_15000_to_30000"><span>≥ S$15k to < S$30k (2.20% p.a.)</span></label>
-                                <label class="toggle-option block"><input type="radio" name="dbsCondition" value="income_2_cat_30000_plus"><span>≥ S$30k (3.00% p.a.)</span></label>
+                    <div id="dbsConditionsWrapper" class="space-y-6">
+                        <div>
+                            <p class="text-sm font-semibold text-ctp-subtext mb-3">1. Number of categories met (excluding Income):</p>
+                            <div class="grid grid-cols-3 gap-2">
+                                <label class="radio-tab">
+                                    <input type="radio" name="dbsCatCount" value="1" class="sr-only" checked>
+                                    <span class="tab-label">1 Category</span>
+                                </label>
+                                <label class="radio-tab">
+                                    <input type="radio" name="dbsCatCount" value="2" class="sr-only">
+                                    <span class="tab-label">2 Categories</span>
+                                </label>
+                                <label class="radio-tab">
+                                    <input type="radio" name="dbsCatCount" value="3" class="sr-only">
+                                    <span class="tab-label">3+ Categories</span>
+                                </label>
                             </div>
                         </div>
-                        <div class="dbs-accordion">
-                            <div class="accordion-header cursor-pointer flex justify-between items-center p-2 bg-ctp-surface1 rounded-md">
-                                 <h4 class="font-semibold text-sm text-ctp-subtext">Income + 3+ Categories (Cap: S$100k)</h4>
-                                 <svg class="w-4 h-4 transform transition-transform text-ctp-subtext" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </div>
-                            <div class="accordion-content hidden pl-4 pt-2">
-                                <label class="toggle-option block"><input type="radio" name="dbsCondition" value="income_3_cat_500_to_15000"><span>≥ S$500 to < S$15k (2.40% p.a.)</span></label>
-                                <label class="toggle-option block"><input type="radio" name="dbsCondition" value="income_3_cat_15000_to_30000"><span>≥ S$15k to < S$30k (2.50% p.a.)</span></label>
-                                <label class="toggle-option block"><input type="radio" name="dbsCondition" value="income_3_cat_30000_plus"><span>≥ S$30k (4.10% p.a.)</span></label>
+                        <div>
+                            <p class="text-sm font-semibold text-ctp-subtext mb-3">2. Total monthly transactions (Income + Categories):</p>
+                            <div class="space-y-2">
+                                <div class="space-y-1">
+                                    <span class="text-[10px] uppercase font-bold text-ctp-accent tracking-wider ml-1">Minimum qualifying requirement</span>
+                                    <label class="toggle-option">
+                                        <input type="radio" name="dbsVolume" value="500_to_15000" checked>
+                                        <div class="flex flex-col">
+                                            <span class="font-medium">≥ S$500 to &lt; S$15k</span>
+                                            <span class="text-[10px] text-ctp-subtext uppercase" id="dbsRatePreview1">Cap S$50,000.00</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                <label class="toggle-option">
+                                    <input type="radio" name="dbsVolume" value="15000_to_30000">
+                                    <div class="flex flex-col">
+                                        <span class="font-medium">≥ S$15k to &lt; S$30k</span>
+                                        <span class="text-[10px] text-ctp-subtext uppercase" id="dbsRatePreview2">Cap S$50,000.00</span>
+                                    </div>
+                                </label>
+                                <label class="toggle-option">
+                                    <input type="radio" name="dbsVolume" value="30000_plus">
+                                    <div class="flex flex-col">
+                                        <span class="font-medium">≥ S$30k</span>
+                                        <span class="text-[10px] text-ctp-subtext uppercase" id="dbsRatePreview3">Cap S$50,000.00</span>
+                                    </div>
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -139,7 +191,10 @@
                 <!-- Card 7: CIMB FastSaver -->
                 <div class="bg-ctp-surface p-6 rounded-lg shadow-sm">
                     <div class="flex items-center justify-between">
-                        <h2 class="text-xl font-semibold text-ctp-primary">CIMB FastSaver Account</h2>
+                        <div class="flex flex-col">
+                            <h2 class="text-xl font-semibold text-ctp-primary">CIMB FastSaver Account</h2>
+                            <span class="text-[10px] text-ctp-subtext italic">Last updated: 2025-08-05</span>
+                        </div>
                         <label class="flex items-center cursor-pointer">
                             <span class="mr-3 text-sm font-medium text-ctp-text">Include Account</span>
                             <div class="relative">

@@ -21,7 +21,10 @@ const bankPieColors = {
     "Unallocated": "#6c7086"     // ctp-overlay0
 };
 
-const formatCurrency = (amount) => new Intl.NumberFormat('en-SG', { style: 'currency', currency: 'SGD' }).format(amount);
+const formatCurrency = (amount) => {
+    const formatted = new Intl.NumberFormat('en-SG', { style: 'currency', currency: 'SGD' }).format(amount);
+    return formatted.replace('$', 'S$');
+};
 
 const totalFundsInput = document.getElementById('totalFunds');
 const allocationResultsDiv = document.getElementById('allocationResults');
@@ -110,19 +113,30 @@ function updateAllocation() {
     }
 
     // UOB One
-    const uobSpendToggle = document.getElementById('uobSpendToggle').checked;
-    const uobGiro = document.querySelector('input[name="uobCondition"][value="giro"]').checked;
-    const uobSalary = document.querySelector('input[name="uobCondition"][value="salary"]').checked;
+    const uobToggle = document.getElementById('uobToggle').checked;
     let selectedUOBOneCondition = 'no_account';
-    if (uobSpendToggle) {
-        if (uobGiro && uobSalary) selectedUOBOneCondition = 'spend_salary_giro';
-        else if (uobGiro) selectedUOBOneCondition = 'spend_giro_debit';
-        else if (uobSalary) selectedUOBOneCondition = 'spend_salary_giro'; // Assuming salary implies giro
-        else selectedUOBOneCondition = 'spend_only';
+    if (uobToggle) {
+        const uobSpendToggle = document.getElementById('uobSpendToggle').checked;
+        const uobGiro = document.querySelector('input[name="uobCondition"][value="giro"]').checked;
+        const uobSalary = document.querySelector('input[name="uobCondition"][value="salary"]').checked;
+        
+        if (!uobSpendToggle) {
+            selectedUOBOneCondition = 'no_account';
+        } else {
+            if (uobGiro && uobSalary) selectedUOBOneCondition = 'spend_salary_giro';
+            else if (uobGiro) selectedUOBOneCondition = 'spend_giro_debit';
+            else if (uobSalary) selectedUOBOneCondition = 'spend_salary_giro';
+            else selectedUOBOneCondition = 'spend_only';
+        }
     }
 
     // UOB Stash
-    const selectedUOBStashCondition = document.querySelector('input[name="uobStashCondition"]:checked').value;
+    const uobStashToggle = document.getElementById('uobStashToggle').checked;
+    let selectedUOBStashCondition = 'no_account';
+    if (uobStashToggle) {
+        const uobStashMabToggle = document.getElementById('uobStashMabToggle').checked;
+        selectedUOBStashCondition = uobStashMabToggle ? 'maintain_balance' : 'base_rate';
+    }
 
     // SC Bonus$aver
     const scToggle = document.getElementById('scToggle').checked;
@@ -135,7 +149,13 @@ function updateAllocation() {
     const selectedOCBC360Conditions = Array.from(document.querySelectorAll('input[name="ocbc360Condition"]:checked')).map(cb => cb.value);
 
     // DBS Multiplier
-    const selectedDBSCondition = document.querySelector('input[name="dbsCondition"]:checked').value;
+    const dbsToggle = document.getElementById('dbsToggle').checked;
+    let selectedDBSCondition = 'no_account';
+    if (dbsToggle) {
+        const catCount = document.querySelector('input[name="dbsCatCount"]:checked').value;
+        const volume = document.querySelector('input[name="dbsVolume"]:checked').value;
+        selectedDBSCondition = `income_${catCount}_cat_${volume}`;
+    }
 
     // CIMB FastSaver
     const cimbToggle = document.getElementById('cimbToggle').checked;
@@ -207,10 +227,14 @@ function updateAllocation() {
             const tierData = breakdown[bank][tier];
             if (tierData.interest > 0) {
                 const tierItem = document.createElement('div');
-                tierItem.className = 'interest-breakdown-item';
+                tierItem.className = 'interest-breakdown-item flex justify-between items-center py-2';
+                const capText = tierData.capacity === Infinity ? "" : ` (up to ${formatCurrency(tierData.capacity)})`;
                 tierItem.innerHTML = `
-                    <span class="text-ctp-subtext">${tier} p.a.</span>
-                    <span class="font-mono text-ctp-text">${formatCurrency(tierData.interest)}</span>
+                    <div class="flex flex-col">
+                        <span class="text-ctp-text font-medium text-sm">${tier} p.a.</span>
+                        <span class="text-[10px] text-ctp-subtext uppercase tracking-wider">On ${formatCurrency(tierData.allocatedAmount)}${capText}</span>
+                    </div>
+                    <span class="font-mono text-ctp-text font-bold">${formatCurrency(tierData.interest)}</span>
                 `;
                 content.appendChild(tierItem);
             }
@@ -232,27 +256,33 @@ interestBreakdownDiv.addEventListener('click', function(event) {
 
 
 // Add event listeners to all input elements
-document.querySelectorAll('input').forEach(element => {
-    element.addEventListener(element.type === 'checkbox' || element.type === 'radio' ? 'change' : 'input', updateAllocation);
+document.addEventListener('change', (event) => {
+    if (event.target.tagName === 'INPUT') {
+        if (event.target.name === 'dbsCatCount') {
+            updateDBSRatePreviews();
+        }
+        updateAllocation();
+    }
+});
+document.addEventListener('input', (event) => {
+    if (event.target.tagName === 'INPUT' && (event.target.type === 'number' || event.target.type === 'text')) {
+        updateAllocation();
+    }
 });
 
-// Accordion Logic for DBS Multiplier
-document.querySelectorAll('.dbs-accordion .accordion-header').forEach(header => {
-    header.addEventListener('click', () => {
-        const content = header.nextElementSibling;
-        const icon = header.querySelector('svg');
-        content.classList.toggle('hidden');
-        icon.classList.toggle('rotate-180');
-
-        // Close other accordions
-        document.querySelectorAll('.dbs-accordion .accordion-content').forEach(otherContent => {
-            if (otherContent !== content) {
-                otherContent.classList.add('hidden');
-                otherContent.previousElementSibling.querySelector('svg').classList.remove('rotate-180');
+function updateDBSRatePreviews() {
+    const catCount = document.querySelector('input[name="dbsCatCount"]:checked').value;
+    const volumes = ['500_to_15000', '15000_to_30000', '30000_plus'];
+    import('../config/bank-rates.js').then(({ BANK_CONFIG }) => {
+        volumes.forEach((vol, index) => {
+            const config = BANK_CONFIG.dbs.conditions[`income_${catCount}_cat_${vol}`];
+            const previewEl = document.getElementById(`dbsRatePreview${index + 1}`);
+            if (config && previewEl) {
+                previewEl.textContent = `Cap ${formatCurrency(config.cap)}`;
             }
         });
     });
-});
+}
 
 // Toggle visibility of conditional options
 function setupConditionalVisibility(toggleId, conditionsId) {
@@ -261,9 +291,14 @@ function setupConditionalVisibility(toggleId, conditionsId) {
     if (toggle && conditions) {
         toggle.addEventListener('change', () => {
             conditions.classList.toggle('hidden', !toggle.checked);
-            // Uncheck all child checkboxes when hiding
+            // Handle child inputs when hiding
             if (!toggle.checked) {
-                conditions.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                // Uncheck child checkboxes except specific ones we want to keep
+                conditions.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                    if (cb.id !== 'uobSpendToggle' && cb.id !== 'uobStashMabToggle') cb.checked = false;
+                });
+                // Uncheck radio buttons
+                conditions.querySelectorAll('input[type="radio"]').forEach(rb => rb.checked = false);
             }
             updateAllocation();
         });
@@ -272,9 +307,11 @@ function setupConditionalVisibility(toggleId, conditionsId) {
     }
 }
 
-setupConditionalVisibility('uobSpendToggle', 'uobConditions');
+setupConditionalVisibility('uobToggle', 'uobConditions');
+setupConditionalVisibility('uobStashToggle', 'uobStashConditions');
 setupConditionalVisibility('scToggle', 'scConditions');
 setupConditionalVisibility('ocbc360Toggle', 'ocbc360Conditions');
+setupConditionalVisibility('dbsToggle', 'dbsConditionsWrapper');
 
 
 // Modal Logic
@@ -293,14 +330,19 @@ function toggleModal(show) {
     }
 }
 
-openDisclaimerBtn.addEventListener('click', () => toggleModal(true));
-closeDisclaimerX.addEventListener('click', () => toggleModal(false));
-closeDisclaimerBtn.addEventListener('click', () => toggleModal(false));
+if (openDisclaimerBtn) openDisclaimerBtn.addEventListener('click', () => toggleModal(true));
+if (closeDisclaimerX) closeDisclaimerX.addEventListener('click', () => toggleModal(false));
+if (closeDisclaimerBtn) closeDisclaimerBtn.addEventListener('click', () => toggleModal(false));
 
 // Close on outside click
-disclaimerModal.addEventListener('click', (e) => {
-    if (e.target === disclaimerModal) toggleModal(false);
-});
+if (disclaimerModal) {
+    disclaimerModal.addEventListener('click', (e) => {
+        if (e.target === disclaimerModal) toggleModal(false);
+    });
+}
 
 // Initial calculation on page load
-window.addEventListener('load', updateAllocation);
+window.addEventListener('load', () => {
+    updateDBSRatePreviews();
+    updateAllocation();
+});
