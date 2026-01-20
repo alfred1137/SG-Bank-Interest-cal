@@ -24,15 +24,14 @@ export function findOptimalAllocationAndInterest(totalFunds, allTiers) {
         totalMonthlyInterest += interestForTier;
 
         // Update breakdown
-        const bankBreakdownName = `${tier.bank} Account`;
-        if (!breakdown[bankBreakdownName]) {
-            breakdown[bankBreakdownName] = {};
+        if (!breakdown[tier.bank]) {
+            breakdown[tier.bank] = {};
         }
         const tierName = `Tier (${(tier.rate * 100).toFixed(2)}%)`;
-        if (!breakdown[bankBreakdownName][tierName]) {
-            breakdown[bankBreakdownName][tierName] = { interest: 0, rate: tier.rate };
+        if (!breakdown[tier.bank][tierName]) {
+            breakdown[tier.bank][tierName] = { interest: 0, rate: tier.rate };
         }
-        breakdown[bankBreakdownName][tierName].interest += interestForTier;
+        breakdown[tier.bank][tierName].interest += interestForTier;
         
         remainingFunds -= amountToAllocate;
     }

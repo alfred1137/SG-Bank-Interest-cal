@@ -1,7 +1,6 @@
 import { getUOBOneTierSegments, getUOBStashTierSegments, getOCBC360TierSegments, getSCTierSegments, getDBSTierSegments, getCIMBTierSegments } from '../logic/calculator.js';
 import { findOptimalAllocationAndInterest } from '../logic/allocation-engine.js';
 
-// Bank account names mapping
 const bankAccountNames = {
     "UOB One": "UOB One Account",
     "UOB Stash": "UOB Stash Account",
@@ -11,10 +10,17 @@ const bankAccountNames = {
     "CIMB": "CIMB FastSaver Account"
 };
 
-// Helper function to format currency
-const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-SG', { style: 'currency', currency: 'SGD' }).format(amount);
+const bankColors = {
+    "UOB One": "bg-blue-500",
+    "UOB Stash": "bg-blue-400",
+    "OCBC 360": "bg-red-500",
+    "SC": "bg-green-500",
+    "DBS": "bg-red-400",
+    "CIMB": "bg-yellow-500",
+    "Unallocated": "bg-gray-300"
 };
+
+const formatCurrency = (amount) => new Intl.NumberFormat('en-SG', { style: 'currency', currency: 'SGD' }).format(amount);
 
 const totalFundsInput = document.getElementById('totalFunds');
 const uobConditionRadios = document.querySelectorAll('input[name="uobCondition"]');
@@ -27,16 +33,46 @@ const dbsConditionRadios = document.querySelectorAll('input[name="dbsCondition"]
 const cimbConditionRadios = document.querySelectorAll('input[name="cimbCondition"]');
 const allocationResultsDiv = document.getElementById('allocationResults');
 const interestBreakdownDiv = document.getElementById('interestBreakdown');
-const monthlyInterestSpan = document.getElementById('monthlyInterest');
+const monthlyInterestDiv = document.getElementById('monthlyInterest');
 const equivalentRateDiv = document.getElementById('equivalentRate');
+const allocationVisualizerDiv = document.getElementById('allocation-visualizer');
+
+function updateAllocationVisualizer(totalFunds, allocation) {
+    allocationVisualizerDiv.innerHTML = '';
+    if (totalFunds <= 0) return;
+
+    let allocatedFunds = 0;
+    for (const bank in allocation) {
+        if (allocation[bank] > 0) {
+            const percentage = (allocation[bank] / totalFunds) * 100;
+            const segment = document.createElement('div');
+            segment.className = `allocation-bar-segment ${bankColors[bank] || 'bg-gray-400'}`;
+            segment.style.width = `${percentage}%`;
+            segment.title = `${bankAccountNames[bank]}: ${formatCurrency(allocation[bank])}`;
+            allocationVisualizerDiv.appendChild(segment);
+            allocatedFunds += allocation[bank];
+        }
+    }
+
+    const unallocatedFunds = totalFunds - allocatedFunds;
+    if (unallocatedFunds > 1) { // Allow for rounding errors
+        const percentage = (unallocatedFunds / totalFunds) * 100;
+        const segment = document.createElement('div');
+        segment.className = `allocation-bar-segment ${bankColors['Unallocated']}`;
+        segment.style.width = `${percentage}%`;
+        segment.title = `Unallocated: ${formatCurrency(unallocatedFunds)}`;
+        allocationVisualizerDiv.appendChild(segment);
+    }
+}
 
 function updateAllocation() {
     const totalFunds = parseFloat(totalFundsInput.value);
     if (isNaN(totalFunds) || totalFunds < 0) {
         allocationResultsDiv.innerHTML = '<p class="text-red-500">Please enter a valid fund amount.</p>';
         interestBreakdownDiv.innerHTML = '';
-        monthlyInterestSpan.textContent = formatCurrency(0);
-        equivalentRateDiv.textContent = '';
+        monthlyInterestDiv.textContent = formatCurrency(0);
+        equivalentRateDiv.textContent = 'Equivalent 0.00% p.a.';
+        updateAllocationVisualizer(0, {});
         return;
     }
 
@@ -49,7 +85,6 @@ function updateAllocation() {
     const selectedOCBC360AccountStatus = document.querySelector('input[name="ocbc360AccountStatus"]:checked').value;
     const selectedOCBC360Conditions = Array.from(document.querySelectorAll('input[name="ocbc360Condition"]:checked')).map(cb => cb.value);
 
-    // Consolidate all available tiers from selected banks
     const allTiers = [
         ...getUOBOneTierSegments(selectedUOBOneCondition),
         ...getUOBStashTierSegments(selectedUOBStashCondition),
@@ -61,36 +96,54 @@ function updateAllocation() {
 
     const { allocation, totalMonthlyInterest, breakdown } = findOptimalAllocationAndInterest(totalFunds, allTiers);
 
-    // Display allocation results
+    // Update Hero Section
+    monthlyInterestDiv.textContent = formatCurrency(totalMonthlyInterest);
+    if (totalFunds > 0) {
+        const equivalentAnnualRate = (totalMonthlyInterest * 12 / totalFunds) * 100;
+        equivalentRateDiv.textContent = `Equivalent ${equivalentAnnualRate.toFixed(2)}% p.a.`;
+    } else {
+        equivalentRateDiv.textContent = 'Equivalent 0.00% p.a.';
+    }
+
+    // Update Allocation Visualizer and Text
+    updateAllocationVisualizer(totalFunds, allocation);
     allocationResultsDiv.innerHTML = '';
-    for (const bank in allocation) {
-        if (allocation[bank] > 0) {
+    const sortedAllocation = Object.entries(allocation).sort(([,a],[,b]) => b-a);
+
+    for (const [bank, amount] of sortedAllocation) {
+        if (amount > 0) {
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'result-item';
+            itemDiv.className = 'flex justify-between items-center text-sm';
             itemDiv.innerHTML = `
-                <span>${bankAccountNames[bank] || bank}:</span>
-                <span class="text-right">${formatCurrency(allocation[bank])}</span>
+                <span class="font-semibold">${bankAccountNames[bank] || bank}</span>
+                <span class="font-mono">${formatCurrency(amount)}</span>
             `;
             allocationResultsDiv.appendChild(itemDiv);
         }
     }
 
-    // Display interest breakdown
+    // Update Interest Breakdown Accordions
     interestBreakdownDiv.innerHTML = '';
     for (const bank in breakdown) {
         const hasInterest = Object.values(breakdown[bank]).some(tierData => tierData.interest > 0);
         if (!hasInterest) continue;
 
-        const bankTitle = document.createElement('h4');
-        bankTitle.className = 'font-semibold text-sm mt-3';
-        bankTitle.textContent = `${bank}:`;
-        interestBreakdownDiv.appendChild(bankTitle);
-        
-        const sortedTiers = Object.keys(breakdown[bank]).sort((a, b) => {
-            const rateA = parseFloat(a.match(/\(([^)]+)\)/)[1]);
-            const rateB = parseFloat(b.match(/\(([^)]+)\)/)[1]);
-            return rateB - rateA;
-        });
+        const totalBankInterest = Object.values(breakdown[bank]).reduce((sum, tier) => sum + tier.interest, 0);
+
+        const accordion = document.createElement('div');
+        accordion.innerHTML = `
+            <div class="accordion-header">
+                <h4 class="font-semibold">${bankAccountNames[bank]}</h4>
+                <div class="flex items-center gap-2">
+                    <span class="font-semibold text-green-700">${formatCurrency(totalBankInterest)}</span>
+                    <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+            </div>
+            <div class="accordion-content"></div>
+        `;
+
+        const content = accordion.querySelector('.accordion-content');
+        const sortedTiers = Object.keys(breakdown[bank]).sort((a, b) => parseFloat(b.match(/[\d.]+/)) - parseFloat(a.match(/[\d.]+/)));
 
         for (const tier of sortedTiers) {
             const tierData = breakdown[bank][tier];
@@ -98,64 +151,58 @@ function updateAllocation() {
                 const tierItem = document.createElement('div');
                 tierItem.className = 'interest-breakdown-item';
                 tierItem.innerHTML = `
-                    <span>${tier} p.a.</span>
-                    <span>${formatCurrency(tierData.interest)}</span>
+                    <span class="text-gray-600">${tier} p.a.</span>
+                    <span class="font-mono">${formatCurrency(tierData.interest)}</span>
                 `;
-                interestBreakdownDiv.appendChild(tierItem);
+                content.appendChild(tierItem);
             }
         }
-    }
-
-    // Display total monthly interest and equivalent rate
-    monthlyInterestSpan.textContent = formatCurrency(totalMonthlyInterest);
-    if (totalFunds > 0) {
-        const equivalentAnnualRate = (totalMonthlyInterest * 12 / totalFunds) * 100;
-        equivalentRateDiv.textContent = `Equivalent ${equivalentAnnualRate.toFixed(2)}% p.a.`;
-    } else {
-        equivalentRateDiv.textContent = '';
+        interestBreakdownDiv.appendChild(accordion);
     }
 }
 
-// Add event listeners
-totalFundsInput.addEventListener('input', updateAllocation);
-uobConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
-uobStashConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
-ocbc360AccountStatusRadios.forEach(radio => {
-    radio.addEventListener('change', () => {
-        const ocbc360Checkboxes = document.querySelectorAll('input[name="ocbc360Condition"]');
-        if (radio.value === 'no_account') {
-            ocbc360Checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-                checkbox.disabled = true;
-            });
-        } else {
-            ocbc360Checkboxes.forEach(checkbox => {
-                checkbox.disabled = false;
-            });
-        }
-        updateAllocation();
-    });
+// Event Delegation for Accordions
+interestBreakdownDiv.addEventListener('click', function(event) {
+    const header = event.target.closest('.accordion-header');
+    if (header) {
+        const content = header.nextElementSibling;
+        const icon = header.querySelector('svg');
+        content.classList.toggle('open');
+        icon.classList.toggle('rotate-180');
+    }
 });
-ocbc360ConditionCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateAllocation));
-scAccountStatusRadios.forEach(radio => {
-    radio.addEventListener('change', () => {
-        const scCheckboxes = document.querySelectorAll('input[name="scCondition"]');
-        if (radio.value === 'no_account') {
-            scCheckboxes.forEach(checkbox => {
-                checkbox.checked = false;
-                checkbox.disabled = true;
-            });
-        } else {
-            scCheckboxes.forEach(checkbox => {
-                checkbox.disabled = false;
-            });
-        }
-        updateAllocation();
-    });
+
+
+// Add event listeners to controls
+[totalFundsInput, ...uobConditionRadios, ...uobStashConditionRadios, ...ocbc360AccountStatusRadios, ...ocbc360ConditionCheckboxes, ...scAccountStatusRadios, ...scConditionCheckboxes, ...dbsConditionRadios, ...cimbConditionRadios].forEach(element => {
+    element.addEventListener(element.type === 'checkbox' || element.type === 'radio' ? 'change' : 'input', updateAllocation);
 });
-scConditionCheckboxes.forEach(checkbox => checkbox.addEventListener('change', updateAllocation));
-dbsConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
-cimbConditionRadios.forEach(radio => radio.addEventListener('change', updateAllocation));
+
+
+// Enable/disable checkboxes based on account status
+function setupConditionalCheckboxes(statusRadiosName, conditionCheckboxesName) {
+    const statusRadios = document.querySelectorAll(`input[name="${statusRadiosName}"]`);
+    const conditionCheckboxes = document.querySelectorAll(`input[name="${conditionCheckboxesName}"]`);
+
+    function toggleCheckboxes() {
+        const hasAccount = document.querySelector(`input[name="${statusRadiosName}"]:checked`).value === 'has_account';
+        conditionCheckboxes.forEach(checkbox => {
+            checkbox.disabled = !hasAccount;
+            if (!hasAccount) {
+                checkbox.checked = false;
+            }
+        });
+        updateAllocation();
+    }
+
+    statusRadios.forEach(radio => radio.addEventListener('change', toggleCheckboxes));
+    // Initial state setup on load
+    toggleCheckboxes();
+}
+
+setupConditionalCheckboxes('scAccountStatus', 'scCondition');
+setupConditionalCheckboxes('ocbc360AccountStatus', 'ocbc360Condition');
+
 
 // Initial calculation on page load
-window.onload = updateAllocation;
+window.addEventListener('load', updateAllocation);

@@ -5,196 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Optimal Fund Allocation</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="src/output.css">
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
-    <div class="container">
-        <div class="input-section">
-            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Fund Allocation Optimizer</h1>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-2xl font-bold text-gray-800">Singapore Savings Account Optimizer</h1>
+            <p class="text-gray-600">Maximize your monthly interest by optimally allocating your funds across high-interest savings accounts.</p>
+        </div>
+    </header>
 
-            <div class="mb-6">
-                <label for="totalFunds" class="block text-gray-700 text-lg font-semibold mb-2">Total Funds (SGD):</label>
-                <input type="number" id="totalFunds" value="250000" min="0" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
-            </div>
-
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-3 text-gray-700">UOB One Account Conditions (Updated):</h2>
-                <div class="toggle-group">
-                    <label class="toggle-option">
-                        <input type="radio" name="uobCondition" value="no_account" checked>
-                        <span>No account / Not applicable</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="uobCondition" value="spend_only">
-                        <span>Spend min. S$500 on eligible UOB Card</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="uobCondition" value="spend_giro_debit">
-                        <span>Spend min. S$500 AND 3 GIRO debit transactions</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="uobCondition" value="spend_salary_giro">
-                        <span>Spend min. S$500 AND credit salary</span>
-                    </label>
+    <main class="container mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Scrolling Workspace -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Card 1: Total Funds -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <label for="totalFunds" class="block text-lg font-semibold text-gray-800 mb-2">Total Funds (SGD):</label>
+                    <input type="number" id="totalFunds" value="250000" min="0" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                 </div>
-            </div>
 
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-3 text-gray-700">UOB Stash Account Conditions:</h2>
-                <div class="toggle-group">
-                    <label class="toggle-option">
-                        <input type="radio" name="uobStashCondition" value="no_account" checked>
-                        <span>No account / Not applicable</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="uobStashCondition" value="maintain_balance">
-                        <span>Maintain previous month's Monthly Average Balance (MAB)</span>
-                    </label>
+                <!-- Card 2: UOB One -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-gray-800">UOB One Account</h2>
+                    <div class="toggle-group">
+                        <label class="toggle-option"><input type="radio" name="uobCondition" value="no_account" checked><span>No account / Not applicable</span></label>
+                        <label class="toggle-option"><input type="radio" name="uobCondition" value="spend_only"><span>Spend min. S$500</span></label>
+                        <label class="toggle-option"><input type="radio" name="uobCondition" value="spend_giro_debit"><span>Spend min. S$500 + 3 GIRO debits</span></label>
+                        <label class="toggle-option"><input type="radio" name="uobCondition" value="spend_salary_giro"><span>Spend min. S$500 + Salary Credit</span></label>
+                    </div>
                 </div>
-            </div>
 
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-3 text-gray-700">CIMB FastSaver Account Conditions:</h2>
-                <div class="toggle-group">
-                    <label class="toggle-option">
-                        <input type="radio" name="cimbCondition" value="has_account" checked>
-                        <span>Has account</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="cimbCondition" value="no_account">
-                        <span>No account / Not applicable</span>
-                    </label>
+                <!-- Card 3: UOB Stash -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-gray-800">UOB Stash Account</h2>
+                    <div class="toggle-group">
+                        <label class="toggle-option"><input type="radio" name="uobStashCondition" value="no_account" checked><span>No account / Not applicable</span></label>
+                        <label class="toggle-option"><input type="radio" name="uobStashCondition" value="maintain_balance"><span>Maintain previous month's MAB</span></label>
+                    </div>
                 </div>
-            </div>
 
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-3 text-gray-700">SC Bonus$aver Account Conditions:</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label class="toggle-option">
-                        <input type="radio" name="scAccountStatus" value="no_account" checked>
-                        <span>No account / Not applicable</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="scAccountStatus" value="has_account">
-                        <span>Has Account</span>
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="scCondition" value="salary_credit" disabled>
-                        <span>Salary Credit (min. S$3k)</span>
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="scCondition" value="card_spend">
-                        <span>Card Spend (min. S$1k)</span>
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="scCondition" value="insure">
-                        <span>Insure (min. S$2k premium)</span>
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="scCondition" value="invest">
-                        <span>Invest (min. S$20k)</span>
-                    </label>
+                <!-- Card 4: SC Bonus$aver -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-gray-800">SC Bonus$aver Account</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="toggle-option"><input type="radio" name="scAccountStatus" value="no_account" checked><span>No account</span></label>
+                        <label class="toggle-option"><input type="radio" name="scAccountStatus" value="has_account"><span>Has Account</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="scCondition" value="salary_credit" disabled><span>Salary Credit (min. S$3k)</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="scCondition" value="card_spend" disabled><span>Card Spend (min. S$1k)</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="scCondition" value="insure" disabled><span>Insure (min. S$2k premium)</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="scCondition" value="invest" disabled><span>Invest (min. S$20k)</span></label>
+                    </div>
                 </div>
-            </div>
 
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-3 text-gray-700">OCBC 360 Account Conditions:</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <label class="toggle-option">
-                        <input type="radio" name="ocbc360AccountStatus" value="no_account" checked>
-                        <span>No account / Not applicable</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="ocbc360AccountStatus" value="has_account">
-                        <span>Has Account</span>
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="ocbc360Condition" value="salary" disabled>
-                        <span>Salary Credit (min. S$1.8k)</span>
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="ocbc360Condition" value="save" disabled>
-                        <span>Save (increase balance by S$500)</span>
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="ocbc360Condition" value="insure" disabled>
-                        <span>Insure</span>
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="ocbc360Condition" value="invest" disabled>
-                        <span>Invest</span>
-                    </label>
+                 <!-- Card 5: OCBC 360 -->
+                 <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-gray-800">OCBC 360 Account</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="toggle-option"><input type="radio" name="ocbc360AccountStatus" value="no_account" checked><span>No account</span></label>
+                        <label class="toggle-option"><input type="radio" name="ocbc360AccountStatus" value="has_account"><span>Has Account</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="ocbc360Condition" value="salary" disabled><span>Salary Credit (min. S$1.8k)</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="ocbc360Condition" value="save" disabled><span>Save (increase balance by S$500)</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="ocbc360Condition" value="insure" disabled><span>Insure</span></label>
+                        <label class="checkbox-option"><input type="checkbox" name="ocbc360Condition" value="invest" disabled><span>Invest</span></label>
+                    </div>
                 </div>
+
+                 <!-- Card 6: DBS Multiplier -->
+                 <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-gray-800">DBS Multiplier Account</h2>
+                    <div class="toggle-group-dbs">
+                         <label class="toggle-option"><input type="radio" name="dbsCondition" value="no_account" checked><span>No account</span></label>
+                         <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 1 Category (Cap: S$50k)</h4>
+                         <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_1_cat_500_to_15000"><span>≥ S$500 to < S$15k (1.80% p.a.)</span></label>
+                         <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_1_cat_15000_to_30000"><span>≥ S$15k to < S$30k (1.90% p.a.)</span></label>
+                         <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_1_cat_30000_plus"><span>≥ S$30k (2.20% p.a.)</span></label>
+                         <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 2 Categories (Cap: S$100k)</h4>
+                         <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_2_cat_500_to_15000"><span>≥ S$500 to < S$15k (2.10% p.a.)</span></label>
+                         <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_2_cat_15000_to_30000"><span>≥ S$15k to < S$30k (2.20% p.a.)</span></label>
+                         <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_2_cat_30000_plus"><span>≥ S$30k (3.00% p.a.)</span></label>
+                         <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 3+ Categories (Cap: S$100k)</h4>
+                         <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_3_cat_500_to_15000"><span>≥ S$500 to < S$15k (2.40% p.a.)</span></label>
+                         <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_3_cat_15000_to_30000"><span>≥ S$15k to < S$30k (2.50% p.a.)</span></label>
+                         <label class="toggle-option"><input type="radio" name="dbsCondition" value="income_3_cat_30000_plus"><span>≥ S$30k (4.10% p.a.)</span></label>
+                    </div>
+                </div>
+
+                <!-- Card 7: CIMB FastSaver -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold mb-3 text-gray-800">CIMB FastSaver Account</h2>
+                    <div class="toggle-group">
+                        <label class="toggle-option"><input type="radio" name="cimbCondition" value="has_account" checked><span>Has account</span></label>
+                        <label class="toggle-option"><input type="radio" name="cimbCondition" value="no_account"><span>No account / Not applicable</span></label>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-3 text-gray-700">DBS Multiplier Account Conditions:</h2>
-                <div class="toggle-group-dbs">
-                    <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="no_account" checked>
-                        <span>No account / Not applicable</span>
-                    </label>
-                    <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 1 Category (Cap: S$50k)</h4>
-                    <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="income_1_cat_500_to_15000">
-                        <span>≥ S$500 to < S$15k (1.80% p.a.)</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="income_1_cat_15000_to_30000">
-                        <span>≥ S$15k to < S$30k (1.90% p.a.)</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="income_1_cat_30000_plus">
-                        <span>≥ S$30k (2.20% p.a.)</span>
-                    </label>
-                    <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 2 Categories (Cap: S$100k)</h4>
-                    <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="income_2_cat_500_to_15000">
-                        <span>≥ S$500 to < S$15k (2.10% p.a.)</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="income_2_cat_15000_to_30000">
-                        <span>≥ S$15k to < S$30k (2.20% p.a.)</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="income_2_cat_30000_plus">
-                        <span>≥ S$30k (3.00% p.a.)</span>
-                    </label>
-                    <h4 class="font-semibold text-sm mt-3 text-gray-600">Income + 3+ Categories (Cap: S$100k)</h4>
-                    <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="income_3_cat_500_to_15000">
-                        <span>≥ S$500 to < S$15k (2.40% p.a.)</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="income_3_cat_15000_to_30000">
-                        <span>≥ S$15k to < S$30k (2.50% p.a.)</span>
-                    </label>
-                    <label class="toggle-option">
-                        <input type="radio" name="dbsCondition" value="income_3_cat_30000_plus">
-                        <span>≥ S$30k (4.10% p.a.)</span>
-                    </label>
+            <!-- Right Sticky Scoreboard -->
+            <div class="relative">
+                <div id="sticky-panel" class="sticky top-8 space-y-6">
+                    <!-- Hero Section -->
+                    <div class="bg-green-600 text-white p-6 rounded-lg shadow-lg text-center">
+                        <h2 class="text-lg font-semibold uppercase tracking-wider">Max Estimated Monthly Interest</h2>
+                        <div id="monthlyInterest" class="text-5xl font-bold my-2">S$0.00</div>
+                        <div id="equivalentRate" class="text-green-200">Equivalent 0.00% p.a.</div>
+                    </div>
+
+                    <!-- Visual Allocation Chart -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Optimal Allocation</h3>
+                        <div id="allocation-visualizer">
+                            <!-- JS will inject bar chart here -->
+                        </div>
+                         <div id="allocationResults" class="mt-4 space-y-2">
+                            <!-- JS will inject text breakdown here -->
+                        </div>
+                    </div>
+
+                    <!-- Breakdown Summary -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Interest Breakdown</h3>
+                        <div id="interestBreakdown" class="space-y-4">
+                            <!-- JS will inject accordions here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="results-section">
-            <h2 class="text-2xl font-bold text-center mb-6 text-green-700">Optimal Allocation & Interest</h2>
-            <div class="result-box">
-                <h3 class="text-xl font-semibold mb-4 text-gray-700">Allocated Funds:</h3>
-                <div id="allocationResults">
-                    </div>
-                
-                <h3 class="text-xl font-semibold mt-6 mb-4 text-gray-700">Monthly Interest Breakdown:</h3>
-                <div id="interestBreakdown">
-                    </div>
-
-                <div class="total-interest">
-                    <div>Maximum Estimated Monthly Interest: <span id="monthlyInterest">S$0.00</span></div>
-                    <div id="equivalentRate" class="text-sm text-gray-600 font-normal mt-1"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </main>
 
     <script type="module" src="src/ui/script.js"></script>
 </body>

@@ -1,0 +1,55 @@
+/* Custom styles for the Savings Optimizer application */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.toggle-option, .checkbox-option {
+    @apply flex items-center gap-2 cursor-pointer p-2 rounded-md transition-colors duration-200;
+}
+
+.toggle-option:hover, .checkbox-option:hover {
+    @apply bg-gray-50;
+}
+
+.toggle-option input[type="radio"], .checkbox-option input[type="checkbox"] {
+    @apply accent-blue-600;
+}
+
+.toggle-option input:checked + span, .checkbox-option input:checked + span {
+    @apply font-semibold text-blue-700;
+}
+
+.checkbox-option input:disabled + span {
+    @apply text-gray-400 cursor-not-allowed;
+}
+
+/* Styles for the allocation visualizer bar */
+#allocation-visualizer {
+    @apply w-full bg-gray-200 rounded-full h-6 overflow-hidden;
+}
+
+.allocation-bar-segment {
+    @apply h-full float-left text-center text-white text-xs font-bold flex items-center justify-center;
+}
+
+/* Styles for the accordion */
+.accordion-header {
+    @apply cursor-pointer flex justify-between items-center w-full p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors;
+}
+
+.accordion-header h4 {
+    @apply font-semibold text-gray-700;
+}
+
+.accordion-content {
+    @apply max-h-0 overflow-hidden transition-max-height duration-300 ease-in-out;
+}
+
+.accordion-content.open {
+    @apply max-h-screen; /* A large value to ensure it can contain the content */
+}
+
+.interest-breakdown-item {
+    @apply flex justify-between text-sm py-1 px-3;
+}
