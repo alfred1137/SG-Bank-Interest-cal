@@ -61,6 +61,8 @@
     --color-ctp-primary: var(--color-latte-blue);
     --color-ctp-bg: var(--color-latte-base);
     --color-ctp-surface: var(--color-latte-surface0);
+    --color-ctp-crust: var(--color-latte-crust);
+    --color-ctp-mantle: var(--color-latte-mantle);
     --color-ctp-text: var(--color-latte-text);
     --color-ctp-subtext: var(--color-latte-subtext0);
     --color-ctp-overlay: var(--color-latte-overlay0);
@@ -82,6 +84,8 @@
         --color-ctp-primary: var(--color-mocha-blue);
         --color-ctp-bg: var(--color-mocha-base);
         --color-ctp-surface: var(--color-mocha-surface0);
+        --color-ctp-crust: var(--color-mocha-crust);
+        --color-ctp-mantle: var(--color-mocha-mantle);
         --color-ctp-text: var(--color-mocha-text);
         --color-ctp-subtext: var(--color-mocha-subtext0);
         --color-ctp-overlay: var(--color-mocha-overlay0);

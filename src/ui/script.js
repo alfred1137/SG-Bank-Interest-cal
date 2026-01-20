@@ -213,9 +213,11 @@ const closeDisclaimerBtn = document.getElementById('closeDisclaimerBtn');
 function toggleModal(show) {
     if (show) {
         disclaimerModal.classList.remove('hidden');
+        disclaimerModal.classList.add('flex');
         document.body.style.overflow = 'hidden'; // Prevent scrolling
     } else {
         disclaimerModal.classList.add('hidden');
+        disclaimerModal.classList.remove('flex');
         document.body.style.overflow = ''; // Restore scrolling
     }
 }
