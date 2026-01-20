@@ -81,7 +81,7 @@ describe('Integration Test for Allocation Engine', () => {
         const totalFunds = 300000;
         const allTiers = [
             ...getUOBStashTierSegments('maintain_balance'),
-            ...getOCBC360TierSegments(['salary', 'save']),
+            ...getOCBC360TierSegments('has_account', ['salary', 'save']),
         ];
 
         const { allocation, totalMonthlyInterest } = findOptimalAllocationAndInterest(totalFunds, allTiers);
@@ -97,7 +97,7 @@ describe('Integration Test for Allocation Engine', () => {
         const allTiers = [
             ...getUOBOneTierSegments('spend_salary_giro'),
             ...getUOBStashTierSegments('maintain_balance'),
-            ...getOCBC360TierSegments(['salary', 'save', 'insure', 'invest']),
+            ...getOCBC360TierSegments('has_account', ['salary', 'save', 'insure', 'invest']),
             ...getSCTierSegments('active', ['salary_credit', 'card_spend', 'insure', 'invest']),
             ...getDBSTierSegments('income_3_cat_30000_plus'),
             ...getCIMBTierSegments('active')

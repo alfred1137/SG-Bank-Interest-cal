@@ -10,59 +10,91 @@ const bankAccountNames = {
     "CIMB": "CIMB FastSaver Account"
 };
 
-const bankColors = {
-    "UOB One": "bg-uob-one",
-    "UOB Stash": "bg-uob-stash",
-    "OCBC 360": "bg-ocbc-360",
-    "SC": "bg-sc",
-    "DBS": "bg-dbs",
-    "CIMB": "bg-cimb",
-    "Unallocated": "bg-ctp-overlay"
+// Use specific hex codes for Chart.js
+const bankPieColors = {
+    "UOB One": "#89b4fa",       // ctp-blue
+    "UOB Stash": "#89dceb",      // ctp-sky
+    "OCBC 360": "#f38ba8",       // ctp-red
+    "SC": "#a6e3a1",            // ctp-green
+    "DBS": "#eba0ac",           // ctp-maroon
+    "CIMB": "#f9e2af",          // ctp-yellow
+    "Unallocated": "#6c7086"     // ctp-overlay0
 };
 
 const formatCurrency = (amount) => new Intl.NumberFormat('en-SG', { style: 'currency', currency: 'SGD' }).format(amount);
 
 const totalFundsInput = document.getElementById('totalFunds');
-const uobConditionRadios = document.querySelectorAll('input[name="uobCondition"]');
-const uobStashConditionRadios = document.querySelectorAll('input[name="uobStashCondition"]');
-const ocbc360AccountStatusRadios = document.querySelectorAll('input[name="ocbc360AccountStatus"]');
-const ocbc360ConditionCheckboxes = document.querySelectorAll('input[name="ocbc360Condition"]');
-const scAccountStatusRadios = document.querySelectorAll('input[name="scAccountStatus"]');
-const scConditionCheckboxes = document.querySelectorAll('input[name="scCondition"]');
-const dbsConditionRadios = document.querySelectorAll('input[name="dbsCondition"]');
-const cimbConditionRadios = document.querySelectorAll('input[name="cimbCondition"]');
 const allocationResultsDiv = document.getElementById('allocationResults');
 const interestBreakdownDiv = document.getElementById('interestBreakdown');
 const monthlyInterestDiv = document.getElementById('monthlyInterest');
+const annualInterestDiv = document.getElementById('annualInterest');
 const equivalentRateDiv = document.getElementById('equivalentRate');
-const allocationVisualizerDiv = document.getElementById('allocation-visualizer');
+const allocationPieChartCanvas = document.getElementById('allocationPieChart');
+let pieChart;
 
 function updateAllocationVisualizer(totalFunds, allocation) {
-    allocationVisualizerDiv.innerHTML = '';
+    if (pieChart) {
+        pieChart.destroy();
+    }
     if (totalFunds <= 0) return;
 
+    const labels = [];
+    const data = [];
+    const backgroundColors = [];
     let allocatedFunds = 0;
+
     for (const bank in allocation) {
         if (allocation[bank] > 0) {
-            const percentage = (allocation[bank] / totalFunds) * 100;
-            const segment = document.createElement('div');
-            segment.className = `allocation-bar-segment ${bankColors[bank] || 'bg-ctp-overlay'}`;
-            segment.style.width = `${percentage}%`;
-            segment.title = `${bankAccountNames[bank]}: ${formatCurrency(allocation[bank])}`;
-            allocationVisualizerDiv.appendChild(segment);
+            labels.push(bankAccountNames[bank] || bank);
+            data.push(allocation[bank]);
+            backgroundColors.push(bankPieColors[bank] || '#6c7086');
             allocatedFunds += allocation[bank];
         }
     }
 
     const unallocatedFunds = totalFunds - allocatedFunds;
     if (unallocatedFunds > 1) { // Allow for rounding errors
-        const percentage = (unallocatedFunds / totalFunds) * 100;
-        const segment = document.createElement('div');
-        segment.className = `allocation-bar-segment ${bankColors['Unallocated']}`;
-        segment.style.width = `${percentage}%`;
-        segment.title = `Unallocated: ${formatCurrency(unallocatedFunds)}`;
-        allocationVisualizerDiv.appendChild(segment);
+        labels.push('Unallocated');
+        data.push(unallocatedFunds);
+        backgroundColors.push(bankPieColors['Unallocated']);
     }
+
+    pieChart = new Chart(allocationPieChartCanvas, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors,
+                borderColor: '#1e1e2e', // ctp-base
+                borderWidth: 2,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed !== null) {
+                                label += formatCurrency(context.parsed);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 function updateAllocation() {
@@ -71,24 +103,48 @@ function updateAllocation() {
         allocationResultsDiv.innerHTML = '<p class="text-ctp-error">Please enter a valid fund amount.</p>';
         interestBreakdownDiv.innerHTML = '';
         monthlyInterestDiv.textContent = formatCurrency(0);
+        annualInterestDiv.textContent = `${formatCurrency(0)} / year`;
         equivalentRateDiv.textContent = 'Equivalent 0.00% p.a.';
         updateAllocationVisualizer(0, {});
         return;
     }
 
-    const selectedUOBOneCondition = document.querySelector('input[name="uobCondition"]:checked').value;
-    const selectedSCAccountStatus = document.querySelector('input[name="scAccountStatus"]:checked').value;
-    const selectedSCConditions = Array.from(document.querySelectorAll('input[name="scCondition"]:checked')).map(cb => cb.value);
-    const selectedDBSCondition = document.querySelector('input[name="dbsCondition"]:checked').value;
-    const selectedCIMBCondition = document.querySelector('input[name="cimbCondition"]:checked').value;
+    // UOB One
+    const uobSpendToggle = document.getElementById('uobSpendToggle').checked;
+    const uobGiro = document.querySelector('input[name="uobCondition"][value="giro"]').checked;
+    const uobSalary = document.querySelector('input[name="uobCondition"][value="salary"]').checked;
+    let selectedUOBOneCondition = 'no_account';
+    if (uobSpendToggle) {
+        if (uobGiro && uobSalary) selectedUOBOneCondition = 'spend_salary_giro';
+        else if (uobGiro) selectedUOBOneCondition = 'spend_giro_debit';
+        else if (uobSalary) selectedUOBOneCondition = 'spend_salary_giro'; // Assuming salary implies giro
+        else selectedUOBOneCondition = 'spend_only';
+    }
+
+    // UOB Stash
     const selectedUOBStashCondition = document.querySelector('input[name="uobStashCondition"]:checked').value;
-    const selectedOCBC360AccountStatus = document.querySelector('input[name="ocbc360AccountStatus"]:checked').value;
+
+    // SC Bonus$aver
+    const scToggle = document.getElementById('scToggle').checked;
+    const selectedSCAccountStatus = scToggle ? 'has_account' : 'no_account';
+    const selectedSCConditions = Array.from(document.querySelectorAll('input[name="scCondition"]:checked')).map(cb => cb.value);
+
+    // OCBC 360
+    const ocbc360Toggle = document.getElementById('ocbc360Toggle').checked;
+    const selectedOCBC360AccountStatus = ocbc360Toggle ? 'has_account' : 'no_account';
     const selectedOCBC360Conditions = Array.from(document.querySelectorAll('input[name="ocbc360Condition"]:checked')).map(cb => cb.value);
+
+    // DBS Multiplier
+    const selectedDBSCondition = document.querySelector('input[name="dbsCondition"]:checked').value;
+
+    // CIMB FastSaver
+    const cimbToggle = document.getElementById('cimbToggle').checked;
+    const selectedCIMBCondition = cimbToggle ? 'has_account' : 'no_account';
 
     const allTiers = [
         ...getUOBOneTierSegments(selectedUOBOneCondition),
         ...getUOBStashTierSegments(selectedUOBStashCondition),
-        ...getOCBC360TierSegments(selectedOCBC360AccountStatus === 'no_account' ? 'no_account' : selectedOCBC360Conditions),
+        ...getOCBC360TierSegments(selectedOCBC360AccountStatus, selectedOCBC360Conditions),
         ...getSCTierSegments(selectedSCAccountStatus, selectedSCConditions),
         ...getDBSTierSegments(selectedDBSCondition),
         ...getCIMBTierSegments(selectedCIMBCondition)
@@ -98,8 +154,10 @@ function updateAllocation() {
 
     // Update Hero Section
     monthlyInterestDiv.textContent = formatCurrency(totalMonthlyInterest);
+    const totalAnnualInterest = totalMonthlyInterest * 12;
+    annualInterestDiv.textContent = `${formatCurrency(totalAnnualInterest)} / year`;
     if (totalFunds > 0) {
-        const equivalentAnnualRate = (totalMonthlyInterest * 12 / totalFunds) * 100;
+        const equivalentAnnualRate = (totalAnnualInterest / totalFunds) * 100;
         equivalentRateDiv.textContent = `Equivalent ${equivalentAnnualRate.toFixed(2)}% p.a.`;
     } else {
         equivalentRateDiv.textContent = 'Equivalent 0.00% p.a.';
@@ -173,35 +231,50 @@ interestBreakdownDiv.addEventListener('click', function(event) {
 });
 
 
-// Add event listeners to controls
-[totalFundsInput, ...uobConditionRadios, ...uobStashConditionRadios, ...ocbc360AccountStatusRadios, ...ocbc360ConditionCheckboxes, ...scAccountStatusRadios, ...scConditionCheckboxes, ...dbsConditionRadios, ...cimbConditionRadios].forEach(element => {
+// Add event listeners to all input elements
+document.querySelectorAll('input').forEach(element => {
     element.addEventListener(element.type === 'checkbox' || element.type === 'radio' ? 'change' : 'input', updateAllocation);
 });
 
+// Accordion Logic for DBS Multiplier
+document.querySelectorAll('.dbs-accordion .accordion-header').forEach(header => {
+    header.addEventListener('click', () => {
+        const content = header.nextElementSibling;
+        const icon = header.querySelector('svg');
+        content.classList.toggle('hidden');
+        icon.classList.toggle('rotate-180');
 
-// Enable/disable checkboxes based on account status
-function setupConditionalCheckboxes(statusRadiosName, conditionCheckboxesName) {
-    const statusRadios = document.querySelectorAll(`input[name="${statusRadiosName}"]`);
-    const conditionCheckboxes = document.querySelectorAll(`input[name="${conditionCheckboxesName}"]`);
-
-    function toggleCheckboxes() {
-        const hasAccount = document.querySelector(`input[name="${statusRadiosName}"]:checked`).value === 'has_account';
-        conditionCheckboxes.forEach(checkbox => {
-            checkbox.disabled = !hasAccount;
-            if (!hasAccount) {
-                checkbox.checked = false;
+        // Close other accordions
+        document.querySelectorAll('.dbs-accordion .accordion-content').forEach(otherContent => {
+            if (otherContent !== content) {
+                otherContent.classList.add('hidden');
+                otherContent.previousElementSibling.querySelector('svg').classList.remove('rotate-180');
             }
         });
-        updateAllocation();
-    }
+    });
+});
 
-    statusRadios.forEach(radio => radio.addEventListener('change', toggleCheckboxes));
-    // Initial state setup on load
-    toggleCheckboxes();
+// Toggle visibility of conditional options
+function setupConditionalVisibility(toggleId, conditionsId) {
+    const toggle = document.getElementById(toggleId);
+    const conditions = document.getElementById(conditionsId);
+    if (toggle && conditions) {
+        toggle.addEventListener('change', () => {
+            conditions.classList.toggle('hidden', !toggle.checked);
+            // Uncheck all child checkboxes when hiding
+            if (!toggle.checked) {
+                conditions.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            }
+            updateAllocation();
+        });
+        // Initial state
+        conditions.classList.toggle('hidden', !toggle.checked);
+    }
 }
 
-setupConditionalCheckboxes('scAccountStatus', 'scCondition');
-setupConditionalCheckboxes('ocbc360AccountStatus', 'ocbc360Condition');
+setupConditionalVisibility('uobSpendToggle', 'uobConditions');
+setupConditionalVisibility('scToggle', 'scConditions');
+setupConditionalVisibility('ocbc360Toggle', 'ocbc360Conditions');
 
 
 // Modal Logic

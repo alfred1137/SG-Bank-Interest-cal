@@ -74,14 +74,14 @@ export function getUOBStashTierSegments(uobStashCondition) {
     }));
 }
 
-export function getOCBC360TierSegments(ocbc360Condition) {
-    if (ocbc360Condition === 'no_account') return [];
+export function getOCBC360TierSegments(ocbc360AccountStatus, ocbc360Conditions) {
+    if (ocbc360AccountStatus === 'no_account') return [];
 
     const config = BANK_CONFIG.ocbc360;
     let rate = config.baseRate;
 
-    if (Array.isArray(ocbc360Condition)) {
-        ocbc360Condition.forEach(condition => {
+    if (Array.isArray(ocbc360Conditions)) {
+        ocbc360Conditions.forEach(condition => {
             if (config.bonuses[condition]) {
                 rate += config.bonuses[condition];
             }
