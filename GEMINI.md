@@ -36,15 +36,21 @@ The **SG Fund Allocation Optimizer** is a client-side web application designed t
     ```bash
     npm start
     ```
-    This serves the application locally using `http-server`.
+    This serves the application locally using `http-server` on port 8080.
 
 3.  **Build CSS:**
     ```bash
     npm run build
     ```
-    Compiles `src/input.css` to `style.css` using Tailwind CSS.
+    Compiles `src/input.css` to `src/output.css` using Tailwind CSS.
 
-4.  **Run Tests:**
+4.  **Full Deployment for Inspection:**
+    To build and run the server in the background for inspection (e.g., on port 8080):
+    ```bash
+    npm run build; npm start
+    ```
+
+5.  **Run Tests:**
     ```bash
     npm test
     ```
@@ -65,3 +71,13 @@ This project uses a "Memory Bank" pattern to maintain context. Refer to `memory-
 ## Deployment
 
 The project is deployed as a static site (e.g., GitHub Pages). The `index.html` file works directly when served, provided the CSS is built.
+
+## Current Default Settings (as of Jan 20, 2026)
+
+The following defaults are set in `index.html`:
+1.  **UOB One**: Included, with "Min. S$500 card spend" and "Salary Credit" enabled.
+2.  **UOB Stash**: NOT included.
+3.  **SC Bonus$aver**: Included, with "Salary Credit" enabled (Card Spend disabled).
+4.  **OCBC 360**: NOT included.
+5.  **DBS Multiplier**: Included, set to "1 Category" and volume "≥ S$500 to < S$15k".
+6.  **CIMB FastSaver**: Included.

@@ -9,7 +9,8 @@ export const BANK_CONFIG = {
     conditions: {
       spend_only: [0.0065, 0.0005, 0.0005, 0.0005],
       spend_giro_debit: [0.0100, 0.0200, 0.0005, 0.0005],
-      spend_salary_giro: [0.0100, 0.0250, 0.0340, 0.0005]
+      spend_salary_giro: [0.0100, 0.0250, 0.0340, 0.0005],
+      spend_salary: [0.0100, 0.0250, 0.0340, 0.0005]
     }
   },
   sc: {
