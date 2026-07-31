@@ -1,6 +1,6 @@
 {
   "name": "sg-bank-interest-cal",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A web-based minisite that calculates the optimal fund allocation across multiple Singaporean banks to maximize monthly interest earnings.",
   "main": "script.js",
   "scripts": {
