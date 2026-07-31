@@ -90,7 +90,7 @@ Developed with a focus on modern UI/UX and transparency, it provides a granular 
 *   **Charts:** [Chart.js](https://www.chartjs.org/)
 *   **Icons:** [Font Awesome](https://fontawesome.com/)
 *   **Testing:** [Jest](https://jestjs.io/)
-*   **Build Tool:** [Node.js](https://nodejs.org/) & [PostCSS](https://postcss.org/)
+*   **Build Tool:** [Node.js](https://nodejs.org/) & [Tailwind CSS CLI](https://tailwindcss.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -155,7 +155,6 @@ To run this project locally, follow these steps.
 ├── __tests__/           # Unit tests for the logic engines
 ├── index.html           # Main application entry point
 ├── favicon.svg          # Project icon
-├── tailwind.config.js   # Tailwind configuration
 ├── package.json         # Project dependencies and scripts
 └── memory-bank/         # Project documentation and context
 ```
