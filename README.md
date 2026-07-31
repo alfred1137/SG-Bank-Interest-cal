@@ -23,7 +23,7 @@
   <h3 align="center">SG Savings Account Optimizer</h3>
 
   <p align="center">
-    <img src="https://img.shields.io/badge/version-v1.1.0-blue" alt="Version">
+    <img src="https://img.shields.io/badge/version-v1.1.1-blue" alt="Version">
     <br />
     Maximize your monthly interest by optimally allocating your funds across high-interest savings accounts in Singapore.
     <br />
