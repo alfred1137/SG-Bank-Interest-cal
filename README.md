@@ -40,19 +40,19 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#overview">📖 Overview</a></li>
-    <li><a href="#features">✨ Features</a></li>
-    <li><a href="#technologies">📦 Technologies</a></li>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#technologies">Technologies</a></li>
     <li>
-      <a href="#getting-started">🚀 Getting Started</a>
+      <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#requirements">✅ Requirements</a></li>
+        <li><a href="#requirements">Requirements</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">🛠️ Usage</a></li>
-    <li><a href="#repository-structure">🗂️ Repository Structure</a></li>
-    <li><a href="#contributing">🤝 Contributing</a></li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#repository-structure">Repository Structure</a></li>
+    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -60,7 +60,7 @@
 
 <!-- OVERVIEW -->
 <a id="overview"></a>
-## 📖 Overview
+## Overview
 
 The **SG Savings Account Optimizer** is a web-based tool designed to help individuals in Singapore navigate the complexity of tiered interest rates and varying bank conditions. By inputting your total available funds and selecting relevant criteria (like salary credit or card spend), the tool calculates the most efficient distribution of funds across supported banks (UOB, SC, DBS, CIMB, OCBC) to maximize your monthly interest earnings.
 
@@ -70,7 +70,7 @@ Developed with a focus on modern UI/UX and transparency, it provides a granular 
 
 <!-- FEATURES -->
 <a id="features"></a>
-## ✨ Features
+## Features
 
 *   **Optimal Allocation Engine:** Uses a globally optimal algorithm to distribute funds across multiple banks and tiers.
 *   **Dynamic UI:** Real-time updates as you toggle conditions or change fund amounts.
@@ -83,7 +83,7 @@ Developed with a focus on modern UI/UX and transparency, it provides a granular 
 
 <!-- TECHNOLOGIES -->
 <a id="technologies"></a>
-## 📦 Technologies
+## Technologies
 
 *   **Frontend:** HTML5, JavaScript (ES6+ Modules)
 *   **Styling:** [Tailwind CSS](https://tailwindcss.com/) with [Catppuccin](https://catppuccin.com/) colors
@@ -96,12 +96,12 @@ Developed with a focus on modern UI/UX and transparency, it provides a granular 
 
 <!-- GETTING STARTED -->
 <a id="getting-started"></a>
-## 🚀 Getting Started
+## Getting Started
 
 To run this project locally, follow these steps.
 
 <a id="requirements"></a>
-### ✅ Requirements
+### Requirements
 
 *   Node.js (v18 or higher)
 *   npm (v9 or higher)
@@ -130,7 +130,7 @@ To run this project locally, follow these steps.
 
 <!-- USAGE -->
 <a id="usage"></a>
-## 🛠️ Usage
+## Usage
 
 1. Enter your **Total Funds** at the top.
 2. Toggle the **Include Account** switch for banks you have or are considering.
@@ -142,7 +142,7 @@ To run this project locally, follow these steps.
 
 <!-- REPOSITORY STRUCTURE -->
 <a id="repository-structure"></a>
-## 🗂️ Repository Structure
+## Repository Structure
 
 ```
 .
@@ -163,7 +163,7 @@ To run this project locally, follow these steps.
 
 <!-- CONTRIBUTING -->
 <a id="contributing"></a>
-## 🤝 Contributing
+## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 

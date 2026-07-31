@@ -135,7 +135,7 @@
     }
 
     .allocation-bar-segment {
-        @apply h-full transition-all duration-500 ease-out;
+        @apply h-full transition-[width] duration-300 ease-out;
     }
 
     .accordion-header {

@@ -45,7 +45,7 @@
                     </div>
                     <div id="uobConditions" class="space-y-4">
                         <div class="space-y-1">
-                            <span class="text-[10px] uppercase font-bold text-ctp-accent tracking-wider ml-1">Minimum qualifying requirement</span>
+                            <span class="text-xs font-semibold text-ctp-subtext ml-1">Minimum qualifying requirement</span>
                             <label class="checkbox-option"><input type="checkbox" id="uobSpendToggle" name="uobSpendToggle" checked><span>Min. S$500 card spend</span></label>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -162,7 +162,7 @@
                             <p class="text-sm font-semibold text-ctp-subtext mb-3">2. Total monthly transactions (Income + Categories):</p>
                             <div class="space-y-2">
                                 <div class="space-y-1">
-                                    <span class="text-[10px] uppercase font-bold text-ctp-accent tracking-wider ml-1">Minimum qualifying requirement</span>
+                                    <span class="text-xs font-semibold text-ctp-subtext ml-1">Minimum qualifying requirement</span>
                                     <label class="toggle-option">
                                         <input type="radio" name="dbsVolume" value="500_to_15000" checked>
                                         <div class="flex flex-col">
@@ -247,31 +247,30 @@
         <div class="flex gap-4">
             <button 
                 id="openAbout"
-                class="bg-ctp-surface/80 hover:bg-ctp-surface border border-ctp-overlay/10 px-6 py-2.5 rounded-full transition-all text-ctp-text hover:text-ctp-primary flex items-center gap-2 shadow-lg"
+                class="bg-ctp-surface hover:bg-ctp-mantle border border-ctp-overlay/10 px-6 py-2.5 rounded-lg transition-colors text-ctp-text hover:text-ctp-primary flex items-center gap-2 shadow-sm"
             >
                 <i class="fas fa-circle-question text-xs text-ctp-primary"></i>
-                <span class="text-[11px] font-bold tracking-wide uppercase">About Project</span>
+                <span class="text-xs font-semibold tracking-wide">About Project</span>
             </button>
             <button 
                 id="openDisclaimer"
-                class="bg-ctp-surface/80 hover:bg-ctp-surface border border-ctp-overlay/10 px-6 py-2.5 rounded-full transition-all text-ctp-text hover:text-ctp-primary flex items-center gap-2 shadow-lg"
+                class="bg-ctp-surface hover:bg-ctp-mantle border border-ctp-overlay/10 px-6 py-2.5 rounded-lg transition-colors text-ctp-text hover:text-ctp-primary flex items-center gap-2 shadow-sm"
             >
                 <i class="fas fa-circle-info text-xs text-ctp-primary"></i>
-                <span class="text-[11px] font-bold tracking-wide uppercase">Legal Disclaimer</span>
+                <span class="text-xs font-semibold tracking-wide">Legal Disclaimer</span>
             </button>
         </div>
 
-        <div class="max-w-4xl w-full bg-ctp-surface/40 backdrop-blur-lg border border-ctp-overlay/10 rounded-[32px] p-8 md:p-10 flex flex-col items-center gap-6 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-ctp-primary/40 rounded-full"></div>
+        <div class="max-w-4xl w-full bg-ctp-surface border border-ctp-overlay/10 rounded-xl p-8 md:p-10 flex flex-col items-center gap-6 shadow-md">
             
             <div class="flex flex-col items-center gap-6 text-center">
-                <div class="space-y-4 text-ctp-subtext text-[11px] md:text-xs font-medium leading-relaxed max-w-2xl">
+                <div class="space-y-4 text-ctp-subtext text-xs font-medium leading-relaxed max-w-2xl">
                     <p>
                         Data provided by bank official sites (UOB, SC, DBS, CIMB, OCBC). 
                         This tool is for informational purposes only. Always verify latest rates directly with the respective financial institutions.
                     </p>
                     <p>
-                        Developed with vibe to create a clear and modern interest optimization experience for those in Singapore.<br />
+                        Developed to create a clear and modern interest optimization experience for those in Singapore.<br />
                         <span class="text-ctp-overlay1 font-mono">v1.1.1</span>
                     </p>
                 </div>
@@ -280,12 +279,12 @@
                     href="https://github.com/alfred1137/SG-Bank-Interest-cal" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    class="bg-ctp-crust/40 hover:bg-ctp-crust/80 border border-ctp-overlay/10 px-6 py-3 rounded-2xl transition-all text-ctp-text flex items-center gap-5 group"
+                    class="bg-ctp-mantle hover:bg-ctp-crust border border-ctp-overlay/10 px-6 py-3 rounded-lg transition-colors text-ctp-text flex items-center gap-5 group"
                 >
-                    <i class="fab fa-github text-[20px] group-hover:scale-110 transition-transform"></i>
+                    <i class="fab fa-github text-[20px] text-ctp-text"></i>
                     <div class="text-left">
-                        <span class="block text-[10px] font-black uppercase tracking-widest leading-none">Source code</span>
-                        <span class="block text-[9px] font-bold text-ctp-subtext group-hover:text-ctp-primary transition-colors uppercase tracking-tighter mt-1">alfred1137 / SG-Bank-Interest-cal</span>
+                        <span class="block text-xs font-bold tracking-wide">Source code</span>
+                        <span class="block text-xs text-ctp-subgroup group-hover:text-ctp-primary transition-colors">alfred1137 / SG-Bank-Interest-cal</span>
                     </div>
                 </a>
             </div>
@@ -293,8 +292,8 @@
     </footer>
 
     <!-- About Modal -->
-    <div id="aboutModal" class="fixed inset-0 bg-ctp-crust/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-ctp-surface max-w-2xl w-full rounded-xl shadow-2xl border border-ctp-overlay/20 max-h-[90vh] flex flex-col">
+    <div id="aboutModal" class="fixed inset-0 bg-ctp-crust/90 z-50 hidden items-center justify-center p-4">
+        <div class="bg-ctp-surface max-w-2xl w-full rounded-xl shadow-xl border border-ctp-overlay/20 max-h-[90vh] flex flex-col">
             <div class="p-6 border-b border-ctp-overlay/10 flex justify-between items-center">
                 <h2 class="text-xl font-bold text-ctp-primary">About This Project</h2>
                 <button id="closeAbout" class="text-ctp-subtext hover:text-ctp-text transition-colors">
@@ -333,8 +332,8 @@
     </div>
 
     <!-- Disclaimer Modal -->
-    <div id="disclaimerModal" class="fixed inset-0 bg-ctp-crust/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-ctp-surface max-w-2xl w-full rounded-xl shadow-2xl border border-ctp-overlay/20 max-h-[90vh] flex flex-col">
+    <div id="disclaimerModal" class="fixed inset-0 bg-ctp-crust/90 z-50 hidden items-center justify-center p-4">
+        <div class="bg-ctp-surface max-w-2xl w-full rounded-xl shadow-xl border border-ctp-overlay/20 max-h-[90vh] flex flex-col">
             <div class="p-6 border-b border-ctp-overlay/10 flex justify-between items-center">
                 <h2 class="text-xl font-bold text-ctp-primary">Legal Disclaimer</h2>
                 <button id="closeDisclaimer" class="text-ctp-subtext hover:text-ctp-text transition-colors">
@@ -356,9 +355,9 @@
     </div>
 
     <!-- Floating Theme Toggle -->
-    <button id="themeToggle" class="fixed bottom-6 right-6 p-4 rounded-full bg-ctp-primary text-ctp-bg shadow-2xl hover:scale-110 transition-all duration-300 z-[100] border-2 border-ctp-crust/10 group" title="Toggle Theme">
-        <i class="fas fa-moon dark:hidden text-xl group-hover:rotate-12 transition-transform"></i>
-        <i class="fas fa-sun hidden dark:block text-xl group-hover:rotate-45 transition-transform"></i>
+    <button id="themeToggle" class="fixed bottom-6 right-6 p-4 rounded-full bg-ctp-primary text-ctp-bg shadow-xl hover:bg-ctp-primary/95 transition-colors duration-200 z-[100] border border-ctp-crust/10 group" title="Toggle Theme">
+        <i class="fas fa-moon dark:hidden text-xl transition-colors"></i>
+        <i class="fas fa-sun hidden dark:block text-xl transition-colors"></i>
     </button>
 
     <script type="module" src="src/ui/script.js"></script>
