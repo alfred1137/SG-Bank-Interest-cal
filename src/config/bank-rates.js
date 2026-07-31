@@ -17,10 +17,10 @@ export const BANK_CONFIG = {
     baseRate: 0.0005,
     bonusCap: 100000,
     bonuses: {
-      salary_credit: 0.0150,
-      card_spend: 0.0155,
+      salary_credit: 0.0090,
+      card_spend: 0.0090,
       insure: 0.0250,
-      invest: 0.0250
+      invest: 0.0150
     }
   },
   dbs: {
@@ -39,10 +39,10 @@ export const BANK_CONFIG = {
   },
   cimb: {
     tiers: [
-      { capacity: 25000, rate: 0.0088 },
-      { capacity: 25000, rate: 0.0178 },
-      { capacity: 25000, rate: 0.0250 },
-      { capacity: Infinity, rate: 0.0080 }
+      { capacity: 25000, rate: 0.0050 },
+      { capacity: 25000, rate: 0.0108 },
+      { capacity: 25000, rate: 0.0158 },
+      { capacity: Infinity, rate: 0.0050 }
     ]
   },
   uobStash: {

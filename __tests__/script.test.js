@@ -29,10 +29,10 @@ describe('Integration Test for Allocation Engine', () => {
 
         const { allocation, totalMonthlyInterest } = findOptimalAllocationAndInterest(totalFunds, allTiers);
         
-        // SC rate is 3.1%, DBS is 3.0%
-        expect(allocation.SC).toBe(100000);
+        // SC rate is 1.45%, DBS is 4.1%
         expect(allocation.DBS).toBe(100000);
-        expect(totalMonthlyInterest).toBeCloseTo(508.33, 2);
+        expect(allocation.SC).toBe(50000);
+        expect(totalMonthlyInterest).toBeCloseTo(410.42, 2);
     });
 
     test('Scenario 3: High funds, all accounts get some allocation', () => {
@@ -54,7 +54,7 @@ describe('Integration Test for Allocation Engine', () => {
         expect(allocation.SC).toBe(100000);
         expect(allocation.CIMB).toBe(150000);
 
-        expect(totalMonthlyInterest).toBeCloseTo(865.83, 2);
+        expect(totalMonthlyInterest).toBeCloseTo(755.42, 2);
     });
 
     test('Scenario 4: $200k allocation with complex interaction', () => {
@@ -68,13 +68,13 @@ describe('Integration Test for Allocation Engine', () => {
 
         const { allocation, totalMonthlyInterest } = findOptimalAllocationAndInterest(totalFunds, allTiers);
 
-        // Optimal: 25k to UOB (4.5%), 100k to DBS (4.1%), 75k to SC (3.1%)
+        // Optimal: 25k to UOB (4.5%), 100k to DBS (4.1%), 75k to SC (1.45%)
         expect(allocation.DBS).toBe(100000);
-        expect(allocation['UOB One']).toBe(25000);
-        expect(allocation.SC).toBe(75000);
+        expect(allocation['UOB One']).toBe(75000);
+        expect(allocation.SC).toBe(25000);
         expect(allocation.CIMB).toBeUndefined();
 
-        expect(totalMonthlyInterest).toBeCloseTo(606.25, 2);
+        expect(totalMonthlyInterest).toBeCloseTo(555.21, 2);
     });
 
     test('Scenario 5: UOB Stash and OCBC 360 accounts included', () => {
@@ -110,12 +110,12 @@ describe('Integration Test for Allocation Engine', () => {
 
         // Corrected expectations based on actual output
         expect(allocation['UOB One']).toBe(150000);
-        expect(allocation['UOB Stash']).toBe(60000);
+        expect(allocation['UOB Stash']).toBe(100000);
         expect(allocation['OCBC 360']).toBe(75000);
         expect(allocation.SC).toBe(100000);
         expect(allocation.DBS).toBe(100000);
-        expect(allocation.CIMB).toBe(515000);
+        expect(allocation.CIMB).toBe(475000);
 
-        expect(totalMonthlyInterest).toBeCloseTo(1939.37, 2);
+        expect(totalMonthlyInterest).toBeCloseTo(1603.54, 2);
     });
 });
